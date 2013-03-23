@@ -15,6 +15,7 @@
 //char *** argv;
 double E_MPI_Init(int * argc, char*** argv)
 {
+	printf("Hello, I'm E_MPI_Init(argc, argv)\n");
 	return 0;
 }
 #ifdef PERF_MPI_THREADED
@@ -816,9 +817,9 @@ int * top_type;
 /* LAM MPI defines MPI_Abort as a macro! We check for this and if 
  */
 #if (defined(MPI_Abort) && defined(_ULM_MPI_H_))
-int _MPI_Abort( MPI_Comm comm, int errorcode, char * file, int line)
+int E_MPI_Abort( MPI_Comm comm, int errorcode, char * file, int line)
 #else
-int  MPI_Abort( comm, errorcode )
+int E_MPI_Abort( comm, errorcode )
 MPI_Comm comm;
 int errorcode;
 #endif /* MPI_Abort & LAM MPI [LAM MPI] */

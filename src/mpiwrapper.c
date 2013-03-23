@@ -23,6 +23,7 @@ int  MPI_Init( argc, argv )
 int * argc;
 char *** argv;
 {
+  E_MPI_Init(argc, argv);
   int  returnVal;
   int  proc_id;
   int  size;

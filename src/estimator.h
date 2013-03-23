@@ -542,9 +542,9 @@ int * top_type );
 *                                                                 *
 ******************************************************************/
 #if (defined(MPI_Abort) && defined(_ULM_MPI_H_))
-int _MPI_Abort( MPI_Comm comm, int errorcode, char * file, int line);
+int E_MPI_Abort( MPI_Comm comm, int errorcode, char * file, int line);
 #else
-int  MPI_Abort( MPI_Comm comm, int errorcode );
+int E_MPI_Abort( MPI_Comm comm, int errorcode );
 #endif /* MPI_Abort & LAM MPI [LAM MPI] */
 
 
