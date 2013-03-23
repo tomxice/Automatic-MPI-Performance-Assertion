@@ -1,2 +1,13 @@
-Automatic MPI Performance Assertion is my Graduation Project.
-We insert performance assertion code into MPI library. Therefore, Users can find performace bugs in their MPI programs without modifying any user code.
+Automatic MPI Performance Assertion
+======================
+About
+----------
+This project is my graduation project in Tsinghua University.
+- Users can find performace bugs in their MPI programs without modifying any user code
+- Our tool may detect problems caused by **System Noise**
+
+Dir
+----------
+./      this file
+src/    code for mpilib
+
