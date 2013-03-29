@@ -5,9 +5,11 @@ DEF= -DPERF_PROFILE
 AR = ar
 ARTAG = rcv
 
-libmpit	: profile.o timer.o mpiwrapper.o mpiwrapper_f.o estimator.o
-	$(AR) $(ARTAG) libmpit.a mpiwrapper.o mpiwrapper_f.o timer.o profile.o estimator.o
+libmpit	: profile.o timer.o mpiwrapper.o mpiwrapper_f.o estimator.o parser.o
+	$(AR) $(ARTAG) libmpit.a mpiwrapper.o mpiwrapper_f.o timer.o profile.o estimator.o parser.o
 	$(RM) -f *.o
+parser.o: parser.c
+	$(CC) $(CFLAGS) -std=c99 $(DEF) -c parser.c
 estimator.o: estimator.c
 	$(CC) $(CFLAGS) $(DEF) -c estimator.c
 profile.o : profile.c	
