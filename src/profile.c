@@ -94,7 +94,7 @@ void PROFILE_FINISH(){
 	comp_time = elapsed_time*1.0e6 - comm_time;
 
 	fprintf(profile_file, "Total execution time: %.2f sec.\n", elapsed_time);
-	fprintf(profile_file, "comm time: %.2f(%2.2f\%), comp time: %.2f(%2.2f\%)\n", comm_time/1.0e6, 100.0*comm_time/(elapsed_time*1.0e6), comp_time/1.0e6, 100.0*(1-comm_time/(elapsed_time*1.0e6)));
+	fprintf(profile_file, "comm time: %.2f(%2.2f%%), comp time: %.2f(%2.2f%%)\n", comm_time/1.0e6, 100.0*comm_time/(elapsed_time*1.0e6), comp_time/1.0e6, 100.0*(1-comm_time/(elapsed_time*1.0e6)));
 	
 	fprintf(profile_file, "Func_Name\t\tTime:%d\t\tCount:%d\n", proc_id, proc_id);
 
@@ -106,7 +106,7 @@ void PROFILE_FINISH(){
 	for(i=0; i<MPI_FUNCTIONS; i++){
 		if (mpi_sort[i]->count != 0){
 			j = mpi_sort[i] - &mpi_profile[0];
-			fprintf(profile_file, "%s\t\t%.2f\t\t%d\n", MPI_Functions[j], mpi_sort[i]->total_time/1.0e6, mpi_sort[i]->count);
+			fprintf(profile_file, "%s\t\t%.2f\t\t%ld\n", MPI_Functions[j], mpi_sort[i]->total_time/1.0e6, mpi_sort[i]->count);
 		}
 	}
 	fclose(profile_file);

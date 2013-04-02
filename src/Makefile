@@ -1,7 +1,7 @@
 CC =gcc
 OPT=-O3 
 CFLAGS = -I /usr/include/mpich2
-DEF= -DPERF_PROFILE  
+DEF= -DPERF_PROFILE -DPERF_ASSERT
 AR = ar
 ARTAG = rcv
 
