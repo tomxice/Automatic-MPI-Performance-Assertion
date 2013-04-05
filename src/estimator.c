@@ -4,18 +4,52 @@
 *                                                                   *
 ********************************************************************/
 #include "estimator.h"
+#include "parser.h"
+
+#ifdef PERF_ASSERT
+LoggpoPara log_cmp[MPS], log_net[MPS], log_smp[MPS];
+IMBPara imb;
+#endif
+
+// report 
+// TODO may provide 3 level output
+// L1: each record for one MPI_FUNCTION (MPI_Send)
+// L2: each record for one MPI_CALL (MPI_Send in sender.c:35)
+// L3: rich info for one MPI_CALL 
+//      (MPI_Send in sender.c:35, max,min,avg,expects,abnormals)
+#define SHORT 0
+#define NORMAL 1
+#define LONG 2
+// for L1
+void E_report(double real, double expc, int id) {
+    if (expc < real/4) {
+        E_result[id][SHORT] ++;
+    }
+    else if (expc > real*4) {
+        E_result[id][LONG] ++;
+    }
+    else {
+        E_result[id][NORMAL] ++;
+    }
+}
+
 
 /******************************************************************
 *                                                                 *
 *                   MPI Functions for Management                  *
 *                                                                 *
 ******************************************************************/
-//double E_MPI_Init( argc, argv )
-//int * argc;
-//char *** argv;
 double E_MPI_Init(int * argc, char*** argv)
 {
 	printf("Hello, I'm E_MPI_Init(argc, argv)\n");
+#ifdef PERF_ASSERT
+    // assume all data files are existing
+    // users may run IMB manually.
+    parse_loggpo("cmp_para", log_cmp);
+    parse_loggpo("net_para", log_net);
+    parse_loggpo("smp_para", log_smp);
+    parse_imb("coll_para", &imb);
+#endif
 	return 0;
 }
 #ifdef PERF_MPI_THREADED
@@ -399,7 +433,23 @@ MPI_Comm comm;
 double E_MPI_Barrier( comm )
 MPI_Comm comm;
 {
-	return 0;
+    double retVal=-1;
+    int np;
+    PMPI_Comm_size( comm, &np);
+    for (int down = 0; down < imb.n_barrier-1; ++down) {
+        if (np == imb.barrier[down].proc) {
+            retVal = imb.barrier[down].t_avg;
+            break;
+        }
+        int up = down + 1;
+        if (np < imb.barrier[up].proc) {
+            double delta_t = imb.barrier[up].t_avg - imb.barrier[down].t_avg;
+            double delta_p = imb.barrier[up].proc - imb.barrier[down].proc;
+            double slope = delta_t/delta_p;
+            retVal = imb.barrier[down].t_avg + slope*(np - imb.barrier[down].proc);
+        }
+    }
+	return retVal;
 }
 double E_MPI_Bcast( buffer, count, datatype, root, comm )
 void * buffer;

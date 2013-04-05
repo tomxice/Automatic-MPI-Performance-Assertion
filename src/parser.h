@@ -4,9 +4,14 @@
 #include <stdio.h>
 #include <string.h>
 
+typedef enum bool{
+    false=0, 
+    true
+}bool;
+
 #define VERIFY 0
 
-#define MPS 1500
+#define MPS 1500 // Max step in loggpo
 typedef struct LoggpoPara {
     int size;
     double os;
@@ -76,7 +81,7 @@ typedef enum IMBState {
     unknown
 } IMBState;
 
-extern LoggpoPara logps[MPS];
-extern IMBPara imb;
+void parse_loggpo(const char* f_para, pLoggpoPara logps);
+void parse_imb(const char* f_para, pIMBPara pimb);
 
 #endif

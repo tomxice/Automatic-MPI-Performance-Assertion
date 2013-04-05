@@ -11,7 +11,9 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include "timer.h"
 #include "profile.h"
+#include "estimator.h"
 
 /******************************************************************
  *                                                                 *
@@ -25,9 +27,9 @@ int  MPI_Init( argc, argv )
 {
     int  returnVal;
     int  proc_id;
-    int  size;
-    char procname[MPI_MAX_PROCESSOR_NAME];
-    int  procnamelength;
+    //int  size;
+    //char procname[MPI_MAX_PROCESSOR_NAME];
+    //int  procnamelength;
 
 #ifdef PERF_PROFILE
     PROFILE_START(0);
@@ -82,9 +84,9 @@ int  MPI_Init_thread (argc, argv, required, provided )
 int  MPI_Finalize(  )
 {
     int  returnVal;
-    int  size;
-    char procname[MPI_MAX_PROCESSOR_NAME];
-    int  procnamelength;
+    //int  size;
+    //char procname[MPI_MAX_PROCESSOR_NAME];
+    //int  procnamelength;
 
 #ifdef PERF_PROFILE
     PROFILE_FINISH();
@@ -367,9 +369,9 @@ int  MPI_Recv( buf, count, datatype, source, tag, comm, status )
     MPI_Comm comm;
     MPI_Status * status;
 {
-    MPI_Status local_status;
+    //MPI_Status local_status;
     int  returnVal;
-    int size;
+    //int size;
 
 #ifdef PERF_PROFILE
     PROFILE_START(12);
@@ -726,8 +728,8 @@ int   MPI_Wait( request, status )
     MPI_Status * status;
 {
     int   returnVal;
-    MPI_Status local_status;
-    MPI_Request saverequest;
+    //MPI_Status local_status;
+    //MPI_Request saverequest;
 
 #ifdef PERF_PROFILE
     PROFILE_START(25);
@@ -1122,10 +1124,24 @@ int   MPI_Barrier( comm )
     printf("Enter MPI_Barrier\n");
 #endif
 
+#ifdef PERF_ASSERT
+    _timer_start(PATN);
+#endif 
+
     returnVal = PMPI_Barrier( comm );
+
+#ifdef PERF_ASSERT
+    _timer_stop(PATN);
+#endif 
 
 #ifdef PERF_PROFILE
     PROFILE_STOP(40);
+#endif
+
+#ifdef PERF_ASSERT
+    double r = _timer_read(PATN);
+    double e = E_MPI_Barrier( comm );
+    E_report(r,e,40);
 #endif
 
     return returnVal;
@@ -1202,7 +1218,7 @@ int   MPI_Gatherv( sendbuf, sendcnt, sendtype, recvbuf, recvcnts, displs, recvty
     MPI_Comm comm;
 {
     int   returnVal;
-    int   rank;
+    //int   rank;
 
 #ifdef PERF_PROFILE
     PROFILE_START(43);

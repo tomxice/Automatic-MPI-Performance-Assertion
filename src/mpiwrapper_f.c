@@ -7067,6 +7067,9 @@ MPI_Fint *ierr;
 
 /******************************************************/
 /******************************************************/
+void MPI_Profile_on();
+void MPI_Profile_off();
+
 void   mpi_profile_on_( )
 {
   MPI_Profile_on();

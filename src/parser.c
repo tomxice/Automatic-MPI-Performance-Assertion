@@ -1,10 +1,6 @@
 #include "parser.h"
 
 #define VERIFY 0
-
-LoggpoPara logps[MPS]; 
-IMBPara imb;
-
 // parameters
 // f_para: the data file
 // loggps: an array of struct where to store data,
@@ -39,8 +35,7 @@ void parse_loggpo(const char* f_para, pLoggpoPara logps) {
 
 // this function tells you which benchmark we are in
 IMBState test_benchmark(const char* line) {
-    int true = 1, false = 0;
-    int comment = false;
+    bool comment = false;
     for (int i = 0; i < strlen(line); ++ i) {
         if (line[i] == '#') {
             comment = true;
@@ -349,12 +344,13 @@ void parse_imb(const char* f_para, pIMBPara pimb) {
 }
 
 // this main is for test parser
-
+/*
 int main() {
     parse_loggpo("cmp_para", logps);
     parse_imb("coll_para", &imb);
     return 0;
 }
+*/
 
           
         

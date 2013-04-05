@@ -8,6 +8,8 @@ void PROFILE_INIT(int);
 void PROFILE_START(int);
 void PROFILE_STOP(int);
 void PROFILE_FINISH();
+void PROFILE_ON();
+void PROFILE_OFF();
 
 typedef struct{
 	double entry_time;
