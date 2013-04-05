@@ -1,4 +1,4 @@
-char *MPI_Functions[] = {
+const char *MPI_Functions[] = {
  "MPI_Init",
  "MPI_Init_thread",
  "MPI_Finalize",

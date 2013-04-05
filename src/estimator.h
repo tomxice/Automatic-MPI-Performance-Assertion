@@ -4,14 +4,7 @@
 #include <string.h>
 #include "mpiname.h"
 
-#define PATN 1
-
-FILE* f_detail;
-
-int E_result[sizeof(MPI_Functions)][3];
-//TODO variable array in C ?
-
-void E_report(double r, double e, int id);
+#define PATN 1 // the index "n" in timer.c
 
 /******************************************************************
 *                                                                 *

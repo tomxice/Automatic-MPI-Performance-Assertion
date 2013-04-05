@@ -11,28 +11,6 @@ LoggpoPara log_cmp[MPS], log_net[MPS], log_smp[MPS];
 IMBPara imb;
 #endif
 
-// report 
-// TODO may provide 3 level output
-// L1: each record for one MPI_FUNCTION (MPI_Send)
-// L2: each record for one MPI_CALL (MPI_Send in sender.c:35)
-// L3: rich info for one MPI_CALL 
-//      (MPI_Send in sender.c:35, max,min,avg,expects,abnormals)
-#define SHORT 0
-#define NORMAL 1
-#define LONG 2
-// for L1
-void E_report(double real, double expc, int id) {
-    if (expc < real/4) {
-        E_result[id][SHORT] ++;
-    }
-    else if (expc > real*4) {
-        E_result[id][LONG] ++;
-    }
-    else {
-        E_result[id][NORMAL] ++;
-    }
-}
-
 
 /******************************************************************
 *                                                                 *

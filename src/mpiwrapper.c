@@ -14,6 +14,7 @@
 #include "timer.h"
 #include "profile.h"
 #include "estimator.h"
+#include "reporter.h"
 
 /******************************************************************
  *                                                                 *
@@ -100,6 +101,8 @@ int  MPI_Finalize(  )
 
 #ifdef PERF_ASSERT
     E_MPI_Finalize();
+    int numproc = 1;//TODO how to get all numporc?
+    R_report(R_Level,numproc);
 #endif
     return returnVal;
 }
@@ -1141,7 +1144,8 @@ int   MPI_Barrier( comm )
 #ifdef PERF_ASSERT
     double r = _timer_read(PATN);
     double e = E_MPI_Barrier( comm );
-    E_report(r,e,40);
+    //int pid = 0;//TODO how to get pid?
+    R_log(R_Level,0,r,e,0,40,"sender.c:35","COMM_WORLD");
 #endif
 
     return returnVal;
