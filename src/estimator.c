@@ -19,8 +19,11 @@ IMBPara imb;
 ******************************************************************/
 double E_MPI_Init(int * argc, char*** argv)
 {
-	printf("Hello, I'm E_MPI_Init(argc, argv)\n");
+	int rank;
+	PMPI_Comm_rank( MPI_COMM_WORLD, &rank);
+	if ( rank != 0 ) return 0;
 #ifdef PERF_ASSERT
+	printf("Hello, I'm E_MPI_Init(argc, argv)\n");
     // assume all data files are existing
     // users may run IMB manually.
     parse_loggpo("paras/cmp_para", log_cmp);
