@@ -31,9 +31,12 @@ proc_1      6       0       6       0
 #Also log the arguments, expectation and real_time.
 Exception
 ==============
+# TODO Location
+# Because users should not change there code, 
+# we use symbol address here.
 
 Func_Name   Location    Detect          t_exp   t_real  parameter
-MPI_Send    sender.c:35 Noise           4us     34us    from:proc_0 to:proc_1 ....
+MPI_Send    0x00001234  Noise           4us     34us    from:proc_0 to:proc_1 ....
 MPI_Send    sender.c:35 Noise           ...
 MPI_Bcast   sender.c:91 Load_Balance    ...
 

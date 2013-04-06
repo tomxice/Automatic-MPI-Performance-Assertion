@@ -23,10 +23,10 @@ double E_MPI_Init(int * argc, char*** argv)
 #ifdef PERF_ASSERT
     // assume all data files are existing
     // users may run IMB manually.
-    parse_loggpo("cmp_para", log_cmp);
-    parse_loggpo("net_para", log_net);
-    parse_loggpo("smp_para", log_smp);
-    parse_imb("coll_para", &imb);
+    parse_loggpo("paras/cmp_para", log_cmp);
+    parse_loggpo("paras/net_para", log_net);
+    parse_loggpo("paras/smp_para", log_smp);
+    parse_imb("paras/coll_para", &imb);
 #endif
 	return 0;
 }

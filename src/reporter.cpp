@@ -1,10 +1,14 @@
+#include <execinfo.h>
 #include <string>
 #include <cstring>
 #include <cstdio>
+#include <cstdlib>
 #include <vector>
 #include <map>
 #include "mpiname.h"
+extern "C" {
 #include "reporter.h"
+}
 
 using namespace std;
 
@@ -14,14 +18,36 @@ struct Record {
     double real, expc;
     string parameter;
 };
-map< string, vector<Record> > result[sizeof(MPI_Functions)];
+const int NUMFUNC=127;
+map< string, vector<Record> > result[NUMFUNC];
+
+void R_init(const char* final_file) {
+    f_final = fopen(final_file,"w");
+    if (f_final == NULL) {
+        printf("cannot open report file\n");
+    }
+}
 
 #define SHORT 0
 #define NORMAL 1
 #define LONG 2
 
-void R_log(int level, int warn, double real, double expc, int pid, int mpiid, const char* c_location, const char* c_para) {
-    string location(c_location, strlen(c_location));
+void R_log(int level, int warn, double real, double expc, int pid, int mpiid, const char* c_para) {
+    // get symbol addr
+    void *buffer[4];
+    char **addrs;
+    int nptrs = backtrace(buffer,4);
+    addrs = backtrace_symbols(buffer, nptrs);
+    string location;
+    if (addrs == NULL) {
+        location = "noknown";
+    }
+    else {
+        location.assign(addrs[2]);
+        free(addrs);
+    }
+    // end symbol addr
+
     if (level >= 4) {
         string para(c_para, strlen(c_para));
     }
@@ -47,7 +73,7 @@ void R_log(int level, int warn, double real, double expc, int pid, int mpiid, co
 void R_report(int level, int numproc) {
 
     // Summary Level 0
-    int numfunc = sizeof(MPI_Functions);
+    int numfunc = NUMFUNC;
     int all_sum[4];
     int func_sum[numfunc][4];//short,normal,long,all
     int proc_sum[numproc][4];//short,normal,long,all

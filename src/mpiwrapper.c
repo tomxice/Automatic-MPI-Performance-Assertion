@@ -50,6 +50,7 @@ int  MPI_Init( argc, argv )
 
 #ifdef PERF_ASSERT
     E_MPI_Init(argc, argv);
+    R_init("final.log");
 #endif
     return returnVal;
 }
@@ -1145,7 +1146,7 @@ int   MPI_Barrier( comm )
     double r = _timer_read(PATN);
     double e = E_MPI_Barrier( comm );
     //int pid = 0;//TODO how to get pid?
-    R_log(R_Level,0,r,e,0,40,"sender.c:35","COMM_WORLD");
+    R_log(R_Level,0,r,e,0,40,"COMM_WORLD");
 #endif
 
     return returnVal;

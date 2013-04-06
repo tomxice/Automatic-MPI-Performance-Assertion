@@ -1,3 +1,5 @@
+#ifndef ESTI_H
+#define ESTI_H
 #include <stdio.h>
 #include <mpi.h>
 #include <stdlib.h>
@@ -689,4 +691,4 @@ void E_MPI_Profile_on();
 
 void E_MPI_Profile_off();
 
-
+#endif
