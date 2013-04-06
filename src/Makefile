@@ -1,18 +1,19 @@
 CC = gcc
 CPP = g++
 OPT= -O2
-CFLAGS = -std=c99 -Wall -I/usr/include/mpich2
+CFLAGS = -std=c99 -Wall -I/usr/include
 CPPFLAGS = -Wall
 DEF= -DPERF_ASSERT
 AR = ar
 ARTAG = rcv
 
-ALL:test.out libmpit
-test.out: profile.o timer.o mpiwrapper.o mpiwrapper_f.o estimator.o parser.o mpiname.o reporter.o main.o
-	g++ -L/usr/bin -lmpich *.o -o test.out
-libmpit	: profile.o timer.o mpiwrapper.o mpiwrapper_f.o estimator.o parser.o mpiname.o reporter.o
-	$(AR) $(ARTAG) libmpit.a mpiwrapper.o mpiwrapper_f.o timer.o profile.o estimator.o parser.o reporter.o
+OBJS= profile.o timer.o mpiwrapper.o mpiwrapper_f.o estimator.o parser.o mpiname.o reporter.o
+
+main.out: main.o libmpit
+	g++ main.o -L. -L/usr/bin -lmpit -lmpich -o main.out
 	$(RM) -f *.o
+libmpit	: $(OBJS)
+	$(AR) $(ARTAG) libmpit.a $(OBJS)
 reporter.o: reporter.cpp
 	$(CPP) $(CPPFLAGS) $(DEF) -c reporter.cpp
 parser.o: parser.c
@@ -34,6 +35,6 @@ main.o: main.c
 clean :
 	rm -f *.o	
 	rm -f libmpit.a
-	rm -f test.out
-	rm -f final.log
+	rm -f *.out
+	rm -f *.log
 	rm -f mpi_record.*
