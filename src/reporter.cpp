@@ -17,6 +17,7 @@ struct Record {
     int status;
     double real, expc;
     string parameter;
+    Record(): pid(-1),status(-1),real(-1),expc(-1),parameter("uninit") {}
 };
 const int NUMFUNC=127;
 map< string, vector<Record> > result[NUMFUNC];
@@ -77,6 +78,10 @@ void R_report(int level, int numproc) {
     int all_sum[4];
     int func_sum[numfunc][4];//short,normal,long,all
     int proc_sum[numproc][4];//short,normal,long,all
+    memset(all_sum,0,4*sizeof(int));
+    memset(func_sum,0,numfunc*4*sizeof(int));
+    memset(proc_sum,0,numproc*4*sizeof(int));
+
     for (int i = 0; i < numfunc; ++ i) {
         map<string, vector<Record> >::iterator iter = result[i].begin();
         while (iter != result[i].end()) {
@@ -85,6 +90,7 @@ void R_report(int level, int numproc) {
                 func_sum[i][it->status] ++;
                 func_sum[i][3] ++;
                 proc_sum[it->pid][it->status] ++;
+//                printf("pid:%d status:%d\n",it->pid,it->status);
                 proc_sum[it->pid][3] ++;
                 all_sum[it->status] ++;
                 all_sum[3] ++;
@@ -93,21 +99,23 @@ void R_report(int level, int numproc) {
         }
     }
     fprintf(f_final, "Summary\n");
-    fprintf(f_final, "===================\n");
-    fprintf(f_final, "Function Summary\n");
-    fprintf(f_final, "-------------------\n");
-    fprintf(f_final, "Function\t\tTotal\tShort\tNormal\tLong\n");
-    fprintf(f_final, "ALL\t\t%d\t%d\t%d\t%d\n",all_sum[3],all_sum[0],all_sum[1],all_sum[2]);
+    fprintf(f_final, "===================\n\n");
+    fprintf(f_final, "%-27s%-12s%-12s%-12s%-12s\n", "Function","Total","Short","Normal","Long");
+    fprintf(f_final, "%-27s%-12d%-12d%-12d%-12d\n", "ALL",all_sum[3],all_sum[0],all_sum[1],all_sum[2]);
     for (int i = 0; i < numfunc; ++ i) {
-        fprintf(f_final, "%s\t\t%d\t%d\t%d\t%d\n",MPI_Functions[i],func_sum[i][3],func_sum[i][0],func_sum[i][1],func_sum[i][2]);
+        fprintf(f_final, "%-27s%-12d%-12d%-12d%-12d\n",MPI_Functions[i],func_sum[i][3],func_sum[i][0],func_sum[i][1],func_sum[i][2]);
     }
+//Process info is hard to collect at runtime.. 
+//because procs run in diff machines..
+#if 0
     fprintf(f_final, "Process Summary\n");
     fprintf(f_final, "-------------------\n");
-    fprintf(f_final, "Process\t\tTotal\tShort\tNormal\tLong\n");
-    fprintf(f_final, "ALL\t\t%d\t%d\t%d\t%d\n",all_sum[3],all_sum[0],all_sum[1],all_sum[2]);
+    fprintf(f_final, "%-15s%-12s%-12s%-12s%-12s\n", "Process","Total","Short","Normal","Long");
+    fprintf(f_final, "%-15s%-12d%-12d%-12d%-12d\n", "ALL",all_sum[3],all_sum[0],all_sum[1],all_sum[2]);
     for (int i = 0; i < numproc; ++ i) {
-        fprintf(f_final, "Proc_%d\t\t%d\t%d\t%d\t%d\n",i,proc_sum[i][3],proc_sum[i][0],proc_sum[i][1],proc_sum[i][2]);
+        fprintf(f_final, "Proc_%-10d%-12d%-12d%-12d%-12d\n",i,proc_sum[i][3],proc_sum[i][0],proc_sum[i][1],proc_sum[i][2]);
     }
+#endif
     // End Summary
     
     // Exceptions Level 1
@@ -124,9 +132,9 @@ void R_report(int level, int numproc) {
             ++ iter;
         }
     }
-    fprintf(f_final, "Exception\n");
-    fprintf(f_final, "===================\n");
-    fprintf(f_final, "Func_name\t\tLocation\tReason\tt_exp\tt_real\n");
+    fprintf(f_final, "\n\nExceptions\n");
+    fprintf(f_final, "===================\n\n");
+    fprintf(f_final, "%-27s%-50s%-10s%-10s%-10s%-s\n","Func_name","Location","Reason","t_exp","t_real","description");
     for (int i = 0; i < numfunc; ++ i) {
         map<string, vector<Record> >::iterator iter = result[i].begin();
         while (iter != result[i].end()) {
@@ -134,16 +142,15 @@ void R_report(int level, int numproc) {
                     it != iter->second.end(); ++ it) {
                 if (it->status == NORMAL)
                     continue;
-                fprintf(f_final, "%s\t%s\t",MPI_Functions[i],iter->first.c_str());
+                fprintf(f_final, "%-27s%-50s",MPI_Functions[i],iter->first.c_str());
                 if (it->status == Noise)
-                    fprintf(f_final, "Noise\t");
+                    fprintf(f_final, "%-10s","Noise");
                 else if (it->status == Load_UB)
-                    fprintf(f_final, "Load_UB\t");
-                fprintf(f_final, "%8f\t%8f\t%s\n",it->expc,it->real,it->parameter.c_str());
+                    fprintf(f_final, "%-10s","Unbalance");
+                fprintf(f_final, "%-10f%-10f%-s\n",it->expc,it->real,it->parameter.c_str());
             }
             ++ iter;
         }
     }
-    fprintf(f_final, "Func_name\t\tLocation\tReason\tt_exp\tt_real\n");
 }
 

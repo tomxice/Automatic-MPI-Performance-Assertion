@@ -28,29 +28,14 @@ int  MPI_Init( argc, argv )
 {
     int  returnVal;
     int  proc_id;
-    //int  size;
-    //char procname[MPI_MAX_PROCESSOR_NAME];
-    //int  procnamelength;
-
-#ifdef PERF_PROFILE
-    PROFILE_START(0);
-#endif
-
-#ifdef DEBUG
-    printf("Enter MPI_Init\n");
-#endif
-
     returnVal = PMPI_Init( argc, argv );
 
-#ifdef PERF_PROFILE
-    PMPI_Comm_rank( MPI_COMM_WORLD, &proc_id );
-    PROFILE_INIT(proc_id);
-    PROFILE_STOP(0);
-#endif
-
 #ifdef PERF_ASSERT
+    PMPI_Comm_rank( MPI_COMM_WORLD, &proc_id );
     E_MPI_Init(argc, argv);
-    R_init("final.log");
+    char filename[128];
+    sprintf(filename,"%s%d","mpipa.report.",proc_id);
+    R_init(filename);
 #endif
     return returnVal;
 }
@@ -86,25 +71,16 @@ int  MPI_Init_thread (argc, argv, required, provided )
 int  MPI_Finalize(  )
 {
     int  returnVal;
-    //int  size;
-    //char procname[MPI_MAX_PROCESSOR_NAME];
-    //int  procnamelength;
 
-#ifdef PERF_PROFILE
-    PROFILE_FINISH();
-#endif
-
-#ifdef DEBUG
-    printf("Enter MPI_Finalize\n");
+#ifdef PERF_ASSERT
+    E_MPI_Finalize();
+    int numproc = 0;
+    PMPI_Comm_size(MPI_COMM_WORLD, &numproc);
+    R_report(R_Level,numproc);
 #endif
 
     returnVal = PMPI_Finalize();
 
-#ifdef PERF_ASSERT
-    E_MPI_Finalize();
-    int numproc = 1;//TODO how to get all numporc?
-    R_report(R_Level,numproc);
-#endif
     return returnVal;
 }
 
@@ -1120,14 +1096,6 @@ int   MPI_Barrier( comm )
 {
     int   returnVal;
 
-#ifdef PERF_PROFILE
-    PROFILE_START(40);
-#endif
-
-#ifdef DEBUG
-    printf("Enter MPI_Barrier\n");
-#endif
-
 #ifdef PERF_ASSERT
     _timer_start(PATN);
 #endif 
@@ -1138,15 +1106,12 @@ int   MPI_Barrier( comm )
     _timer_stop(PATN);
 #endif 
 
-#ifdef PERF_PROFILE
-    PROFILE_STOP(40);
-#endif
-
 #ifdef PERF_ASSERT
     double r = _timer_read(PATN);
     double e = E_MPI_Barrier( comm );
-    //int pid = 0;//TODO how to get pid?
-    R_log(R_Level,0,r,e,0,40,"COMM_WORLD");
+    int pid;
+    PMPI_Comm_rank(MPI_COMM_WORLD, &pid);
+    R_log(R_Level,0,r,e,pid,40,"COMM_WORLD");
 #endif
 
     return returnVal;
@@ -1161,22 +1126,20 @@ int   MPI_Bcast( buffer, count, datatype, root, comm )
 {
     int   returnVal;
 
-#ifdef PERF_PROFILE
-    PROFILE_START(41);
-#endif
-
-#ifdef DEBUG
-    printf("Enter MPI_Bcast\n");
-#endif
-
+#ifdef PERF_ASSERT
+    _timer_start(PATN);
+#endif 
     returnVal = PMPI_Bcast( buffer, count, datatype, root, comm );
 
-#ifdef PERF_PROFILE
-    PROFILE_STOP(41);
-#endif
-
 #ifdef PERF_ASSERT
-    E_MPI_Bcast( buffer, count, datatype, root, comm );
+    _timer_stop(PATN);
+    double r = _timer_read(PATN);
+    double e = E_MPI_Bcast( buffer, count, datatype, root, comm );
+    int pid;
+    PMPI_Comm_rank(MPI_COMM_WORLD, &pid);
+    char para[100];
+    sprintf(para, "count:%d, root:%d",count,root);
+    R_log(R_Level,0,r,e,pid,41,para);
 #endif
 
     return returnVal;
@@ -1194,18 +1157,21 @@ int   MPI_Gather( sendbuf, sendcnt, sendtype, recvbuf, recvcount, recvtype, root
 {
     int   returnVal;
 
-#ifdef PERF_PROFILE
-    PROFILE_START(42);
-#endif
-
-#ifdef DEBUG
-    printf("Enter MPI_Gather\n");
-#endif
+#ifdef PERF_ASSERT
+    _timer_start(PATN);
+#endif 
 
     returnVal = PMPI_Gather( sendbuf, sendcnt, sendtype, recvbuf, recvcount, recvtype, root, comm );
 
-#ifdef PERF_PROFILE
-    PROFILE_STOP(42);
+#ifdef PERF_ASSERT
+    _timer_stop(PATN);
+    double r = _timer_read(PATN);
+    double e = E_MPI_Gather( sendbuf, sendcnt, sendtype, recvbuf, recvcount, recvtype, root, comm );
+    int pid;
+    PMPI_Comm_rank(MPI_COMM_WORLD, &pid);
+    char para[100];
+    sprintf(para, "sendcnt:%d, root:%d",sendcnt,root);
+    R_log(R_Level,0,r,e,pid,42,para);
 #endif
 
     return returnVal;

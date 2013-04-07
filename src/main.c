@@ -19,6 +19,9 @@ int main( int argc, char** argv) {
         MPI_Recv(message, 20, MPI_CHAR, 0, 99, MPI_COMM_WORLD, &status);
         printf("received :%s:\n", message);
     }
+    MPI_Barrier(MPI_COMM_WORLD);
+    int array[100];
+    MPI_Bcast(array,100,MPI_INT,0,MPI_COMM_WORLD);
     MPI_Finalize();
 
     return 0;

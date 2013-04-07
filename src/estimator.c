@@ -10,7 +10,76 @@
 LoggpoPara log_cmp[MPS], log_net[MPS], log_smp[MPS];
 IMBPara imb;
 #endif
-
+int E_count2byte ( MPI_Datatype datatype, int count ) {
+    int nb = 0;
+    // TODO size of datatype ?
+    if (datatype == MPI_INT) {
+        nb = count*4;
+    }
+    else 
+    {
+        nb = count;
+    }
+    return nb;
+}
+#define E_GET_COLL_AVG_TIME(n_coll_op, coll_op) \
+    int pdown, pup, bdown, bup;\
+    for (pdown = 0; pdown < imb.n_coll_op-1; ++ pdown) {\
+        if (np == imb.coll_op[pdown].proc) {\
+            pup = pdown;\
+            break;\
+        }\
+        pup = pdown + 1;\
+        if (np < imb.coll_op[pup].proc) {\
+            break;\
+        }\
+    }\
+    for (bdown = 0; bdown < imb.coll_op[pdown].n_byte; ++ bdown) {\
+        if (nb == imb.coll_op[pdown].para[bdown].bytes) {\
+            bup = bdown;\
+            break;\
+        }\
+        bup = bdown + 1;\
+        if (nb <= imb.coll_op[pup].para[bup].bytes) {\
+            break;\
+        }\
+    }\
+    double delta_t, delta_x, slope;\
+    double t1[4] = {imb.coll_op[pdown].para[bdown].t_avg, imb.coll_op[pdown].para[bdown].t_avg,\
+                    imb.coll_op[pup].para[bdown].t_avg,   imb.coll_op[pdown].para[bup].t_avg};\
+    double t2[4] = {imb.coll_op[pup].para[bdown].t_avg,   imb.coll_op[pdown].para[bup].t_avg,\
+                    imb.coll_op[pup].para[bup].t_avg,     imb.coll_op[pup].para[bup].t_avg};\
+    double x1[4] = {imb.coll_op[pdown].proc,              imb.coll_op[pdown].para[bdown].bytes,\
+                    imb.coll_op[pup].para[bdown].bytes,   imb.coll_op[pdown].proc};\
+    double x2[4] = {imb.coll_op[pup].proc,                imb.coll_op[pdown].para[bup].bytes,\
+                    imb.coll_op[pup].para[bup].bytes,     imb.coll_op[pup].proc};\
+    double x[4] = { np, nb, nb, np };\
+    double retVal = 0;\
+    if (pup == pdown && bup == bdown) { \
+        retVal = t1[0]; \
+    } \
+    else if (pup == pdown) { \
+        delta_t = t1[1] - t2[1]; \
+        delta_x = x1[1] - x2[1]; \
+        slope = delta_t/delta_x; \
+        retVal = t1[1] + slope*(x[1]-x1[1]); \
+    } \
+    else if (bup == bdown) { \
+        delta_t = t1[0] - t2[0]; \
+        delta_x = x1[0] - x2[0]; \
+        slope = delta_t/delta_x; \
+        retVal = t1[0] + slope*(x[0]-x1[0]); \
+    } \
+    else { \
+        for (int i = 0; i < 4; ++ i) { \
+            delta_t = t1[i] - t2[i]; \
+            delta_x = x1[i] - x2[i]; \
+            slope = delta_t/delta_x; \
+            retVal += t1[i] + slope*(x[i]-x1[i]); \
+        } \
+        retVal /= 4; \
+    }\
+    return retVal;
 
 /******************************************************************
 *                                                                 *
@@ -19,13 +88,10 @@ IMBPara imb;
 ******************************************************************/
 double E_MPI_Init(int * argc, char*** argv)
 {
-	int rank;
-	PMPI_Comm_rank( MPI_COMM_WORLD, &rank);
-	if ( rank != 0 ) return 0;
 #ifdef PERF_ASSERT
-	printf("Hello, I'm E_MPI_Init(argc, argv)\n");
     // assume all data files are existing
     // users may run IMB manually.
+    // and copy datas to all machines manually
     parse_loggpo("paras/cmp_para", log_cmp);
     parse_loggpo("paras/net_para", log_net);
     parse_loggpo("paras/smp_para", log_smp);
@@ -363,7 +429,10 @@ int recvcount;
 MPI_Datatype recvtype;
 MPI_Comm comm;
 {
-	return 0;
+    int np, nb; 
+    PMPI_Comm_size( comm, &np);
+    nb = E_count2byte( sendtype, sendcount);
+    E_GET_COLL_AVG_TIME(n_allgather,allgather);
 }
 double E_MPI_Allgatherv( sendbuf, sendcount, sendtype, recvbuf, recvcounts, displs, recvtype, comm )
 void * sendbuf;
@@ -385,7 +454,10 @@ MPI_Datatype datatype;
 MPI_Op op;
 MPI_Comm comm;
 {
-	return 0;
+    int np, nb; 
+    PMPI_Comm_size( comm, &np);
+    nb = E_count2byte( datatype, count);
+    E_GET_COLL_AVG_TIME(n_allreduce,allreduce);
 }
 double E_MPI_Alltoall( sendbuf, sendcount, sendtype, recvbuf, recvcnt, recvtype, comm )
 void * sendbuf;
@@ -414,7 +486,7 @@ MPI_Comm comm;
 double E_MPI_Barrier( comm )
 MPI_Comm comm;
 {
-    double retVal=-1;
+    double retVal = -1;
     int np;
     PMPI_Comm_size( comm, &np);
     for (int down = 0; down < imb.n_barrier-1; ++down) {
@@ -439,7 +511,10 @@ MPI_Datatype datatype;
 int root;
 MPI_Comm comm;
 {
-	return 0;
+    int np, nb; 
+    PMPI_Comm_size( comm, &np);
+    nb = E_count2byte( datatype, count);
+    E_GET_COLL_AVG_TIME(n_bcast,bcast)
 }
 double E_MPI_Gather( sendbuf, sendcnt, sendtype, recvbuf, recvcount, recvtype, root, comm )
 void * sendbuf;
@@ -451,7 +526,10 @@ MPI_Datatype recvtype;
 int root;
 MPI_Comm comm;
 {
-	return 0;
+    int np, nb; 
+    PMPI_Comm_size( comm, &np);
+    nb = E_count2byte( sendtype, sendcnt);
+    E_GET_COLL_AVG_TIME(n_gather,gather)
 }
 double E_MPI_Gatherv( sendbuf, sendcnt, sendtype, recvbuf, recvcnts, displs, recvtype, root, comm )
 void * sendbuf;
@@ -485,7 +563,10 @@ MPI_Op op;
 int root;
 MPI_Comm comm;
 {
-	return 0;
+    int np, nb; 
+    PMPI_Comm_size( comm, &np);
+    nb = E_count2byte( datatype, count );
+    E_GET_COLL_AVG_TIME(n_reduce,reduce)
 }
 double E_MPI_Scan( sendbuf, recvbuf, count, datatype, op, comm )
 void * sendbuf;
