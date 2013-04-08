@@ -23,7 +23,7 @@ int E_count2byte ( MPI_Datatype datatype, int count ) {
     return nb;
 }
 #define E_GET_COLL_AVG_TIME(n_coll_op, coll_op) \
-    int pdown, pup, bdown, bup;\
+    int pdown=0, pup=0, bdown=0, bup=0;\
     for (pdown = 0; pdown < imb.n_coll_op-1; ++ pdown) {\
         if (np == imb.coll_op[pdown].proc) {\
             pup = pdown;\

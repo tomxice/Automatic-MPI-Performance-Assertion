@@ -1,8 +1,8 @@
 CC = gcc
 CPP = g++
 OPT= -O2
-CFLAGS = -std=c99 -Wall -I/usr/include
-CPPFLAGS = -Wall
+CFLAGS = -std=c99 $(CPPFLAGS)
+CPPFLAGS = $(OPT) -g -Wall -I/usr/include 
 DEF= -DPERF_ASSERT
 AR = ar
 ARTAG = rcv
@@ -28,7 +28,7 @@ mpiwrapper_f.o: mpiwrapper_f.c
 	$(CC) $(CFLAGS) $(DEF) -c mpiwrapper_f.c 
 timer.o : timer.c	
 	$(CC) $(CFLAGS) -c timer.c
-mpiname.o: mpiname.c
+mpiname.o: mpiname.c mpiname.h
 	$(CC) $(CFLAGS) -c mpiname.c
 main.o: main.c
 	$(CC) $(CFLAGS) -c main.c
