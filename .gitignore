@@ -1,2 +1,5 @@
 cscope.*
 *.un~
+*.tar*
+*.zip
+*.bz2

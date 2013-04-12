@@ -1,0 +1,41 @@
+CC = icc
+CPP = icpc
+OPT= -O2
+CFLAGS = -std=c99 $(CPPFLAGS)
+CPPFLAGS = $(OPT) -g -I/apps/intel/impi/4.0.2.003/include64
+DEF= -DPERF_ASSERT
+AR = ar
+ARTAG = rcv
+
+OBJS= profile.o timer.o mpiwrapper.o mpiwrapper_f.o estimator.o parser.o mpiname.o reporter.o
+
+main.out: main.o libmpit
+	$(CPP) main.o -L. -L/usr/bin -L/apps/intel/impi/4.0.2.003/lib64/ -lmpit -lmpich -o main.out
+	$(RM) -f *.o
+libmpit	: $(OBJS)
+	$(AR) $(ARTAG) libmpit.a $(OBJS)
+reporter.o: reporter.cpp
+	$(CPP) $(CPPFLAGS) $(DEF) -c reporter.cpp
+parser.o: parser.c
+	$(CC) $(CFLAGS) $(DEF) -c parser.c
+estimator.o: estimator.c
+	$(CC) $(CFLAGS) $(DEF) -c estimator.c
+profile.o : profile.c	
+	$(CC) $(CFLAGS) $(DEF) -c profile.c
+mpiwrapper.o: mpiwrapper.c
+	$(CC) $(CFLAGS) $(DEF) -c mpiwrapper.c
+mpiwrapper_f.o: mpiwrapper_f.c
+	$(CC) $(CFLAGS) $(DEF) -c mpiwrapper_f.c 
+timer.o : timer.c	
+	$(CC) $(CFLAGS) -c timer.c
+mpiname.o: mpiname.c mpiname.h
+	$(CC) $(CFLAGS) -c mpiname.c
+main.o: main.c
+	$(CC) $(CFLAGS) -c main.c
+clean :
+	rm -f *.o	
+	rm -f libmpit.a
+	rm -f *.out
+	rm -f *.log
+	rm -f mpi_record.*
+	rm -f mpipa.report.*
