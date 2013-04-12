@@ -444,7 +444,10 @@ int * displs;
 MPI_Datatype recvtype;
 MPI_Comm comm;
 {
-	return 0;
+    int np, nb; 
+    PMPI_Comm_size( comm, &np);
+    nb = E_count2byte( sendtype, sendcount);
+    E_GET_COLL_AVG_TIME(n_allgatherv,allgatherv);
 }
 double E_MPI_Allreduce( sendbuf, recvbuf, count, datatype, op, comm )
 void * sendbuf;
@@ -468,7 +471,10 @@ int recvcnt;
 MPI_Datatype recvtype;
 MPI_Comm comm;
 {
-	return 0;
+    int np, nb; 
+    PMPI_Comm_size( comm, &np);
+    nb = E_count2byte( sendtype, sendcount);
+    E_GET_COLL_AVG_TIME(n_alltoall,alltoall);
 }
 double E_MPI_Alltoallv( sendbuf, sendcnts, sdispls, sendtype, recvbuf, recvcnts, rdispls, recvtype, comm )
 void * sendbuf;
@@ -481,7 +487,10 @@ int * rdispls;
 MPI_Datatype recvtype;
 MPI_Comm comm;
 {
-	return 0;
+    int np, nb; 
+    PMPI_Comm_size( comm, &np);
+    nb = E_count2byte( sendtype, *sendcnts);
+    E_GET_COLL_AVG_TIME(n_alltoallv,alltoallv);
 }
 double E_MPI_Barrier( comm )
 MPI_Comm comm;
@@ -489,18 +498,20 @@ MPI_Comm comm;
     double retVal = -1;
     int np;
     PMPI_Comm_size( comm, &np);
-    for (int down = 0; down < imb.n_barrier-1; ++down) {
+    int down;
+    for (down = 0; down < imb.n_barrier; ++down) {
         if (np == imb.barrier[down].proc) {
             retVal = imb.barrier[down].t_avg;
+            //printf("Barrier equal, retVal: %lf\n", retVal);
             break;
         }
-        int up = down + 1;
-        if (np < imb.barrier[up].proc) {
-            double delta_t = imb.barrier[up].t_avg - imb.barrier[down].t_avg;
-            double delta_p = imb.barrier[up].proc - imb.barrier[down].proc;
-            double slope = delta_t/delta_p;
-            retVal = imb.barrier[down].t_avg + slope*(np - imb.barrier[down].proc);
-        }
+    }
+    int up = down + 1;
+    if (np < imb.barrier[up].proc) {
+        double delta_t = imb.barrier[up].t_avg - imb.barrier[down].t_avg;
+        double delta_p = imb.barrier[up].proc - imb.barrier[down].proc;
+        double slope = delta_t/delta_p;
+        retVal = imb.barrier[down].t_avg + slope*(np - imb.barrier[down].proc);
     }
 	return retVal;
 }
@@ -542,7 +553,10 @@ MPI_Datatype recvtype;
 int root;
 MPI_Comm comm;
 {
-	return 0;
+    int np, nb; 
+    PMPI_Comm_size( comm, &np);
+    nb = E_count2byte( sendtype, sendcnt);
+    E_GET_COLL_AVG_TIME(n_gatherv,gatherv)
 }
 double E_MPI_Reduce_scatter( sendbuf, recvbuf, recvcnts, datatype, op, comm )
 void * sendbuf;
@@ -552,7 +566,7 @@ MPI_Datatype datatype;
 MPI_Op op;
 MPI_Comm comm;
 {
-	return 0;
+    return 0;
 }
 double E_MPI_Reduce( sendbuf, recvbuf, count, datatype, op, root, comm )
 void * sendbuf;
@@ -588,7 +602,10 @@ MPI_Datatype recvtype;
 int root;
 MPI_Comm comm;
 {
-	return 0;
+    int np, nb; 
+    PMPI_Comm_size( comm, &np);
+    nb = E_count2byte( sendtype, sendcnt );
+    E_GET_COLL_AVG_TIME(n_scatter,scatter);
 }
 double E_MPI_Scatterv( sendbuf, sendcnts, displs, sendtype, recvbuf, recvcnt, recvtype, root, comm )
 void * sendbuf;
@@ -601,7 +618,10 @@ MPI_Datatype recvtype;
 int root;
 MPI_Comm comm;
 {
-	return 0;
+    int np, nb; 
+    PMPI_Comm_size( comm, &np);
+    nb = E_count2byte( sendtype, sendcnts );
+    E_GET_COLL_AVG_TIME(n_scatterv,scatterv);
 }
 /******************************************************************
 *                                                                 *

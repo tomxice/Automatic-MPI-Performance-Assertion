@@ -4,6 +4,7 @@
 *.swp
 *.~
 *.un~
+*.tmp
 paras/*_para
 *.log
 mpipa.report.*

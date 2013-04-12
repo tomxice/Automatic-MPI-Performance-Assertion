@@ -25,51 +25,71 @@ typedef struct LoggpoPara {
 
 #define PROC_N 10
 #define BYTE_N 30
-typedef struct IMB_BYTES_Para {
+#define L1_OP_PARA(op) \
+    struct L1Para op[PROC_N]; 
+#define L2_OP_PARA(op) \
+    struct L2Para op[PROC_N];
+typedef struct IMB_BYTES_Para_L1 {
+    int bytes;
+    double t_avg;
+} Para_L1;
+typedef struct IMB_BYTES_Para_L2 {
     int bytes;
     double t_min, t_max, t_avg;
-} Para;
+} Para_L2;
+struct L1Para { 
+    int proc; 
+    int n_byte; 
+    Para_L1 para[BYTE_N]; 
+};
+struct L2Para { 
+    int proc; 
+    int n_byte; 
+    Para_L2 para[BYTE_N]; 
+};
 typedef struct IMBPara {
-    int n_barrier;
-    int n_bcast;
-    int n_reduce;
-    int n_gather;
+    int n_pingpong;
+    L1_OP_PARA(pingpong)
+    int n_pingping;
+    L1_OP_PARA(pingping)
+    int n_sendrecv;
+    L2_OP_PARA(sendrecv)
+    int n_exchange;
+    L2_OP_PARA(exchange)
     int n_allreduce;
+    L2_OP_PARA(allreduce)
+    int n_reduce;
+    L2_OP_PARA(reduce)
+    int n_reduce_scatter;
+    L2_OP_PARA(reduce_scatter)
     int n_allgather;
-    struct BarrierPara {
+    L2_OP_PARA(allgather)
+    int n_allgatherv;
+    L2_OP_PARA(allgatherv)
+    int n_gather;
+    L2_OP_PARA(gather)
+    int n_gatherv;
+    L2_OP_PARA(gatherv)
+    int n_scatter;
+    L2_OP_PARA(scatter)
+    int n_scatterv;
+    L2_OP_PARA(scatterv)
+    int n_alltoall;
+    L2_OP_PARA(alltoall)
+    int n_alltoallv;
+    L2_OP_PARA(alltoallv)
+    int n_bcast;
+    L2_OP_PARA(bcast)
+    int n_barrier;
+    struct Para_L0 {
         int proc; 
         int n_byte;
         double t_min, t_max, t_avg;
     } barrier[PROC_N];
-    struct BcastPara {
-        int proc;
-        int n_byte;
-        Para para[BYTE_N];
-    } bcast[PROC_N];
-    struct ReducePara {
-        int proc;
-        int n_byte;
-        Para para[BYTE_N];
-    } reduce[PROC_N];
-    struct GatherPara {
-        int proc;
-        int n_byte;
-        Para para[BYTE_N];
-    } gather[PROC_N];
-    struct AllreducePara {
-        int proc;
-        int n_byte;
-        Para para[BYTE_N];
-    } allreduce[PROC_N];
-    struct AllgatherPara {
-        int proc;
-        int n_byte;
-        Para para[BYTE_N];
-    } allgather[PROC_N];
 } IMBPara, *pIMBPara;
 
 typedef enum IMBState {
-    init,
+    init = 0,
     barrier,
     bcast,
     reduce,

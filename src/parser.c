@@ -1,6 +1,33 @@
 #include "parser.h"
 
 #define VERIFY 0
+#define PAR_L2(op,n_op) \
+    if (ns == init) { \
+        int ret = sscanf(line,"%s%s%s%d",str0,str1,str2,&proc);  \
+        if (ret != 4) break; \
+        if (strcmp(str1,"#processes") == 0) \
+        pimb->op[pimb->n_op].proc = proc; \
+    } \
+    else if (ns == data) { \
+        int bytes, rep; \
+        double t0, t1, t2; \
+        int ret = sscanf(line,"%d%d%lf%lf%lf",&bytes,&rep,&t0,&t1,&t2); \
+        if (ret != 5) { \
+            break; \
+        } \
+        int n_byte = pimb->op[pimb->n_op].n_byte ++; \
+        pimb->op[pimb->n_op].para[n_byte].bytes = bytes; \
+        pimb->op[pimb->n_op].para[n_byte].t_min = t0; \
+        pimb->op[pimb->n_op].para[n_byte].t_max = t1; \
+        pimb->op[pimb->n_op].para[n_byte].t_avg = t2; \
+    } \
+    else if (ns == op ) { \
+        ++ pimb->n_op; \
+    } \
+    else { \
+        s = ns; \
+        ++ pimb->n_op; \
+    } 
 // parameters
 // f_para: the data file
 // loggps: an array of struct where to store data,
@@ -61,7 +88,7 @@ IMBState test_benchmark(const char* line) {
     else if (strcmp(str2,"Gather") == 0) s = gather;
     else if (strcmp(str2,"Allreduce") == 0) s = allreduce;
     else if (strcmp(str2,"Allgather") == 0) s = allgather;
-    else s = unknown;
+    else s = init;
     return s;
 }
     
@@ -85,7 +112,6 @@ void parse_imb(const char* f_para, pIMBPara pimb) {
     IMBState s = init, ns;
     // read a line
     while (line == fgets(line, LINES, pf_para)) {
-        //printf("%s,%d\n",line,s);
         // empty line
         if (strlen(line) == 0) {
             ns = data;
@@ -93,6 +119,7 @@ void parse_imb(const char* f_para, pIMBPara pimb) {
         }
             
         ns = test_benchmark(line);
+        //printf("line:%s,state:%d,newstate:%d\n",line,s,ns);
         switch (s) {
         case init:
             if (ns >= init && ns <= end)
@@ -126,149 +153,19 @@ void parse_imb(const char* f_para, pIMBPara pimb) {
             }
             break;
         case bcast:
-            if (ns == init) {
-                int ret = sscanf(line,"%s%s%s%d",str0,str1,str2,&proc);
-                if (ret != 4) break;
-                if (strcmp(str1,"#processes") == 0)
-                    pimb->bcast[pimb->n_bcast].proc = proc;
-            }
-            else if (ns == data) {
-                int bytes, rep;
-                double t0, t1, t2;
-                int ret = sscanf(line,"%d%d%lf%lf%lf",&bytes,&rep,&t0,&t1,&t2);
-                if (ret != 5) {
-                    //printf("Read parameters error\n");
-                    break;
-                }
-                int n_byte = pimb->bcast[pimb->n_bcast].n_byte ++;
-                pimb->bcast[pimb->n_bcast].para[n_byte].bytes = bytes;
-                pimb->bcast[pimb->n_bcast].para[n_byte].t_min = t0;
-                pimb->bcast[pimb->n_bcast].para[n_byte].t_max = t1;
-                pimb->bcast[pimb->n_bcast].para[n_byte].t_avg = t2;
-            }
-            else if (ns == bcast ) {
-                ++ pimb->n_bcast;
-            }
-            else {
-                s = ns;
-                ++ pimb->n_bcast;
-            }
+            PAR_L2(bcast,n_bcast)
             break;
         case reduce:
-            if (ns == init) {
-                int ret = sscanf(line,"%s%s%s%d",str0,str1,str2,&proc);
-                if (ret != 4) break;
-                if (strcmp(str1,"#processes") == 0)
-                    pimb->reduce[pimb->n_reduce].proc = proc;
-            }
-            else if (ns == data) {
-                int bytes, rep;
-                double t0, t1, t2;
-                int ret = sscanf(line,"%d%d%lf%lf%lf",&bytes,&rep,&t0,&t1,&t2);
-                if (ret != 5) {
-                    //printf("Read parameters error\n");
-                    break;
-                }
-                int n_byte = pimb->reduce[pimb->n_reduce].n_byte ++;
-                pimb->reduce[pimb->n_reduce].para[n_byte].bytes = bytes;
-                pimb->reduce[pimb->n_reduce].para[n_byte].t_min = t0;
-                pimb->reduce[pimb->n_reduce].para[n_byte].t_max = t1;
-                pimb->reduce[pimb->n_reduce].para[n_byte].t_avg = t2;
-            }
-            else if (ns == reduce ) {
-                ++ pimb->n_reduce;
-            }
-            else {
-                s = ns;
-                ++ pimb->n_reduce;
-            }
+            PAR_L2(reduce,n_reduce)
             break;
         case gather:
-            if (ns == init) {
-                int ret = sscanf(line,"%s%s%s%d",str0,str1,str2,&proc);
-                if (ret != 4) break;
-                if (strcmp(str1,"#processes") == 0)
-                    pimb->gather[pimb->n_gather].proc = proc;
-            }
-            else if (ns == data) {
-                int bytes, rep;
-                double t0, t1, t2;
-                int ret = sscanf(line,"%d%d%lf%lf%lf",&bytes,&rep,&t0,&t1,&t2);
-                if (ret != 5) {
-                    //printf("Read parameters error\n");
-                    break;
-                }
-                int n_byte = pimb->gather[pimb->n_gather].n_byte ++;
-                pimb->gather[pimb->n_gather].para[n_byte].bytes = bytes;
-                pimb->gather[pimb->n_gather].para[n_byte].t_min = t0;
-                pimb->gather[pimb->n_gather].para[n_byte].t_max = t1;
-                pimb->gather[pimb->n_gather].para[n_byte].t_avg = t2;
-            }
-            else if (ns == gather ) {
-                ++ pimb->n_gather;
-            }
-            else {
-                s = ns;
-                ++ pimb->n_gather;
-            }
+            PAR_L2(gather,n_gather)
             break;
         case allreduce:
-            if (ns == init) {
-                int ret = sscanf(line,"%s%s%s%d",str0,str1,str2,&proc);
-                if (ret != 4) break;
-                if (strcmp(str1,"#processes") == 0)
-                    pimb->allreduce[pimb->n_allreduce].proc = proc;
-            }
-            else if (ns == data) {
-                int bytes, rep;
-                double t0, t1, t2;
-                int ret = sscanf(line,"%d%d%lf%lf%lf",&bytes,&rep,&t0,&t1,&t2);
-                if (ret != 5) {
-                    //printf("Read parameters error\n");
-                    break;
-                }
-                int n_byte = pimb->allreduce[pimb->n_allreduce].n_byte ++;
-                pimb->allreduce[pimb->n_allreduce].para[n_byte].bytes = bytes;
-                pimb->allreduce[pimb->n_allreduce].para[n_byte].t_min = t0;
-                pimb->allreduce[pimb->n_allreduce].para[n_byte].t_max = t1;
-                pimb->allreduce[pimb->n_allreduce].para[n_byte].t_avg = t2;
-            }
-            else if (ns == allreduce ) {
-                ++ pimb->n_allreduce;
-            }
-            else {
-                s = ns;
-                ++ pimb->n_allreduce;
-            }
+            PAR_L2(allreduce,n_allreduce)
             break;
         case allgather:
-            if (ns == init) {
-                int ret = sscanf(line,"%s%s%s%d",str0,str1,str2,&proc);
-                if (ret != 4) break;
-                if (strcmp(str1,"#processes") == 0)
-                    pimb->allgather[pimb->n_allgather].proc = proc;
-            }
-            else if (ns == data) {
-                int bytes, rep;
-                double t0, t1, t2;
-                int ret = sscanf(line,"%d%d%lf%lf%lf",&bytes,&rep,&t0,&t1,&t2);
-                if (ret != 5) {
-                    //printf("Read parameters error\n");
-                    break;
-                }
-                int n_byte = pimb->allgather[pimb->n_allgather].n_byte ++;
-                pimb->allgather[pimb->n_allgather].para[n_byte].bytes = bytes;
-                pimb->allgather[pimb->n_allgather].para[n_byte].t_min = t0;
-                pimb->allgather[pimb->n_allgather].para[n_byte].t_max = t1;
-                pimb->allgather[pimb->n_allgather].para[n_byte].t_avg = t2;
-            }
-            else if (ns == allgather ) {
-                ++ pimb->n_allgather;
-            }
-            else {
-                s = ns;
-                ++ pimb->n_allgather;
-            }
+            PAR_L2(allgather,n_allgather)
             break;
         case end:
         case data:
