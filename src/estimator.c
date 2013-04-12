@@ -620,7 +620,7 @@ MPI_Comm comm;
 {
     int np, nb; 
     PMPI_Comm_size( comm, &np);
-    nb = E_count2byte( sendtype, sendcnts );
+    nb = E_count2byte( sendtype, *sendcnts );
     E_GET_COLL_AVG_TIME(n_scatterv,scatterv);
 }
 /******************************************************************

@@ -1,6 +1,32 @@
 #include "parser.h"
 
-#define VERIFY 0
+#define VERIFY 1
+#define PAR_L1(op,n_op) \
+    if (ns == init) { \
+        int ret = sscanf(line,"%s%s%s%d",str0,str1,str2,&proc);  \
+        if (ret != 4) break; \
+        if (strcmp(str1,"#processes") == 0) \
+        pimb->op[pimb->n_op].proc = proc; \
+    } \
+    else if (ns == data) { \
+        int bytes, rep; \
+        double t0; \
+        int ret = sscanf(line,"%d%d%lf",&bytes,&rep,&t0); \
+        if (ret != 5) { \
+            break; \
+        } \
+        int n_byte = pimb->op[pimb->n_op].n_byte ++; \
+        pimb->op[pimb->n_op].para[n_byte].bytes = bytes; \
+        pimb->op[pimb->n_op].para[n_byte].t_avg = t0; \
+    } \
+    else if (ns == op ) { \
+        ++ pimb->n_op; \
+    } \
+    else { \
+        s = ns; \
+        ++ pimb->n_op; \
+    } 
+
 #define PAR_L2(op,n_op) \
     if (ns == init) { \
         int ret = sscanf(line,"%s%s%s%d",str0,str1,str2,&proc);  \
@@ -119,7 +145,7 @@ void parse_imb(const char* f_para, pIMBPara pimb) {
         }
             
         ns = test_benchmark(line);
-        //printf("line:%s,state:%d,newstate:%d\n",line,s,ns);
+        printf("line:%s,state:%d,newstate:%d\n",line,s,ns);
         switch (s) {
         case init:
             if (ns >= init && ns <= end)
@@ -152,25 +178,54 @@ void parse_imb(const char* f_para, pIMBPara pimb) {
                 ++ pimb->n_barrier;
             }
             break;
-        case bcast:
-            PAR_L2(bcast,n_bcast)
+        case pingpong:
+            PAR_L1(pingpong,n_pingpong)
             break;
-        case reduce:
-            PAR_L2(reduce,n_reduce)
+        case pingping:
+            PAR_L1(pingping,n_pingping)
             break;
-        case gather:
-            PAR_L2(gather,n_gather)
+        case sendrecv:
+            PAR_L2(sendrecv,n_sendrecv)
+            break;
+        case exchange:
+            PAR_L2(exchange,n_exchange)
             break;
         case allreduce:
             PAR_L2(allreduce,n_allreduce)
             break;
+        case reduce:
+            PAR_L2(reduce,n_reduce)
+            break;
+        case reduce_scatter:
+            PAR_L2(reduce_scatter,n_reduce_scatter)
+            break;
         case allgather:
             PAR_L2(allgather,n_allgather)
+            break;
+        case allgatherv:
+            PAR_L2(allgatherv,n_allgatherv)
+            break;
+        case scatter:
+            PAR_L2(scatter,n_scatter)
+            break;
+        case scatterv:
+            PAR_L2(scatterv,n_scatterv)
+            break;
+        case alltoall:
+            PAR_L2(alltoall,n_alltoall)
+            break;
+        case alltoallv:
+            PAR_L2(alltoallv,n_alltoallv)
+            break;
+        case bcast:
+            PAR_L2(bcast,n_bcast)
             break;
         case end:
         case data:
         case unknown:
         default:
+            if (ns >= init && ns <= end)
+                s = ns;
             break;
         }
     }
@@ -241,13 +296,14 @@ void parse_imb(const char* f_para, pIMBPara pimb) {
 }
 
 // this main is for test parser
-/*
+#ifdef PAR_TEST
+IMBPara imb;
 int main() {
-    parse_loggpo("cmp_para", logps);
-    parse_imb("coll_para", &imb);
+    //parse_loggpo("cmp_para", logps);
+    parse_imb("paras/coll_para", &imb);
     return 0;
 }
-*/
+#endif
 
           
         

@@ -9,8 +9,6 @@ typedef enum bool{
     true
 }bool;
 
-#define VERIFY 0
-
 #define MPS 1500 // Max step in loggpo
 typedef struct LoggpoPara {
     int size;
@@ -90,12 +88,23 @@ typedef struct IMBPara {
 
 typedef enum IMBState {
     init = 0,
-    barrier,
-    bcast,
-    reduce,
-    gather,
+    pingpong,
+    pingping,
+    sendrecv,
+    exchange,
     allreduce,
+    reduce,
+    reduce_scatter,
     allgather,
+    allgatherv,
+    gather,
+    gatherv,
+    scatter,
+    scatterv,
+    alltoall,
+    alltoallv,
+    bcast,
+    barrier,
     end,
     data,
     unknown
