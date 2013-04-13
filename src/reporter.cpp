@@ -29,15 +29,19 @@ void R_init(const char* final_file) {
     }
 }
 
-#define SHORT 0
-#define NORMAL 1
-#define LONG 2
+#define SCNT 5
+#define ALL 0
+#define SHORT 1
+#define NORMAL 2
+#define LONG 3
+#define NODATA 4
+const char* status[SCNT] = {"ALL","SHORT","NORMAL","LONG","NODATA"};
 
 void R_log(int level, int warn, double real, double expc, int pid, int mpiid, const char* c_para) {
     // get symbol addr
-    void *buffer[4];
+    void *buffer[SCNT];
     char **addrs;
-    int nptrs = backtrace(buffer,4);
+    int nptrs = backtrace(buffer,SCNT);
     addrs = backtrace_symbols(buffer, nptrs);
     string location;
     if (addrs == NULL) {
@@ -54,6 +58,7 @@ void R_log(int level, int warn, double real, double expc, int pid, int mpiid, co
     }
     Record record;
     record.pid = pid;
+    if (expc < 0) record.status = NODATA;
     if (real < expc*0.25) record.status = SHORT;
     else if (real > expc*4) record.status = LONG;
     else record.status = NORMAL;
@@ -75,12 +80,12 @@ void R_report(int level, int numproc) {
 
     // Summary Level 0
     int numfunc = NUMFUNC;
-    int all_sum[4];
-    int func_sum[numfunc][4];//short,normal,long,all
-    int proc_sum[numproc][4];//short,normal,long,all
-    memset(all_sum,0,4*sizeof(int));
-    memset(func_sum,0,numfunc*4*sizeof(int));
-    memset(proc_sum,0,numproc*4*sizeof(int));
+    int all_sum[SCNT];
+    int func_sum[numfunc][SCNT];//short,normal,long,all
+    int proc_sum[numproc][SCNT];//short,normal,long,all
+    memset(all_sum,0,SCNT*sizeof(int));
+    memset(func_sum,0,numfunc*SCNT*sizeof(int));
+    memset(proc_sum,0,numproc*SCNT*sizeof(int));
 
     for (int i = 0; i < numfunc; ++ i) {
         map<string, vector<Record> >::iterator iter = result[i].begin();
@@ -88,22 +93,22 @@ void R_report(int level, int numproc) {
             for (vector<Record>::iterator it = iter->second.begin();
                     it != iter->second.end(); ++ it) {
                 func_sum[i][it->status] ++;
-                func_sum[i][3] ++;
+                func_sum[i][ALL] ++;
                 proc_sum[it->pid][it->status] ++;
 //                printf("pid:%d status:%d\n",it->pid,it->status);
-                proc_sum[it->pid][3] ++;
+                proc_sum[it->pid][ALL] ++;
                 all_sum[it->status] ++;
-                all_sum[3] ++;
+                all_sum[ALL] ++;
             }
             ++ iter;
         }
     }
     fprintf(f_final, "Summary\n");
     fprintf(f_final, "===================\n\n");
-    fprintf(f_final, "%-27s%-12s%-12s%-12s%-12s\n", "Function","Total","Short","Normal","Long");
-    fprintf(f_final, "%-27s%-12d%-12d%-12d%-12d\n", "ALL",all_sum[3],all_sum[0],all_sum[1],all_sum[2]);
+    fprintf(f_final, "%-27s%-12s%-12s%-12s%-12s%-12s\n", "Function","Total","Short","Normal","Long","NoData");
+    fprintf(f_final, "%-27s%-12d%-12d%-12d%-12d%-12d\n", "ALL",all_sum[ALL],all_sum[SHORT],all_sum[NORMAL],all_sum[LONG],all_sum[NODATA]);
     for (int i = 0; i < numfunc; ++ i) {
-        fprintf(f_final, "%-27s%-12d%-12d%-12d%-12d\n",MPI_Functions[i],func_sum[i][3],func_sum[i][0],func_sum[i][1],func_sum[i][2]);
+        fprintf(f_final, "%-27s%-12d%-12d%-12d%-12d%-12d\n",MPI_Functions[i],func_sum[i][ALL],func_sum[i][SHORT],func_sum[i][NORMAL],func_sum[i][LONG],func_sum[i][NODATA]);
     }
 //Process info is hard to collect at runtime.. 
 //because procs run in diff machines..

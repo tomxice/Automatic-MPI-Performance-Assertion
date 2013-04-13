@@ -24,7 +24,7 @@ int E_count2byte ( MPI_Datatype datatype, int count ) {
 }
 #define E_GET_COLL_AVG_TIME(n_coll_op, coll_op) \
     int pdown=0, pup=0, bdown=0, bup=0;\
-    for (pdown = 0; pdown < imb.n_coll_op-1; ++ pdown) {\
+    for (pdown = 0; pdown < imb.n_coll_op; ++ pdown) {\
         if (np == imb.coll_op[pdown].proc) {\
             pup = pdown;\
             break;\
@@ -34,6 +34,9 @@ int E_count2byte ( MPI_Datatype datatype, int count ) {
             break;\
         }\
     }\
+    if (pdown == imb.n_coll_op) { \
+        return -1; \
+    } \
     for (bdown = 0; bdown < imb.coll_op[pdown].n_byte; ++ bdown) {\
         if (nb == imb.coll_op[pdown].para[bdown].bytes) {\
             bup = bdown;\
@@ -44,6 +47,9 @@ int E_count2byte ( MPI_Datatype datatype, int count ) {
             break;\
         }\
     }\
+    if (bdown == imb.coll_op[pdown].n_byte) { \
+        return -1; \
+    } \
     double delta_t, delta_x, slope;\
     double t1[4] = {imb.coll_op[pdown].para[bdown].t_avg, imb.coll_op[pdown].para[bdown].t_avg,\
                     imb.coll_op[pup].para[bdown].t_avg,   imb.coll_op[pdown].para[bup].t_avg};\

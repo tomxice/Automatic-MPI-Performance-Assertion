@@ -1,6 +1,6 @@
 #include "parser.h"
 
-#define VERIFY 1
+#define VERIFY 0
 #define PAR_L1(op,n_op) \
     if (ns == init) { \
         int ret = sscanf(line,"%s%s%s%d",str0,str1,str2,&proc);  \
@@ -145,7 +145,7 @@ void parse_imb(const char* f_para, pIMBPara pimb) {
         }
             
         ns = test_benchmark(line);
-        printf("line:%s,state:%d,newstate:%d\n",line,s,ns);
+        //printf("line:%s,state:%d,newstate:%d\n",line,s,ns);
         switch (s) {
         case init:
             if (ns >= init && ns <= end)
