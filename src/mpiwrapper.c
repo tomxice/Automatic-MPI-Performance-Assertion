@@ -961,18 +961,23 @@ int   MPI_Allgather( sendbuf, sendcount, sendtype, recvbuf, recvcount, recvtype,
 {
     int   returnVal;
 
-#ifdef PERF_PROFILE
-    PROFILE_START(35);
-#endif
-
-#ifdef DEBUG
-    printf("Enter MPI_Allgather\n");
-#endif
+#ifdef PERF_ASSERT
+    _timer_start(PATN);
+#endif 
 
     returnVal = PMPI_Allgather( sendbuf, sendcount, sendtype, recvbuf, recvcount, recvtype, comm );
 
-#ifdef PERF_PROFILE
-    PROFILE_STOP(35);
+#ifdef PERF_ASSERT
+    _timer_stop(PATN);
+#endif 
+
+#ifdef PERF_ASSERT
+    double r = _timer_read(PATN)*1e6;
+    _timer_clear(PATN);
+    double e = E_MPI_Allgather( sendbuf, sendcount, sendtype, recvbuf, recvcount, recvtype, comm );
+    int pid;
+    PMPI_Comm_rank(MPI_COMM_WORLD, &pid);
+    R_log(R_Level,0,r,e,pid,35,"COMM_WORLD");
 #endif
 
     return returnVal;
@@ -990,18 +995,23 @@ int   MPI_Allgatherv( sendbuf, sendcount, sendtype, recvbuf, recvcounts, displs,
 {
     int   returnVal;
 
-#ifdef PERF_PROFILE
-    PROFILE_START(36);
-#endif
-
-#ifdef DEBUG
-    printf("Enter MPI_Allgatherv\n");
-#endif
+#ifdef PERF_ASSERT
+    _timer_start(PATN);
+#endif 
 
     returnVal = PMPI_Allgatherv( sendbuf, sendcount, sendtype, recvbuf, recvcounts, displs, recvtype, comm );
 
-#ifdef PERF_PROFILE
-    PROFILE_STOP(36);
+#ifdef PERF_ASSERT
+    _timer_stop(PATN);
+#endif 
+
+#ifdef PERF_ASSERT
+    double r = _timer_read(PATN)*1e6;
+    _timer_clear(PATN);
+    double e = E_MPI_Allgatherv( sendbuf, sendcount, sendtype, recvbuf, recvcounts, displs, recvtype, comm );
+    int pid;
+    PMPI_Comm_rank(MPI_COMM_WORLD, &pid);
+    R_log(R_Level,0,r,e,pid,36,"COMM_WORLD");
 #endif
 
     return returnVal;
@@ -1017,18 +1027,23 @@ int   MPI_Allreduce( sendbuf, recvbuf, count, datatype, op, comm )
 {
     int   returnVal;
 
-#ifdef PERF_PROFILE
-    PROFILE_START(37);
-#endif
-
-#ifdef DEBUG
-    printf("Enter MPI_Allreduce\n");
-#endif
+#ifdef PERF_ASSERT
+    _timer_start(PATN);
+#endif 
 
     returnVal = PMPI_Allreduce( sendbuf, recvbuf, count, datatype, op, comm );
 
-#ifdef PERF_PROFILE
-    PROFILE_STOP(37);
+#ifdef PERF_ASSERT
+    _timer_stop(PATN);
+#endif 
+
+#ifdef PERF_ASSERT
+    double r = _timer_read(PATN)*1e6;
+    _timer_clear(PATN);
+    double e = E_MPI_Allreduce( sendbuf, recvbuf, count, datatype, op, comm );
+    int pid;
+    PMPI_Comm_rank(MPI_COMM_WORLD, &pid);
+    R_log(R_Level,0,r,e,pid,37,"COMM_WORLD");
 #endif
 
     return returnVal;
@@ -1045,18 +1060,23 @@ int  MPI_Alltoall( sendbuf, sendcount, sendtype, recvbuf, recvcnt, recvtype, com
 {
     int  returnVal;
 
-#ifdef PERF_PROFILE
-    PROFILE_START(38);
-#endif
-
-#ifdef DEBUG
-    printf("Enter MPI_Alltoall\n");
-#endif
+#ifdef PERF_ASSERT
+    _timer_start(PATN);
+#endif 
 
     returnVal = PMPI_Alltoall( sendbuf, sendcount, sendtype, recvbuf, recvcnt, recvtype, comm );
 
-#ifdef PERF_PROFILE
-    PROFILE_STOP(38);
+#ifdef PERF_ASSERT
+    _timer_stop(PATN);
+#endif 
+
+#ifdef PERF_ASSERT
+    double r = _timer_read(PATN)*1e6;
+    _timer_clear(PATN);
+    double e = E_MPI_Alltoall( sendbuf, sendcount, sendtype, recvbuf, recvcnt, recvtype, comm );
+    int pid;
+    PMPI_Comm_rank(MPI_COMM_WORLD, &pid);
+    R_log(R_Level,0,r,e,pid,38,"COMM_WORLD");
 #endif
 
     return returnVal;
@@ -1075,18 +1095,23 @@ int   MPI_Alltoallv( sendbuf, sendcnts, sdispls, sendtype, recvbuf, recvcnts, rd
 {
     int   returnVal;
 
-#ifdef PERF_PROFILE
-    PROFILE_START(39);
-#endif
-
-#ifdef DEBUG
-    printf("Enter MPI_Alltoallv\n");
-#endif
+#ifdef PERF_ASSERT
+    _timer_start(PATN);
+#endif 
 
     returnVal = PMPI_Alltoallv( sendbuf, sendcnts, sdispls, sendtype, recvbuf, recvcnts, rdispls, recvtype, comm );
 
-#ifdef PERF_PROFILE
-    PROFILE_STOP(39);
+#ifdef PERF_ASSERT
+    _timer_stop(PATN);
+#endif 
+
+#ifdef PERF_ASSERT
+    double r = _timer_read(PATN)*1e6;
+    _timer_clear(PATN);
+    double e = E_MPI_Alltoallv( sendbuf, sendcnts, sdispls, sendtype, recvbuf, recvcnts, rdispls, recvtype, comm );
+    int pid;
+    PMPI_Comm_rank(MPI_COMM_WORLD, &pid);
+    R_log(R_Level,0,r,e,pid,39,"COMM_WORLD");
 #endif
 
     return returnVal;
@@ -1193,20 +1218,23 @@ int   MPI_Gatherv( sendbuf, sendcnt, sendtype, recvbuf, recvcnts, displs, recvty
     MPI_Comm comm;
 {
     int   returnVal;
-    //int   rank;
 
-#ifdef PERF_PROFILE
-    PROFILE_START(43);
-#endif
-
-#ifdef DEBUG
-    printf("Enter MPI_Gatherv\n");
-#endif
+#ifdef PERF_ASSERT
+    _timer_start(PATN);
+#endif 
 
     returnVal = PMPI_Gatherv( sendbuf, sendcnt, sendtype, recvbuf, recvcnts, displs, recvtype, root, comm );
 
-#ifdef PERF_PROFILE
-    PROFILE_STOP(43);
+#ifdef PERF_ASSERT
+    _timer_stop(PATN);
+    double r = _timer_read(PATN)*1e6;
+    _timer_clear(PATN);
+    double e = E_MPI_Gatherv( sendbuf, sendcnt, sendtype, recvbuf, recvcnts, displs, recvtype, root, comm );
+    int pid;
+    PMPI_Comm_rank(MPI_COMM_WORLD, &pid);
+    char para[100];
+    sprintf(para, "sendcnt:%d, root:%d",sendcnt,root);
+    R_log(R_Level,0,r,e,pid,43,para);
 #endif
 
     return returnVal;
@@ -1222,18 +1250,23 @@ int   MPI_Reduce_scatter( sendbuf, recvbuf, recvcnts, datatype, op, comm )
 {
     int   returnVal;
 
-#ifdef PERF_PROFILE
-    PROFILE_START(44);
-#endif
-
-#ifdef DEBUG
-    printf("Enter MPI_Reduce_scatter\n");
-#endif
+#ifdef PERF_ASSERT
+    _timer_start(PATN);
+#endif 
 
     returnVal = PMPI_Reduce_scatter( sendbuf, recvbuf, recvcnts, datatype, op, comm );
 
-#ifdef PERF_PROFILE
-    PROFILE_STOP(44);
+#ifdef PERF_ASSERT
+    _timer_stop(PATN);
+#endif 
+
+#ifdef PERF_ASSERT
+    double r = _timer_read(PATN)*1e6;
+    _timer_clear(PATN);
+    double e = E_MPI_Reduce_scatter( sendbuf, recvbuf, recvcnts, datatype, op, comm );
+    int pid;
+    PMPI_Comm_rank(MPI_COMM_WORLD, &pid);
+    R_log(R_Level,0,r,e,pid,44,"COMM_WORLD");
 #endif
 
     return returnVal;
@@ -1250,18 +1283,23 @@ int   MPI_Reduce( sendbuf, recvbuf, count, datatype, op, root, comm )
 {
     int   returnVal;
 
-#ifdef PERF_PROFILE
-    PROFILE_START(45);
-#endif
-
-#ifdef DEBUG
-    printf("Enter MPI_Reduce\n");
-#endif
+#ifdef PERF_ASSERT
+    _timer_start(PATN);
+#endif 
 
     returnVal = PMPI_Reduce( sendbuf, recvbuf, count, datatype, op, root, comm );
 
-#ifdef PERF_PROFILE
-    PROFILE_STOP(45);
+#ifdef PERF_ASSERT
+    _timer_stop(PATN);
+#endif 
+
+#ifdef PERF_ASSERT
+    double r = _timer_read(PATN)*1e6;
+    _timer_clear(PATN);
+    double e = E_MPI_Reduce( sendbuf, recvbuf, count, datatype, op, root, comm );
+    int pid;
+    PMPI_Comm_rank(MPI_COMM_WORLD, &pid);
+    R_log(R_Level,0,r,e,pid,45,"COMM_WORLD");
 #endif
 
     return returnVal;
@@ -1306,18 +1344,23 @@ int   MPI_Scatter( sendbuf, sendcnt, sendtype, recvbuf, recvcnt, recvtype, root,
 {
     int   returnVal;
 
-#ifdef PERF_PROFILE
-    PROFILE_START(47);
-#endif
-
-#ifdef DEBUG
-    printf("Enter MPI_Scatter\n");
-#endif
+#ifdef PERF_ASSERT
+    _timer_start(PATN);
+#endif 
 
     returnVal = PMPI_Scatter( sendbuf, sendcnt, sendtype, recvbuf, recvcnt, recvtype, root, comm );
 
-#ifdef PERF_PROFILE
-    PROFILE_STOP(47);
+#ifdef PERF_ASSERT
+    _timer_stop(PATN);
+#endif 
+
+#ifdef PERF_ASSERT
+    double r = _timer_read(PATN)*1e6;
+    _timer_clear(PATN);
+    double e = E_MPI_Scatter( sendbuf, sendcnt, sendtype, recvbuf, recvcnt, recvtype, root, comm );
+    int pid;
+    PMPI_Comm_rank(MPI_COMM_WORLD, &pid);
+    R_log(R_Level,0,r,e,pid,47,"COMM_WORLD");
 #endif
 
     return returnVal;
@@ -1336,18 +1379,23 @@ int   MPI_Scatterv( sendbuf, sendcnts, displs, sendtype, recvbuf, recvcnt, recvt
 {
     int returnVal;
 
-#ifdef PERF_PROFILE
-    PROFILE_START(48);
-#endif
-
-#ifdef DEBUG
-    printf("Enter MPI_Scatterv\n");
-#endif
+#ifdef PERF_ASSERT
+    _timer_start(PATN);
+#endif 
 
     returnVal = PMPI_Scatterv( sendbuf, sendcnts, displs, sendtype, recvbuf, recvcnt, recvtype, root, comm );
 
-#ifdef PERF_PROFILE
-    PROFILE_STOP(48);
+#ifdef PERF_ASSERT
+    _timer_stop(PATN);
+#endif 
+
+#ifdef PERF_ASSERT
+    double r = _timer_read(PATN)*1e6;
+    _timer_clear(PATN);
+    double e = E_MPI_Scatterv( sendbuf, sendcnts, displs, sendtype, recvbuf, recvcnt, recvtype, root, comm );
+    int pid;
+    PMPI_Comm_rank(MPI_COMM_WORLD, &pid);
+    R_log(R_Level,0,r,e,pid,48,"COMM_WORLD");
 #endif
 
     return returnVal;

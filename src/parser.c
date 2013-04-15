@@ -108,12 +108,23 @@ IMBState test_benchmark(const char* line) {
     if (strcmp(str1,"Benchmarking") != 0) return init;
 
     IMBState s = unknown;
-    if (strcmp(str2,"Barrier") == 0) s = barrier;
-    else if (strcmp(str2,"Bcast") == 0) s = bcast;
-    else if (strcmp(str2,"Reduce") == 0) s = reduce;
-    else if (strcmp(str2,"Gather") == 0) s = gather;
+    if (strcmp(str2,"PingPong") == 0) s = pingpong;
+    else if (strcmp(str2,"PingPing") == 0) s = pingping;
+    else if (strcmp(str2,"Sendrecv") == 0) s = sendrecv;
+    else if (strcmp(str2,"Exchange") == 0) s = exchange;
     else if (strcmp(str2,"Allreduce") == 0) s = allreduce;
+    else if (strcmp(str2,"Reduce") == 0) s = reduce;
+    else if (strcmp(str2,"Reduce_scatter") == 0) s = reduce_scatter;
     else if (strcmp(str2,"Allgather") == 0) s = allgather;
+    else if (strcmp(str2,"Allgatherv") == 0) s = allgatherv;
+    else if (strcmp(str2,"Gather") == 0) s = gather;
+    else if (strcmp(str2,"Gatherv") == 0) s = gatherv;
+    else if (strcmp(str2,"Scatter") == 0) s = scatter;
+    else if (strcmp(str2,"Scatterv") == 0) s = scatterv;
+    else if (strcmp(str2,"Alltoall") == 0) s = alltoall;
+    else if (strcmp(str2,"Alltoallv") == 0) s = alltoallv;
+    else if (strcmp(str2,"Bcast") == 0) s = bcast;
+    else if (strcmp(str2,"Barrier") == 0) s = barrier;
     else s = init;
     return s;
 }
