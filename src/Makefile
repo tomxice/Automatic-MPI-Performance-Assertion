@@ -3,7 +3,7 @@ CPP = g++
 OPT= -O2
 CFLAGS = -std=c99 $(CPPFLAGS)
 CPPFLAGS = $(OPT) -g -Wall -I/usr/include 
-DEF= -DPERF_ASSERT
+DEF= -DPERF_ASSERT -DALLTRACE
 AR = ar
 ARTAG = rcv
 
@@ -11,7 +11,6 @@ OBJS= profile.o timer.o mpiwrapper.o mpiwrapper_f.o estimator.o parser.o mpiname
 
 main.out: main.o libmpit
 	g++ main.o -L. -L/usr/bin -lmpit -lmpich -o main.out
-	$(RM) -f *.o
 libmpit	: $(OBJS)
 	$(AR) $(ARTAG) libmpit.a $(OBJS)
 reporter.o: reporter.cpp

@@ -48,7 +48,14 @@ void R_log(int level, int warn, double real, double expc, int pid, int mpiid, co
         location = "noknown";
     }
     else {
-        location.assign(addrs[2]);
+        int a,b;
+        for (b = strlen(addrs[2])-1; b >= 0; -- b) {
+            if (addrs[2][b] == ']') break;
+        }
+        for (a = b-1; a >= 0; -- a) {
+            if (addrs[2][a] == '[') break;
+        }
+        location.assign(addrs[2]+a+1,b-a-1); // for C/C++
         free(addrs);
     }
     // end symbol addr
@@ -108,6 +115,7 @@ void R_report(int level, int numproc) {
     fprintf(f_final, "%-27s%-12s%-12s%-12s%-12s%-12s\n", "Function","Total","Short","Normal","Long","NoData");
     fprintf(f_final, "%-27s%-12d%-12d%-12d%-12d%-12d\n", "ALL",all_sum[ALL],all_sum[SHORT],all_sum[NORMAL],all_sum[LONG],all_sum[NODATA]);
     for (int i = 0; i < numfunc; ++ i) {
+        if (func_sum[i][ALL] == 0) continue;
         fprintf(f_final, "%-27s%-12d%-12d%-12d%-12d%-12d\n",MPI_Functions[i],func_sum[i][ALL],func_sum[i][SHORT],func_sum[i][NORMAL],func_sum[i][LONG],func_sum[i][NODATA]);
     }
 //Process info is hard to collect at runtime.. 
@@ -123,39 +131,25 @@ void R_report(int level, int numproc) {
 #endif
     // End Summary
     
-    // Exceptions Level 1
-    // status used to present REASON here.
-    // TODO no analyse yet.. all will be Noise
-    const int Noise = -1, Load_UB = -2;
-    for (int i = 0; i < numfunc; ++ i) {
-        map<string, vector<Record> >::iterator iter = result[i].begin();
-        while (iter != result[i].end()) {
-            for (vector<Record>::iterator it = iter->second.begin();
-                    it != iter->second.end(); ++ it) {
-                it->status = Noise;//TODO analyse here
-            }
-            ++ iter;
-        }
-    }
     fprintf(f_final, "\n\nExceptions\n");
     fprintf(f_final, "===================\n\n");
-    fprintf(f_final, "%-27s%-50s%-10s%-10s%-10s%-s\n","Func_name","Location","Reason","t_exp","t_real","description");
+    fprintf(f_final, "%-27s%-20s%-10s%-10s%-s\n","Func_name","Location","t_exp","t_real","description");
     for (int i = 0; i < numfunc; ++ i) {
         map<string, vector<Record> >::iterator iter = result[i].begin();
         while (iter != result[i].end()) {
             for (vector<Record>::iterator it = iter->second.begin();
                     it != iter->second.end(); ++ it) {
-                if (it->status == NORMAL)
-                    continue;
-                fprintf(f_final, "%-27s%-50s",MPI_Functions[i],iter->first.c_str());
-                if (it->status == Noise)
-                    fprintf(f_final, "%-10s","Noise");
-                else if (it->status == Load_UB)
-                    fprintf(f_final, "%-10s","Unbalance");
-                fprintf(f_final, "%-10f%-10f%-s\n",it->expc,it->real,it->parameter.c_str());
+#ifndef ALLTRACE
+                if (it->status == NORMAL) continue;
+#endif
+                fprintf(f_final, "%-27s%-20s",MPI_Functions[i],iter->first.c_str());
+                fprintf(f_final, "%-10.2e%-10.2e%-s\n",it->expc,it->real,it->parameter.c_str());
             }
             ++ iter;
         }
     }
+    
+    //close report file
+    fclose(f_final);
 }
 

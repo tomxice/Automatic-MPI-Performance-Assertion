@@ -10,6 +10,7 @@
 #include <mpi.h>
 #include <stdlib.h>
 #include <string.h>
+#include <unistd.h>
 
 #include "timer.h"
 #include "profile.h"
@@ -1107,7 +1108,8 @@ int   MPI_Barrier( comm )
 #endif 
 
 #ifdef PERF_ASSERT
-    double r = _timer_read(PATN);
+    double r = _timer_read(PATN)*1e6;
+    _timer_clear(PATN);
     double e = E_MPI_Barrier( comm );
     int pid;
     PMPI_Comm_rank(MPI_COMM_WORLD, &pid);
@@ -1133,7 +1135,8 @@ int   MPI_Bcast( buffer, count, datatype, root, comm )
 
 #ifdef PERF_ASSERT
     _timer_stop(PATN);
-    double r = _timer_read(PATN);
+    double r = _timer_read(PATN)*1e6;
+    _timer_clear(PATN);
     double e = E_MPI_Bcast( buffer, count, datatype, root, comm );
     int pid;
     PMPI_Comm_rank(MPI_COMM_WORLD, &pid);
@@ -1165,7 +1168,8 @@ int   MPI_Gather( sendbuf, sendcnt, sendtype, recvbuf, recvcount, recvtype, root
 
 #ifdef PERF_ASSERT
     _timer_stop(PATN);
-    double r = _timer_read(PATN);
+    double r = _timer_read(PATN)*1e6;
+    _timer_clear(PATN);
     double e = E_MPI_Gather( sendbuf, sendcnt, sendtype, recvbuf, recvcount, recvtype, root, comm );
     int pid;
     PMPI_Comm_rank(MPI_COMM_WORLD, &pid);

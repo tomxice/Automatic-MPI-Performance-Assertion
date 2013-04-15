@@ -48,7 +48,8 @@ int E_count2byte ( MPI_Datatype datatype, int count ) {
         }\
     }\
     if (bdown == imb.coll_op[pdown].n_byte) { \
-        return -1; \
+        bup = imb.coll_op[pdown].n_byte - 1; \
+        bdown = bup - 1; \
     } \
     double delta_t, delta_x, slope;\
     double t1[4] = {imb.coll_op[pdown].para[bdown].t_avg, imb.coll_op[pdown].para[bdown].t_avg,\

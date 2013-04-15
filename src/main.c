@@ -2,26 +2,17 @@
 #include "stdlib.h"
 #include "stdio.h"
 #include "string.h"
+#include "timer.h"
+
+#define SIZE (3*4194304/2)
+char array[SIZE];
 
 int main( int argc, char** argv) {
-    char message[20];
     int myrank;
-    MPI_Status status;
     MPI_Init( &argc, &argv );
     MPI_Comm_rank( MPI_COMM_WORLD, &myrank );
-    if (myrank == 0) /* code for process zero */
-    {
-        strcpy(message,"Hello, there");
-        MPI_Send(message, strlen(message)+1, MPI_CHAR, 1, 99, MPI_COMM_WORLD);
-    }
-    else if (myrank == 1) /* code for process one */
-    {
-        MPI_Recv(message, 20, MPI_CHAR, 0, 99, MPI_COMM_WORLD, &status);
-        printf("received :%s:\n", message);
-    }
     MPI_Barrier(MPI_COMM_WORLD);
-    int array[100];
-    MPI_Bcast(array,100,MPI_INT,0,MPI_COMM_WORLD);
+    MPI_Bcast(array,SIZE,MPI_CHAR,0,MPI_COMM_WORLD);
     MPI_Finalize();
 
     return 0;
