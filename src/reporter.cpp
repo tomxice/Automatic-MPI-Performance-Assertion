@@ -56,6 +56,14 @@ void R_log(int level, int warn, double real, double expc, int pid, int mpiid, co
             if (addrs[2][a] == '[') break;
         }
         location.assign(addrs[2]+a+1,b-a-1); // for C/C++
+        location.append("  ");
+        for (b = strlen(addrs[3])-1; b >= 0; -- b) {
+            if (addrs[3][b] == ']') break;
+        }
+        for (a = b-1; a >= 0; -- a) {
+            if (addrs[3][a] == '[') break;
+        }
+        location.append(addrs[3]+a+1,b-a-1); // for Fortran
         free(addrs);
     }
     // end symbol addr
@@ -133,7 +141,7 @@ void R_report(int level, int numproc) {
     
     fprintf(f_final, "\n\nExceptions\n");
     fprintf(f_final, "===================\n\n");
-    fprintf(f_final, "%-27s%-20s%-10s%-10s%-s\n","Func_name","Location","t_exp","t_real","description");
+    fprintf(f_final, "%-27s%-22s%-10s%-10s%-s\n","Func_name","Location","t_exp","t_real","description");
     for (int i = 0; i < numfunc; ++ i) {
         map<string, vector<Record> >::iterator iter = result[i].begin();
         while (iter != result[i].end()) {
@@ -142,7 +150,7 @@ void R_report(int level, int numproc) {
 #ifndef ALLTRACE
                 if (it->status == NORMAL) continue;
 #endif
-                fprintf(f_final, "%-27s%-20s",MPI_Functions[i],iter->first.c_str());
+                fprintf(f_final, "%-27s%-22s",MPI_Functions[i],iter->first.c_str());
                 fprintf(f_final, "%-10.2e%-10.2e%-s\n",it->expc,it->real,it->parameter.c_str());
             }
             ++ iter;
