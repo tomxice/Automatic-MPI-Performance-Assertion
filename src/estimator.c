@@ -3,6 +3,7 @@
 * This file use to estimate how long will a E_MPI call take?
 *                                                                   *
 ********************************************************************/
+#include <mpi.h>
 #include "estimator.h"
 #include "parser.h"
 
@@ -12,14 +13,8 @@ IMBPara imb;
 #endif
 int E_count2byte ( MPI_Datatype datatype, int count ) {
     int nb = 0;
-    // TODO size of datatype ?
-    if (datatype == MPI_INT) {
-        nb = count*4;
-    }
-    else 
-    {
-        nb = count;
-    }
+    PMPI_Type_size(datatype, &nb);
+    nb *= count;
     return nb;
 }
 #define E_GET_COLL_AVG_TIME(n_coll_op, coll_op) \
@@ -550,8 +545,10 @@ MPI_Comm comm;
     }
     // normal
     double retVal = 0;
-    up = down + 1;
-    if (np < imb.barrier[up].proc) {
+    if (down == up) {
+        retVal = imb.barrier[up].t_avg;
+    }
+    else {
         double delta_t = imb.barrier[up].t_avg - imb.barrier[down].t_avg;
         double delta_p = imb.barrier[up].proc - imb.barrier[down].proc;
         double slope = delta_t/delta_p;
