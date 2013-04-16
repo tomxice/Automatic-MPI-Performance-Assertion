@@ -24,30 +24,46 @@ int E_count2byte ( MPI_Datatype datatype, int count ) {
 }
 #define E_GET_COLL_AVG_TIME(n_coll_op, coll_op) \
     int pdown=0, pup=0, bdown=0, bup=0;\
-    for (pdown = 0; pdown < imb.n_coll_op; ++ pdown) {\
-        if (np == imb.coll_op[pdown].proc) {\
-            pup = pdown;\
-            break;\
-        }\
-        pup = pdown + 1;\
-        if (np < imb.coll_op[pup].proc) {\
-            break;\
-        }\
-    }\
-    if (pdown == imb.n_coll_op) { \
+    int hit = 0; \
+    for (pdown = 0; pdown < imb.n_coll_op-1; ++ pdown) {\
+        pup = pdown + 1; \
+        if (imb.coll_op[pdown].proc == np) { \
+            pup = pdown; \
+            hit = 1; \
+            break; \
+        } \
+        else if (imb.coll_op[pdown].proc < np && np < imb.coll_op[pup].proc) { \
+            hit = 1; \
+            break; \
+        } \
+        else if (imb.coll_op[pup].proc == np) { \
+            pdown = pup; \
+            hit = 1; \
+            break; \
+        } \
+    } \
+    if (hit == 0) { \
         return -1; \
     } \
+    hit = 0; \
     for (bdown = 0; bdown < imb.coll_op[pdown].n_byte; ++ bdown) {\
-        if (nb == imb.coll_op[pdown].para[bdown].bytes) {\
+        bup = bdown + 1; \
+        if (imb.coll_op[pdown].para[bdown].bytes == nb) {\
             bup = bdown;\
+            hit = 1;\
             break;\
         }\
-        bup = bdown + 1;\
-        if (nb <= imb.coll_op[pup].para[bup].bytes) {\
+        else if (imb.coll_op[pdown].para[bdown].bytes < nb && nb < imb.coll_op[pup].para[bup].bytes) {\
+            hit = 1;\
+            break;\
+        }\
+        else if (imb.coll_op[pup].para[bup].bytes == nb) {\
+            bdown = bup;\
+            hit = 1;\
             break;\
         }\
     }\
-    if (bdown == imb.coll_op[pdown].n_byte) { \
+    if (hit == 0) { \
         bup = imb.coll_op[pdown].n_byte - 1; \
         bdown = bup - 1; \
     } \
@@ -502,18 +518,39 @@ MPI_Comm comm;
 double E_MPI_Barrier( comm )
 MPI_Comm comm;
 {
-    double retVal = -1;
     int np;
     PMPI_Comm_size( comm, &np);
-    int down;
-    for (down = 0; down < imb.n_barrier; ++down) {
+    int down,up;
+    int hit = 0;
+    //printf ("n_barrier:%d\n", imb.n_barrier);
+    for (down = 0; down < imb.n_barrier-1; ++ down) {
+        up = down + 1;
+        //printf("np:%d,down:%d,pdown:%d,up:%d,pup:%d\n",np,down,imb.barrier[down].proc,up,imb.barrier[up].proc);
         if (np == imb.barrier[down].proc) {
-            retVal = imb.barrier[down].t_avg;
-            //printf("Barrier equal, retVal: %lf\n", retVal);
+            up = down;
+            hit = 1;
+            //printf("hit lower bound\n");
+            break;
+        }
+        else if (imb.barrier[down].proc < np && np < imb.barrier[up].proc) {
+            hit = 1;
+            //printf("hit internal\n");
+            break;
+        }
+        else if (np == imb.barrier[up].proc) {
+            down = up;
+            hit = 1;
+            //printf("hit upper bound\n");
             break;
         }
     }
-    int up = down + 1;
+    // too many procs
+    if (hit == 0) {
+        return -1;
+    }
+    // normal
+    double retVal = 0;
+    up = down + 1;
     if (np < imb.barrier[up].proc) {
         double delta_t = imb.barrier[up].t_avg - imb.barrier[down].t_avg;
         double delta_p = imb.barrier[up].proc - imb.barrier[down].proc;

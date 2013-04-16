@@ -3,7 +3,7 @@ CPP = icpc
 OPT= -O2
 CFLAGS = -std=c99 $(CPPFLAGS)
 CPPFLAGS = $(OPT) -g -I/apps/intel/impi/4.0.2.003/include64
-DEF= -DPERF_ASSERT
+DEF= -DPERF_ASSERT -DALLTRACE
 AR = ar
 ARTAG = rcv
 

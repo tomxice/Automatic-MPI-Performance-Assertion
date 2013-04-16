@@ -4,7 +4,7 @@
 #include "string.h"
 #include "timer.h"
 
-#define SIZE (3*4194304/2)
+#define SIZE (20)
 char array[SIZE];
 
 int main( int argc, char** argv) {
