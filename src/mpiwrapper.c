@@ -977,7 +977,9 @@ int   MPI_Allgather( sendbuf, sendcount, sendtype, recvbuf, recvcount, recvtype,
     double e = E_MPI_Allgather( sendbuf, sendcount, sendtype, recvbuf, recvcount, recvtype, comm );
     int pid;
     PMPI_Comm_rank(MPI_COMM_WORLD, &pid);
-    R_log(R_Level,0,r,e,pid,35,"COMM_WORLD");
+    char para[100];
+    sprintf(para, "sendcount:%d, recvcount:%d",sendcount,recvcount);
+    R_log(R_Level,0,r,e,pid,35,para);
 #endif
 
     return returnVal;
@@ -1011,7 +1013,9 @@ int   MPI_Allgatherv( sendbuf, sendcount, sendtype, recvbuf, recvcounts, displs,
     double e = E_MPI_Allgatherv( sendbuf, sendcount, sendtype, recvbuf, recvcounts, displs, recvtype, comm );
     int pid;
     PMPI_Comm_rank(MPI_COMM_WORLD, &pid);
-    R_log(R_Level,0,r,e,pid,36,"COMM_WORLD");
+    char para[100];
+    sprintf(para, "sendcount:%d, recvcounts:%d",sendcount,*recvcounts);
+    R_log(R_Level,0,r,e,pid,36,para);
 #endif
 
     return returnVal;
@@ -1043,7 +1047,9 @@ int   MPI_Allreduce( sendbuf, recvbuf, count, datatype, op, comm )
     double e = E_MPI_Allreduce( sendbuf, recvbuf, count, datatype, op, comm );
     int pid;
     PMPI_Comm_rank(MPI_COMM_WORLD, &pid);
-    R_log(R_Level,0,r,e,pid,37,"COMM_WORLD");
+    char para[100];
+    sprintf(para, "count:%d",count);
+    R_log(R_Level,0,r,e,pid,37,para);
 #endif
 
     return returnVal;
@@ -1076,7 +1082,9 @@ int  MPI_Alltoall( sendbuf, sendcount, sendtype, recvbuf, recvcnt, recvtype, com
     double e = E_MPI_Alltoall( sendbuf, sendcount, sendtype, recvbuf, recvcnt, recvtype, comm );
     int pid;
     PMPI_Comm_rank(MPI_COMM_WORLD, &pid);
-    R_log(R_Level,0,r,e,pid,38,"COMM_WORLD");
+    char para[100];
+    sprintf(para, "sendcount:%d, recvcnt:%d",sendcount, recvcnt);
+    R_log(R_Level,0,r,e,pid,38,para);
 #endif
 
     return returnVal;
@@ -1111,7 +1119,9 @@ int   MPI_Alltoallv( sendbuf, sendcnts, sdispls, sendtype, recvbuf, recvcnts, rd
     double e = E_MPI_Alltoallv( sendbuf, sendcnts, sdispls, sendtype, recvbuf, recvcnts, rdispls, recvtype, comm );
     int pid;
     PMPI_Comm_rank(MPI_COMM_WORLD, &pid);
-    R_log(R_Level,0,r,e,pid,39,"COMM_WORLD");
+    char para[100];
+    sprintf(para, "sendcnts:%d, recvcnts:%d",*sendcnts, *recvcnts);
+    R_log(R_Level,0,r,e,pid,39,para);
 #endif
 
     return returnVal;
@@ -1138,7 +1148,11 @@ int   MPI_Barrier( comm )
     double e = E_MPI_Barrier( comm );
     int pid;
     PMPI_Comm_rank(MPI_COMM_WORLD, &pid);
-    R_log(R_Level,0,r,e,pid,40,"COMM_WORLD");
+    char para[100];
+    int size;
+    PMPI_Comm_size(comm,&size);
+    sprintf(para, "CommSize:%d",size);
+    R_log(R_Level,0,r,e,pid,40,para);
 #endif
 
     return returnVal;
@@ -1199,7 +1213,7 @@ int   MPI_Gather( sendbuf, sendcnt, sendtype, recvbuf, recvcount, recvtype, root
     int pid;
     PMPI_Comm_rank(MPI_COMM_WORLD, &pid);
     char para[100];
-    sprintf(para, "sendcnt:%d, root:%d",sendcnt,root);
+    sprintf(para, "sendcnt:%d, recvcount:%d, root:%d",sendcnt,recvcount,root);
     R_log(R_Level,0,r,e,pid,42,para);
 #endif
 
@@ -1233,7 +1247,7 @@ int   MPI_Gatherv( sendbuf, sendcnt, sendtype, recvbuf, recvcnts, displs, recvty
     int pid;
     PMPI_Comm_rank(MPI_COMM_WORLD, &pid);
     char para[100];
-    sprintf(para, "sendcnt:%d, root:%d",sendcnt,root);
+    sprintf(para, "sendcnt:%d, recvcnts:%d, root:%d",sendcnt,*recvcnts,root);
     R_log(R_Level,0,r,e,pid,43,para);
 #endif
 
@@ -1266,7 +1280,9 @@ int   MPI_Reduce_scatter( sendbuf, recvbuf, recvcnts, datatype, op, comm )
     double e = E_MPI_Reduce_scatter( sendbuf, recvbuf, recvcnts, datatype, op, comm );
     int pid;
     PMPI_Comm_rank(MPI_COMM_WORLD, &pid);
-    R_log(R_Level,0,r,e,pid,44,"COMM_WORLD");
+    char para[100];
+    sprintf(para, "recvcnts:%d",*recvcnts);
+    R_log(R_Level,0,r,e,pid,44,para);
 #endif
 
     return returnVal;
@@ -1299,7 +1315,9 @@ int   MPI_Reduce( sendbuf, recvbuf, count, datatype, op, root, comm )
     double e = E_MPI_Reduce( sendbuf, recvbuf, count, datatype, op, root, comm );
     int pid;
     PMPI_Comm_rank(MPI_COMM_WORLD, &pid);
-    R_log(R_Level,0,r,e,pid,45,"COMM_WORLD");
+    char para[100];
+    sprintf(para, "count:%d, root:%d",count,root);
+    R_log(R_Level,0,r,e,pid,45,para);
 #endif
 
     return returnVal;
@@ -1360,7 +1378,9 @@ int   MPI_Scatter( sendbuf, sendcnt, sendtype, recvbuf, recvcnt, recvtype, root,
     double e = E_MPI_Scatter( sendbuf, sendcnt, sendtype, recvbuf, recvcnt, recvtype, root, comm );
     int pid;
     PMPI_Comm_rank(MPI_COMM_WORLD, &pid);
-    R_log(R_Level,0,r,e,pid,47,"COMM_WORLD");
+    char para[100];
+    sprintf(para, "sendcnt:%d, recvcnt:%d, root:%d",sendcnt,recvcnt,root);
+    R_log(R_Level,0,r,e,pid,47,para);
 #endif
 
     return returnVal;
@@ -1395,7 +1415,9 @@ int   MPI_Scatterv( sendbuf, sendcnts, displs, sendtype, recvbuf, recvcnt, recvt
     double e = E_MPI_Scatterv( sendbuf, sendcnts, displs, sendtype, recvbuf, recvcnt, recvtype, root, comm );
     int pid;
     PMPI_Comm_rank(MPI_COMM_WORLD, &pid);
-    R_log(R_Level,0,r,e,pid,48,"COMM_WORLD");
+    char para[100];
+    sprintf(para, "sendcnts:%d, recvcnt:%d, root:%d",*sendcnts,recvcnt,root);
+    R_log(R_Level,0,r,e,pid,48,para);
 #endif
 
     return returnVal;
