@@ -68,9 +68,6 @@ void R_log(int level, int warn, double real, double expc, int pid, int mpiid, co
     }
     // end symbol addr
 
-    if (level >= 4) {
-        string para(c_para, strlen(c_para));
-    }
     Record record;
     record.pid = pid;
     if (expc < 0) record.status = NODATA;
@@ -83,9 +80,7 @@ void R_log(int level, int warn, double real, double expc, int pid, int mpiid, co
 
     record.real = real;
     record.expc = expc;
-    if (level >= 4 || record.status != NORMAL) {
-        record.parameter.assign(c_para);
-    }
+    record.parameter.assign(c_para);
     result[mpiid][location].push_back(record);
     
     // TODO real time warnning
