@@ -73,19 +73,20 @@ void parse_loggpo(const char* f_para, pLogGPO logps) {
     int index = 0;
     int LINES = 200;
     char line[LINES];
-    // line 1
-    fgets(line, LINES, pf_para);
-    sscanf(line, LOGP_FILE_LATENCY_R, &logps->latency);
-    fgets(line, LINES, pf_para);
-    sscanf(line, LOGP_FILE_OVERHEAD_R, &logps->os_0, &logps->or_0);
+    if (line == fgets(line, LINES, pf_para))
+        sscanf(line, LOGP_FILE_LATENCY_R, &logps->latency);
+    if (line == fgets(line, LINES, pf_para))
+        sscanf(line, LOGP_FILE_OVERHEAD_R, &logps->os_0, &logps->or_0);
     while (line == fgets(line, LINES, pf_para)) {
         pLoggpoPara p = &(logps->para[index]); 
         int ret = sscanf(line, "%d%lf%lf%lf%lf%lf%lf%lf", 
           &p->size, &p->os, &p->or, &p->ov, &p->sr, &p->gap, &p->rtt, &p->rtt100);
         if (ret == 8) ++index;
     }
+    logps->n_size = index;
     // verify
     #ifdef VERIFY
+    printf("n_size;%d\n", logps->n_size);
     printf("latency:%f\n",logps->latency);
     printf("os_0:%f, or_0:%f\n", logps->os_0, logps->or_0);
     for (int i = 0; i < index; ++ i) {

@@ -22,6 +22,7 @@ typedef struct LoggpoPara {
 } LoggpoPara, *pLoggpoPara;
 
 typedef struct LogGPO {
+    int n_size;
     double latency;
     double os_0;
     double or_0;
