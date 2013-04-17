@@ -21,6 +21,13 @@ typedef struct LoggpoPara {
     double rtt100;
 } LoggpoPara, *pLoggpoPara;
 
+typedef struct LogGPO {
+    double latency;
+    double os_0;
+    double or_0;
+    LoggpoPara para[1500];
+} LogGPO, *pLogGPO;
+
 #define PROC_N 10
 #define BYTE_N 30
 #define L1_OP_PARA(op) \
@@ -110,7 +117,7 @@ typedef enum IMBState {
     unknown
 } IMBState;
 
-void parse_loggpo(const char* f_para, pLoggpoPara logps);
+void parse_loggpo(const char* f_para, pLogGPO logps);
 void parse_imb(const char* f_para, pIMBPara pimb);
 
 #endif

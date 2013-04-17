@@ -8,7 +8,7 @@
 #include "parser.h"
 
 #ifdef PERF_ASSERT
-LoggpoPara log_cmp[MPS], log_net[MPS], log_smp[MPS];
+LogGPO log_cmp, log_net, log_smp;
 IMBPara imb;
 #endif
 int E_count2byte ( MPI_Datatype datatype, int count ) {
@@ -110,9 +110,9 @@ double E_MPI_Init(int * argc, char*** argv)
     // assume all data files are existing
     // users may run IMB manually.
     // and copy datas to all machines manually
-    parse_loggpo("paras/cmp_para", log_cmp);
-    parse_loggpo("paras/net_para", log_net);
-    parse_loggpo("paras/smp_para", log_smp);
+    parse_loggpo("paras/cmp_para", &log_cmp);
+    parse_loggpo("paras/net_para", &log_net);
+    parse_loggpo("paras/smp_para", &log_smp);
     parse_imb("paras/coll_para", &imb);
 #endif
 	return 0;

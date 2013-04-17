@@ -1,6 +1,5 @@
 #include "parser.h"
 
-#define VERIFY 0
 #define PAR_L1(op,n_op) \
     if (ns == init) { \
         int ret = sscanf(line,"%s%s%s%d",str0,str1,str2,&proc);  \
@@ -56,10 +55,14 @@
     } 
 // parameters
 // f_para: the data file
-// loggps: an array of struct where to store data,
+// loggps: a struct where to store data,
 //         pass the head pointer here
-void parse_loggpo(const char* f_para, pLoggpoPara logps) {
-    memset(logps, 0, sizeof(LoggpoPara));
+
+#define LOGP_FILE_LATENCY_R "# Latency = %lf\n"
+#define LOGP_FILE_OVERHEAD_R "# Os_0 = %lf Or_0 = %lf\n"
+
+void parse_loggpo(const char* f_para, pLogGPO logps) {
+    memset(logps, 0, sizeof(LogGPO));
     FILE* pf_para = NULL;
     pf_para = fopen(f_para,"r");
     if (! pf_para) {
@@ -70,16 +73,23 @@ void parse_loggpo(const char* f_para, pLoggpoPara logps) {
     int index = 0;
     int LINES = 200;
     char line[LINES];
+    // line 1
+    fgets(line, LINES, pf_para);
+    sscanf(line, LOGP_FILE_LATENCY_R, &logps->latency);
+    fgets(line, LINES, pf_para);
+    sscanf(line, LOGP_FILE_OVERHEAD_R, &logps->os_0, &logps->or_0);
     while (line == fgets(line, LINES, pf_para)) {
-        pLoggpoPara p = &(logps[index]); 
+        pLoggpoPara p = &(logps->para[index]); 
         int ret = sscanf(line, "%d%lf%lf%lf%lf%lf%lf%lf", 
           &p->size, &p->os, &p->or, &p->ov, &p->sr, &p->gap, &p->rtt, &p->rtt100);
         if (ret == 8) ++index;
     }
     // verify
-    #if VERIFY
+    #ifdef VERIFY
+    printf("latency:%f\n",logps->latency);
+    printf("os_0:%f, or_0:%f\n", logps->os_0, logps->or_0);
     for (int i = 0; i < index; ++ i) {
-        pLoggpoPara p = &(logps[i]); 
+        pLoggpoPara p = &(logps->para[i]); 
         printf("\t%d\t%lf\t%lf\t%lf\t%lf\t%lf\t%lf\t%lf\n",
           p->size, p->os, p->or, p->ov, p->sr, p->gap, p->rtt, p->rtt100);
     }
@@ -241,7 +251,7 @@ void parse_imb(const char* f_para, pIMBPara pimb) {
         }
     }
 
-    #if VERIFY
+    #ifdef VERIFY
     printf("Barrier\n-----------\n");
     for (int i = 0; i < pimb->n_barrier; ++ i) {
         printf("proc: %d, tmin: %8f tmax: %8f tavg: %8f\n",
@@ -308,10 +318,11 @@ void parse_imb(const char* f_para, pIMBPara pimb) {
 
 // this main is for test parser
 #ifdef PAR_TEST
+LogGPO logps;
 IMBPara imb;
 int main() {
-    //parse_loggpo("cmp_para", logps);
-    parse_imb("paras/coll_para", &imb);
+    parse_loggpo("paras/cmp_para", &logps);
+    //parse_imb("paras/coll_para", &imb);
     return 0;
 }
 #endif
