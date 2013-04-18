@@ -14,6 +14,5 @@ int main( int argc, char** argv) {
     MPI_Barrier(MPI_COMM_WORLD);
     MPI_Bcast(array,SIZE,MPI_CHAR,0,MPI_COMM_WORLD);
     MPI_Finalize();
-
     return 0;
 }

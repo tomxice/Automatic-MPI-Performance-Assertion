@@ -17,6 +17,82 @@ LogGPO log_cmp, log_net, log_smp;
 IMBPara imb;
 pLocation location;
 
+/********************************************************************
+* Determining whether two MPI rank are in the same node or same CPU
+********************************************************************/
+#define NETWORK 0 //net_para
+#define INTRA_NODE 1 //smp_para
+#define INTRA_CPU 2 //cmp_para
+
+// TODO you need to modify this function to fit your own arch
+int diff_cpu( int c0, int c1 ) {
+    if (c0/6 == c1/6) return 0;
+    else return 1;
+}
+
+int rank_dist( int r0, int r1 ) {
+    if (location[r0].node != location[r1].node) return NETWORK;
+    else if (diff_cpu(location[r0].core, location[r1].core)) return INTRA_NODE;
+    else return INTRA_CPU;
+}
+
+pLogGPO getGPO(int r0, int r1) {
+    int dist = rank_dist(r0,r1);
+    if (dist == NETWORK) return &log_net;
+    else if (dist == INTRA_NODE) return &log_smp;
+    else if (dist == INTRA_CPU) return &log_cmp;
+    else return NULL;
+}
+
+/********************************************************************
+* For Caculating Time
+********************************************************************/
+int logbs(pLoggpoPara A, int key, int len) {
+    int imin = 0, imax = len-1;
+    if (imax < 0) return -2;
+    if (key < A[imin].size || key > A[imax].size) return -1;
+    // continually narrow search until just one element remains
+    while (imin < imax)
+    {
+        int imid = (imin+imax) >> 1;
+        if (imid >= imax) {
+            printf ("imid >= imax!\n");
+        }
+        if (A[imid].size < key)
+            imin = imid + 1;
+        else
+            imax = imid;
+    }
+    if (A[imin].size > key) --imin;
+    return imin;
+}
+
+LoggpoPara getPara(pLogGPO p, int size) {
+    int a = logbs(p->para, size, p->n_size);
+    int b = 0;
+    if (a == -1) { // size too large
+        a = p->n_size - p->n_size/10;
+        b = p->n_size - 1;
+    }
+    else if (p->para[a].size == size) // hit
+        return p->para[a];
+    else { // interval
+        b = a + 1;
+    }
+    LoggpoPara np;
+    double delta = ((double)size-p->para[a].size)/(p->para[b].size-p->para[a].size);
+    np.size = size;
+    np.os = p->para[a].os + delta*(p->para[b].os - p->para[a].os);
+    np.or = p->para[a].or + delta*(p->para[b].or - p->para[a].or);
+    np.ov = p->para[a].ov + delta*(p->para[b].ov - p->para[a].ov);
+    np.sr = p->para[a].sr + delta*(p->para[b].sr - p->para[a].sr);
+    np.gap = p->para[a].gap + delta*(p->para[b].gap - p->para[a].gap);
+    np.rtt = p->para[a].rtt + delta*(p->para[b].rtt - p->para[a].rtt);
+    np.rtt100 = p->para[a].rtt100 + delta*(p->para[b].rtt100 - p->para[a].rtt100);
+    return np;
+}
+
+
 int E_count2byte ( MPI_Datatype datatype, int count ) {
     int nb = 0;
     PMPI_Type_size(datatype, &nb);
@@ -173,10 +249,18 @@ double E_MPI_Init(int * argc, char*** argv)
                 location[rank].core = r_core;
             }
         }
+#if 0
         for (int rank = 0; rank < gsize; ++ rank) {
             printf("rank:%d in node:%d core:%d\n", rank, location[rank].node, location[rank].core);
         }
+#endif
     }
+#if 0
+    LoggpoPara para = getPara(getGPO(0,1),2<<20);
+    pLoggpoPara p = &para; 
+    printf("\t%d\t%lf\t%lf\t%lf\t%lf\t%lf\t%lf\t%lf\n",
+            p->size, p->os, p->or, p->ov, p->sr, p->gap, p->rtt, p->rtt100);
+#endif
 	return 0;
 }
 #ifdef PERF_MPI_THREADED
