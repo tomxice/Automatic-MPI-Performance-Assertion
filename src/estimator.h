@@ -6,7 +6,11 @@
 #include <string.h>
 #include "mpiname.h"
 
-#define PATN 1 // the index "n" in timer.c
+#define PATN 50 // the index "n" in timer.c
+typedef struct Location {
+    int node;
+    int core;
+} Location,*pLocation;
 
 /******************************************************************
 *                                                                 *

@@ -4,13 +4,19 @@
 *                                                                   *
 ********************************************************************/
 #include <mpi.h>
+#include <unistd.h>
+#include <stdlib.h>
+#include <stdio.h>
+#include <string.h>
+#include <sys/types.h>
 #include "estimator.h"
 #include "parser.h"
 
-#ifdef PERF_ASSERT
+
 LogGPO log_cmp, log_net, log_smp;
 IMBPara imb;
-#endif
+pLocation location;
+
 int E_count2byte ( MPI_Datatype datatype, int count ) {
     int nb = 0;
     PMPI_Type_size(datatype, &nb);
@@ -106,7 +112,6 @@ int E_count2byte ( MPI_Datatype datatype, int count ) {
 ******************************************************************/
 double E_MPI_Init(int * argc, char*** argv)
 {
-#ifdef PERF_ASSERT
     // assume all data files are existing
     // users may run IMB manually.
     // and copy datas to all machines manually
@@ -114,7 +119,64 @@ double E_MPI_Init(int * argc, char*** argv)
     parse_loggpo("paras/net_para", &log_net);
     parse_loggpo("paras/smp_para", &log_smp);
     parse_imb("paras/coll_para", &imb);
-#endif
+    // get self location HOSTNAME:CORE
+    char proc_file_name[50];
+    sprintf(proc_file_name, "/proc/%d/stat", getpid());
+    FILE* proc_file = fopen(proc_file_name, "r");
+    if (! proc_file) {
+        printf("Proc File %s Open Failed!\n", proc_file_name);
+    }
+    int core;
+    if (1 != fscanf(proc_file, "%*d %*s %*c %*d %*d %*d %*d %*d %*u %*u %*u %*u %*u %*u %*u %*d %*d %*d %*d %*d %*d %*u %*u %*d %*u %*u %*u %*u %*u %*u %*u %*u %*u %*u %*u %*u %*u %*d %d %*u %*u %*u",&core))
+        printf("Read Core ID Failed!\n");
+    char hostname[40];
+    gethostname(hostname,40);
+    // Send their info to rank:0
+    int gsize;
+    PMPI_Comm_size( MPI_COMM_WORLD, &gsize);
+    location = (pLocation)malloc(gsize*sizeof(Location));
+    int myrank;
+    PMPI_Comm_rank(MPI_COMM_WORLD, &myrank);
+    if (myrank != 0) {
+        char sendbuf[100];
+        sprintf(sendbuf, "%s %d",hostname,core);
+        PMPI_Send( sendbuf, 100, MPI_CHAR, 0, myrank, MPI_COMM_WORLD);
+    }
+    if (myrank == 0) {
+        char rbuf[100];
+        MPI_Status ms;
+        char** ls = (char**)malloc(gsize*sizeof(char*));
+        int cnt = 0;
+        ls[0] = (char*)malloc(40);
+        if (ls[0] == strcpy(ls[0],hostname)) 
+            ++ cnt;
+        location[0].node = 0;
+        location[0].core = core;
+        char r_hn[40];
+        int r_core;
+        for (int rank = 1; rank < gsize; ++ rank) {
+            PMPI_Recv(rbuf, 100, MPI_CHAR, rank, rank, MPI_COMM_WORLD, &ms);
+            sscanf(rbuf,"%s %d",r_hn,&r_core);
+            int i;
+            for (i = 0; i < cnt; ++ i) {
+                if(strcmp(ls[i],r_hn) == 0) {
+                    location[rank].node = i;
+                    location[rank].core = r_core;
+                    break;
+                }
+            }
+            if (i == cnt) {
+                ls[i] = (char*)malloc(40);
+                if (ls[i] == strcpy(ls[i],r_hn)) 
+                    ++ cnt;
+                location[rank].node = i;
+                location[rank].core = r_core;
+            }
+        }
+        for (int rank = 0; rank < gsize; ++ rank) {
+            printf("rank:%d in node:%d core:%d\n", rank, location[rank].node, location[rank].core);
+        }
+    }
 	return 0;
 }
 #ifdef PERF_MPI_THREADED
