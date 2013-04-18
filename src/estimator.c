@@ -249,18 +249,10 @@ double E_MPI_Init(int * argc, char*** argv)
                 location[rank].core = r_core;
             }
         }
-#if 0
-        for (int rank = 0; rank < gsize; ++ rank) {
-            printf("rank:%d in node:%d core:%d\n", rank, location[rank].node, location[rank].core);
-        }
-#endif
+        for (int i = 0; i < cnt; ++ i) 
+            free(ls[i]);
+        free(ls);
     }
-#if 0
-    LoggpoPara para = getPara(getGPO(0,1),2<<20);
-    pLoggpoPara p = &para; 
-    printf("\t%d\t%lf\t%lf\t%lf\t%lf\t%lf\t%lf\t%lf\n",
-            p->size, p->os, p->or, p->ov, p->sr, p->gap, p->rtt, p->rtt100);
-#endif
 	return 0;
 }
 #ifdef PERF_MPI_THREADED
