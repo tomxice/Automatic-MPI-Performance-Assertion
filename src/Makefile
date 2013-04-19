@@ -7,7 +7,7 @@ DEF= -DPERF_ASSERT -DALLTRACE -D_XOPEN_SOURCE=500
 AR = ar
 ARTAG = rcv
 
-OBJS= profile.o timer.o mpiwrapper.o mpiwrapper_f.o estimator.o parser.o mpiname.o reporter.o
+OBJS= timer.o mpiwrapper.o mpiwrapper_f.o estimator.o parser.o mpiname.o reporter.o
 
 main.out: main.o libmpit
 	g++ main.o -L. -L/usr/bin -lmpit -lmpich -o main.out
@@ -19,8 +19,6 @@ parser.o: parser.c
 	$(CC) $(CFLAGS) $(DEF) -c parser.c
 estimator.o: estimator.c
 	$(CC) $(CFLAGS) $(DEF) -c estimator.c
-profile.o : profile.c	
-	$(CC) $(CFLAGS) $(DEF) -c profile.c
 mpiwrapper.o: mpiwrapper.c
 	$(CC) $(CFLAGS) $(DEF) -c mpiwrapper.c
 mpiwrapper_f.o: mpiwrapper_f.c

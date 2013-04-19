@@ -13,7 +13,6 @@
 #include <unistd.h>
 
 #include "timer.h"
-#include "profile.h"
 #include "estimator.h"
 #include "reporter.h"
 
@@ -356,21 +355,7 @@ int  MPI_Testany( count, array_of_requests, index, flag, status ) //22
     MPI_Status * status;
 {
     int  returnVal;
-
-#ifdef PERF_PROFILE
-    PROFILE_START(22);
-#endif
-
-#ifdef DEBUG
-    printf("Enter MPI_Testany\n");
-#endif
-
     returnVal = PMPI_Testany( count, array_of_requests, index, flag, status );
-
-#ifdef PERF_PROFILE
-    PROFILE_STOP(22);
-#endif
-
     return returnVal;
 }
 
@@ -379,21 +364,7 @@ int  MPI_Test_cancelled( status, flag ) //23
     int * flag;
 {
     int  returnVal;
-
-#ifdef PERF_PROFILE
-    PROFILE_START(23);
-#endif
-
-#ifdef DEBUG
-    printf("Enter MPI_Test_cancelled\n");
-#endif
-
     returnVal = PMPI_Test_cancelled( status, flag );
-
-#ifdef PERF_PROFILE
-    PROFILE_STOP(23);
-#endif
-
     return returnVal;
 }
 
@@ -405,21 +376,7 @@ int  MPI_Testsome( incount, array_of_requests, outcount, array_of_indices, array
     MPI_Status * array_of_statuses;
 {
     int  returnVal;
-
-#ifdef PERF_PROFILE
-    PROFILE_START(24);
-#endif
-
-#ifdef DEBUG
-    printf("Enter MPI_Testsome\n");
-#endif
-
     returnVal = PMPI_Testsome( incount, array_of_requests, outcount, array_of_indices, array_of_statuses );
-
-#ifdef PERF_PROFILE
-    PROFILE_STOP(24);
-#endif
-
     return returnVal;
 }
 
@@ -430,21 +387,7 @@ int   MPI_Wait( request, status ) //25
     int   returnVal;
     //MPI_Status local_status;
     //MPI_Request saverequest;
-
-#ifdef PERF_PROFILE
-    PROFILE_START(25);
-#endif
-
-#ifdef DEBUG
-    printf("Enter MPI_Wait\n");
-#endif
-
     returnVal = PMPI_Wait( request, status );
-
-#ifdef PERF_PROFILE
-    PROFILE_STOP(25);
-#endif
-
     return returnVal;
 }
 
@@ -454,21 +397,7 @@ int  MPI_Waitall( count, array_of_requests, array_of_statuses ) //26
     MPI_Status * array_of_statuses;
 {
     int  returnVal;
-
-#ifdef PERF_PROFILE
-    PROFILE_START(26);
-#endif
-
-#ifdef DEBUG
-    printf("Enter MPI_Waitall\n");
-#endif
-
     returnVal = PMPI_Waitall( count, array_of_requests, array_of_statuses );
-
-#ifdef PERF_PROFILE
-    PROFILE_STOP(26);
-#endif
-
     return returnVal;
 }
 
@@ -479,21 +408,7 @@ int  MPI_Waitany( count, array_of_requests, index, status ) //27
     MPI_Status * status;
 {
     int  returnVal;
-
-#ifdef PERF_PROFILE
-    PROFILE_START(27);
-#endif
-
-#ifdef DEBUG
-    printf("Enter MPI_Waitany\n");
-#endif
-
     returnVal = PMPI_Waitany( count, array_of_requests, index, status );
-
-#ifdef PERF_PROFILE
-    PROFILE_STOP(27);
-#endif
-
     return returnVal;
 }
 
@@ -505,21 +420,7 @@ int  MPI_Waitsome( incount, array_of_requests, outcount, array_of_indices, array
     MPI_Status * array_of_statuses;
 {
     int  returnVal;
-
-#ifdef PERF_PROFILE
-    PROFILE_START(28);
-#endif
-
-#ifdef DEBUG
-    printf("Enter MPI_Waitsome\n");
-#endif
-
     returnVal = PMPI_Waitsome( incount, array_of_requests, outcount, array_of_indices, array_of_statuses );
-
-#ifdef PERF_PROFILE
-    PROFILE_STOP(28);
-#endif
-
     return returnVal;
 }
 
@@ -527,21 +428,7 @@ int  MPI_Cancel( request ) //29
     MPI_Request * request;
 {
     int  returnVal;
-
-#ifdef PERF_PROFILE
-    PROFILE_START(29);
-#endif
-
-#ifdef DEBUG
-    printf("Enter MPI_Cancel\n");
-#endif
-
     returnVal = PMPI_Cancel( request );
-
-#ifdef PERF_PROFILE
-    PROFILE_STOP(29);
-#endif
-
     return returnVal;
 }
 
@@ -549,21 +436,7 @@ int  MPI_Request_free( request ) //30
     MPI_Request * request;
 {
     int  returnVal;
-
-#ifdef PERF_PROFILE
-    PROFILE_START(30);
-#endif
-
-#ifdef DEBUG
-    printf("Enter MPI_Request_free\n");
-#endif
-
     returnVal = PMPI_Request_free( request );
-
-#ifdef PERF_PROFILE
-    PROFILE_STOP(30);
-#endif
-
     return returnVal;
 }
 
@@ -571,21 +444,7 @@ int  MPI_Start( request ) //31
     MPI_Request * request;
 {
     int  returnVal;
-
-#ifdef PERF_PROFILE
-    PROFILE_START(31);
-#endif
-
-#ifdef DEBUG
-    printf("Enter MPI_Start\n");
-#endif
-
     returnVal = PMPI_Start( request );
-
-#ifdef PERF_PROFILE
-    PROFILE_STOP(31);
-#endif
-
     return returnVal;
 }
 
@@ -594,21 +453,7 @@ int  MPI_Startall( count, array_of_requests ) //32
     MPI_Request * array_of_requests;
 {
     int  returnVal;
-
-#ifdef PERF_PROFILE
-    PROFILE_START(32);
-#endif
-
-#ifdef DEBUG
-    printf("Enter MPI_Startall\n");
-#endif
-
     returnVal = PMPI_Startall( count, array_of_requests );
-
-#ifdef PERF_PROFILE
-    PROFILE_STOP(32);
-#endif
-
     return returnVal;
 }
 
@@ -620,21 +465,7 @@ int  MPI_Iprobe( source, tag, comm, flag, status ) //33
     MPI_Status * status;
 {
     int  returnVal;
-
-#ifdef PERF_PROFILE
-    PROFILE_START(33);
-#endif
-
-#ifdef DEBUG
-    printf("Enter MPI_Iprobe\n");
-#endif
-
     returnVal = PMPI_Iprobe( source, tag, comm, flag, status );
-
-#ifdef PERF_PROFILE
-    PROFILE_STOP(33);
-#endif
-
     return returnVal;
 }
 
@@ -645,21 +476,7 @@ int  MPI_Probe( source, tag, comm, status ) //34
     MPI_Status * status;
 {
     int  returnVal;
-
-#ifdef PERF_PROFILE
-    PROFILE_START(34);
-#endif
-
-#ifdef DEBUG
-    printf("Enter MPI_Probe\n");
-#endif
-
     returnVal = PMPI_Probe( source, tag, comm, status );
-
-#ifdef PERF_PROFILE
-    PROFILE_STOP(34);
-#endif
-
     return returnVal;
 }
 
@@ -1051,21 +868,7 @@ int   MPI_Scan( sendbuf, recvbuf, count, datatype, op, comm ) //46
     MPI_Comm comm;
 {
     int   returnVal;
-
-#ifdef PERF_PROFILE
-    PROFILE_START(46);
-#endif
-
-#ifdef DEBUG
-    printf("Enter MPI_Scan\n");
-#endif
-
     returnVal = PMPI_Scan( sendbuf, recvbuf, count, datatype, op, comm );
-
-#ifdef PERF_PROFILE
-    PROFILE_STOP(46);
-#endif
-
     return returnVal;
 }
 
@@ -1154,21 +957,7 @@ int   MPI_Comm_compare( comm1, comm2, result ) //49
     int * result;
 {
     int   returnVal;
-
-#ifdef PERF_PROFILE
-    PROFILE_START(49);
-#endif
-
-#ifdef DEBUG
-    printf("Enter MPI_Comm_compare\n");
-#endif
-
     returnVal = PMPI_Comm_compare( comm1, comm2, result );
-
-#ifdef PERF_PROFILE
-    PROFILE_STOP(49);
-#endif
-
     return returnVal;
 }
 
@@ -1178,21 +967,7 @@ int   MPI_Comm_create( comm, group, comm_out ) //50
     MPI_Comm * comm_out;
 {
     int   returnVal;
-
-#ifdef PERF_PROFILE
-    PROFILE_START(50);
-#endif
-
-#ifdef DEBUG
-    printf("Enter MPI_Comm_create\n");
-#endif
-
     returnVal = PMPI_Comm_create( comm, group, comm_out );
-
-#ifdef PERF_PROFILE
-    PROFILE_STOP(50);
-#endif
-
     return returnVal;
 }
 
@@ -1201,21 +976,7 @@ int   MPI_Comm_dup( comm, comm_out ) //51
     MPI_Comm * comm_out;
 {
     int   returnVal;
-
-#ifdef PERF_PROFILE
-    PROFILE_START(51);
-#endif
-
-#ifdef DEBUG
-    printf("Enter MPI_Comm_dup\n");
-#endif
-
     returnVal = PMPI_Comm_dup( comm, comm_out );
-
-#ifdef PERF_PROFILE
-    PROFILE_STOP(51);
-#endif
-
     return returnVal;
 }
 
@@ -1223,21 +984,7 @@ int   MPI_Comm_free( comm ) //52
     MPI_Comm * comm;
 {
     int   returnVal;
-
-#ifdef PERF_PROFILE
-    PROFILE_START(52);
-#endif
-
-#ifdef DEBUG
-    printf("Enter MPI_Comm_free\n");
-#endif
-
     returnVal = PMPI_Comm_free( comm );
-
-#ifdef PERF_PROFILE
-    PROFILE_STOP(52);
-#endif
-
     return returnVal;
 }
 
@@ -1246,17 +993,7 @@ int   MPI_Comm_group( comm, group ) //53
     MPI_Group * group;
 {
     int   returnVal;
-
-#ifdef PERF_PROFILE
-    PROFILE_START(53);
-#endif
-
     returnVal = PMPI_Comm_group( comm, group );
-
-#ifdef PERF_PROFILE
-    PROFILE_STOP(53);
-#endif
-
     return returnVal;
 }
 
@@ -1265,17 +1002,7 @@ int   MPI_Comm_rank( comm, rank ) //54
     int * rank;
 {
     int   returnVal;
-
-#ifdef PERF_PROFILE
-    PROFILE_START(54);
-#endif
-
     returnVal = PMPI_Comm_rank( comm, rank );
-
-#ifdef PERF_PROFILE
-    PROFILE_STOP(54);
-#endif
-
     return returnVal;
 }
 
@@ -1284,17 +1011,7 @@ int   MPI_Comm_remote_group( comm, group ) //55
     MPI_Group * group;
 {
     int   returnVal;
-
-#ifdef PERF_PROFILE
-    PROFILE_START(55);
-#endif
-
     returnVal = PMPI_Comm_remote_group( comm, group );
-
-#ifdef PERF_PROFILE
-    PROFILE_STOP(55);
-#endif
-
     return returnVal;
 }
 
@@ -1303,17 +1020,7 @@ int   MPI_Comm_remote_size( comm, size ) //56
     int * size;
 {
     int   returnVal;
-
-#ifdef PERF_PROFILE
-    PROFILE_START(56);
-#endif
-
     returnVal = PMPI_Comm_remote_size( comm, size );
-
-#ifdef PERF_PROFILE
-    PROFILE_STOP(56);
-#endif
-
     return returnVal;
 }
 
@@ -1322,17 +1029,7 @@ int   MPI_Comm_size( comm, size ) //57
     int * size;
 {
     int   returnVal;
-
-#ifdef PERF_PROFILE
-    PROFILE_START(57);
-#endif
-
     returnVal = PMPI_Comm_size( comm, size );
-
-#ifdef PERF_PROFILE
-    PROFILE_STOP(57);
-#endif
-
     return returnVal;
 }
 
@@ -1343,17 +1040,7 @@ int   MPI_Comm_split( comm, color, key, comm_out ) //58
     MPI_Comm * comm_out;
 {
     int   returnVal;
-
-#ifdef PERF_PROFILE
-    PROFILE_START(58);
-#endif
-
     returnVal = PMPI_Comm_split( comm, color, key, comm_out );
-
-#ifdef PERF_PROFILE
-    PROFILE_STOP(58);
-#endif
-
     return returnVal;
 }
 
@@ -1362,17 +1049,7 @@ int   MPI_Comm_test_inter( comm, flag ) //59
     int * flag;
 {
     int   returnVal;
-
-#ifdef PERF_PROFILE
-    PROFILE_START(59);
-#endif
-
     returnVal = PMPI_Comm_test_inter( comm, flag );
-
-#ifdef PERF_PROFILE
-    PROFILE_STOP(59);
-#endif
-
     return returnVal;
 }
 
@@ -1382,17 +1059,7 @@ int   MPI_Group_compare( group1, group2, result ) //60
     int * result;
 {
     int   returnVal;
-
-#ifdef PERF_PROFILE
-    PROFILE_START(60);
-#endif
-
     returnVal = PMPI_Group_compare( group1, group2, result );
-
-#ifdef PERF_PROFILE
-    PROFILE_STOP(60);
-#endif
-
     return returnVal;
 }
 
@@ -1402,17 +1069,7 @@ int   MPI_Group_difference( group1, group2, group_out ) //61
     MPI_Group * group_out;
 {
     int   returnVal;
-
-#ifdef PERF_PROFILE
-    PROFILE_START(61);
-#endif
-
     returnVal = PMPI_Group_difference( group1, group2, group_out );
-
-#ifdef PERF_PROFILE
-    PROFILE_STOP(61);
-#endif
-
     return returnVal;
 }
 
@@ -1423,17 +1080,7 @@ int   MPI_Group_excl( group, n, ranks, newgroup ) //62
     MPI_Group * newgroup;
 {
     int   returnVal;
-
-#ifdef PERF_PROFILE
-    PROFILE_START(62);
-#endif
-
     returnVal = PMPI_Group_excl( group, n, ranks, newgroup );
-
-#ifdef PERF_PROFILE
-    PROFILE_STOP(62);
-#endif
-
     return returnVal;
 }
 
@@ -1441,17 +1088,7 @@ int   MPI_Group_free( group ) //63
     MPI_Group * group;
 {
     int   returnVal;
-
-#ifdef PERF_PROFILE
-    PROFILE_START(63);
-#endif
-
     returnVal = PMPI_Group_free( group );
-
-#ifdef PERF_PROFILE
-    PROFILE_STOP(63);
-#endif
-
     return returnVal;
 }
 
@@ -1462,17 +1099,7 @@ int   MPI_Group_incl( group, n, ranks, group_out ) //64
     MPI_Group * group_out;
 {
     int   returnVal;
-
-#ifdef PERF_PROFILE
-    PROFILE_START(64);
-#endif
-
     returnVal = PMPI_Group_incl( group, n, ranks, group_out );
-
-#ifdef PERF_PROFILE
-    PROFILE_STOP(64);
-#endif
-
     return returnVal;
 }
 
@@ -1482,17 +1109,7 @@ int   MPI_Group_intersection( group1, group2, group_out ) //65
     MPI_Group * group_out;
 {
     int   returnVal;
-
-#ifdef PERF_PROFILE
-    PROFILE_START(65);
-#endif
-
     returnVal = PMPI_Group_intersection( group1, group2, group_out );
-
-#ifdef PERF_PROFILE
-    PROFILE_STOP(65);
-#endif
-
     return returnVal;
 }
 
@@ -1501,17 +1118,7 @@ int   MPI_Group_rank( group, rank ) //66
     int * rank;
 {
     int   returnVal;
-
-#ifdef PERF_PROFILE
-    PROFILE_START(66);
-#endif
-
     returnVal = PMPI_Group_rank( group, rank );
-
-#ifdef PERF_PROFILE
-    PROFILE_STOP(66);
-#endif
-
     return returnVal;
 }
 
@@ -1522,17 +1129,7 @@ int   MPI_Group_range_excl( group, n, ranges, newgroup ) //67
     MPI_Group * newgroup;
 {
     int   returnVal;
-
-#ifdef PERF_PROFILE
-    PROFILE_START(67);
-#endif
-
     returnVal = PMPI_Group_range_excl( group, n, ranges, newgroup );
-
-#ifdef PERF_PROFILE
-    PROFILE_STOP(67);
-#endif
-
     return returnVal;
 }
 
@@ -1543,17 +1140,7 @@ int   MPI_Group_range_incl( group, n, ranges, newgroup ) //68
     MPI_Group * newgroup;
 {
     int   returnVal;
-
-#ifdef PERF_PROFILE
-    PROFILE_START(68);
-#endif
-
     returnVal = PMPI_Group_range_incl( group, n, ranges, newgroup );
-
-#ifdef PERF_PROFILE
-    PROFILE_STOP(68);
-#endif
-
     return returnVal;
 }
 
@@ -1562,17 +1149,7 @@ int   MPI_Group_size( group, size ) //69
     int * size;
 {
     int   returnVal;
-
-#ifdef PERF_PROFILE
-    PROFILE_START(69);
-#endif
-
     returnVal = PMPI_Group_size( group, size );
-
-#ifdef PERF_PROFILE
-    PROFILE_STOP(69);
-#endif
-
     return returnVal;
 }
 
@@ -1584,17 +1161,7 @@ int   MPI_Group_translate_ranks( group_a, n, ranks_a, group_b, ranks_b ) //70
     int * ranks_b;
 {
     int   returnVal;
-
-#ifdef PERF_PROFILE
-    PROFILE_START(70);
-#endif
-
     returnVal = PMPI_Group_translate_ranks( group_a, n, ranks_a, group_b, ranks_b );
-
-#ifdef PERF_PROFILE
-    PROFILE_STOP(70);
-#endif
-
     return returnVal;
 }
 
@@ -1604,17 +1171,7 @@ int   MPI_Group_union( group1, group2, group_out ) //71
     MPI_Group * group_out;
 {
     int   returnVal;
-
-#ifdef PERF_PROFILE
-    PROFILE_START(71);
-#endif
-
     returnVal = PMPI_Group_union( group1, group2, group_out );
-
-#ifdef PERF_PROFILE
-    PROFILE_STOP(71);
-#endif
-
     return returnVal;
 }
 
@@ -1627,17 +1184,7 @@ int   MPI_Intercomm_create( local_comm, local_leader, peer_comm, remote_leader, 
     MPI_Comm * comm_out;
 {
     int   returnVal;
-
-#ifdef PERF_PROFILE
-    PROFILE_START(72);
-#endif
-
     returnVal = PMPI_Intercomm_create( local_comm, local_leader, peer_comm, remote_leader, tag, comm_out );
-
-#ifdef PERF_PROFILE
-    PROFILE_STOP(72);
-#endif
-
     return returnVal;
 }
 
@@ -1647,17 +1194,7 @@ int   MPI_Intercomm_merge( comm, high, comm_out ) //73
     MPI_Comm * comm_out;
 {
     int   returnVal;
-
-#ifdef PERF_PROFILE
-    PROFILE_START(73);
-#endif
-
     returnVal = PMPI_Intercomm_merge( comm, high, comm_out );
-
-#ifdef PERF_PROFILE
-    PROFILE_STOP(73);
-#endif
-
     return returnVal;
 }
 
@@ -1668,17 +1205,7 @@ int   MPI_Keyval_create( copy_fn, delete_fn, keyval, extra_state ) //74
     void * extra_state;
 {
     int   returnVal;
-
-#ifdef PERF_PROFILE
-    PROFILE_START(74);
-#endif
-
     returnVal = PMPI_Keyval_create( copy_fn, delete_fn, keyval, extra_state );
-
-#ifdef PERF_PROFILE
-    PROFILE_STOP(74);
-#endif
-
     return returnVal;
 }
 
@@ -1686,17 +1213,7 @@ int   MPI_Keyval_free( keyval ) //75
     int * keyval;
 {
     int   returnVal;
-
-#ifdef PERF_PROFILE
-    PROFILE_START(75);
-#endif
-
     returnVal = PMPI_Keyval_free( keyval );
-
-#ifdef PERF_PROFILE
-    PROFILE_STOP(75);
-#endif
-
     return returnVal;
 }
 
@@ -1707,17 +1224,7 @@ int   MPI_Cart_coords( comm, rank, maxdims, coords ) //76
     int * coords;
 {
     int   returnVal;
-
-#ifdef PERF_PROFILE
-    PROFILE_START(76);
-#endif
-
     returnVal = PMPI_Cart_coords( comm, rank, maxdims, coords );
-
-#ifdef PERF_PROFILE
-    PROFILE_STOP(76);
-#endif
-
     return returnVal;
 }
 
@@ -1730,17 +1237,7 @@ int   MPI_Cart_create( comm_old, ndims, dims, periods, reorder, comm_cart ) //77
     MPI_Comm * comm_cart;
 {
     int   returnVal;
-
-#ifdef PERF_PROFILE
-    PROFILE_START(77);
-#endif
-
     returnVal = PMPI_Cart_create( comm_old, ndims, dims, periods, reorder, comm_cart );
-
-#ifdef PERF_PROFILE
-    PROFILE_STOP(77);
-#endif
-
     return returnVal;
 }
 
@@ -1752,17 +1249,7 @@ int   MPI_Cart_get( comm, maxdims, dims, periods, coords ) //78
     int * coords;
 {
     int   returnVal;
-
-#ifdef PERF_PROFILE
-    PROFILE_START(78);
-#endif
-
     returnVal = PMPI_Cart_get( comm, maxdims, dims, periods, coords );
-
-#ifdef PERF_PROFILE
-    PROFILE_STOP(78);
-#endif
-
     return returnVal;
 }
 
@@ -1774,17 +1261,7 @@ int   MPI_Cart_map( comm_old, ndims, dims, periods, newrank ) //79
     int * newrank;
 {
     int   returnVal;
-
-#ifdef PERF_PROFILE
-    PROFILE_START(79);
-#endif
-
     returnVal = PMPI_Cart_map( comm_old, ndims, dims, periods, newrank );
-
-#ifdef PERF_PROFILE
-    PROFILE_STOP(79);
-#endif
-
     return returnVal;
 }
 
@@ -1794,17 +1271,7 @@ int   MPI_Cart_rank( comm, coords, rank ) //80
     int * rank;
 {
     int   returnVal;
-
-#ifdef PERF_PROFILE
-    PROFILE_START(80);
-#endif
-
     returnVal = PMPI_Cart_rank( comm, coords, rank );
-
-#ifdef PERF_PROFILE
-    PROFILE_STOP(80);
-#endif
-
     return returnVal;
 }
 
@@ -1816,17 +1283,7 @@ int   MPI_Cart_shift( comm, direction, displ, source, dest ) //81
     int * dest;
 {
     int   returnVal;
-
-#ifdef PERF_PROFILE
-    PROFILE_START(81);
-#endif
-
     returnVal = PMPI_Cart_shift( comm, direction, displ, source, dest );
-
-#ifdef PERF_PROFILE
-    PROFILE_STOP(81);
-#endif
-
     return returnVal;
 }
 
@@ -1836,17 +1293,7 @@ int   MPI_Cart_sub( comm, remain_dims, comm_new ) //82
     MPI_Comm * comm_new;
 {
     int   returnVal;
-
-#ifdef PERF_PROFILE
-    PROFILE_START(82);
-#endif
-
     returnVal = PMPI_Cart_sub( comm, remain_dims, comm_new );
-
-#ifdef PERF_PROFILE
-    PROFILE_STOP(82);
-#endif
-
     return returnVal;
 }
 
@@ -1855,17 +1302,7 @@ int   MPI_Cartdim_get( comm, ndims ) //83
     int * ndims;
 {
     int   returnVal;
-
-#ifdef PERF_PROFILE
-    PROFILE_START(83);
-#endif
-
     returnVal = PMPI_Cartdim_get( comm, ndims );
-
-#ifdef PERF_PROFILE
-    PROFILE_STOP(83);
-#endif
-
     return returnVal;
 }
 
@@ -1875,17 +1312,7 @@ int  MPI_Dims_create( nnodes, ndims, dims ) //84
     int * dims;
 {
     int  returnVal;
-
-#ifdef PERF_PROFILE
-    PROFILE_START(84);
-#endif
-
     returnVal = PMPI_Dims_create( nnodes, ndims, dims );
-
-#ifdef PERF_PROFILE
-    PROFILE_STOP(84);
-#endif
-
     return returnVal;
 }
 
@@ -1898,17 +1325,7 @@ int   MPI_Graph_create( comm_old, nnodes, index, edges, reorder, comm_graph ) //
     MPI_Comm * comm_graph;
 {
     int   returnVal;
-
-#ifdef PERF_PROFILE
-    PROFILE_START(85);
-#endif
-
     returnVal = PMPI_Graph_create( comm_old, nnodes, index, edges, reorder, comm_graph );
-
-#ifdef PERF_PROFILE
-    PROFILE_STOP(85);
-#endif
-
     return returnVal;
 }
 
@@ -1920,17 +1337,7 @@ int   MPI_Graph_get( comm, maxindex, maxedges, index, edges ) //86
     int * edges;
 {
     int   returnVal;
-
-#ifdef PERF_PROFILE
-    PROFILE_START(86);
-#endif
-
     returnVal = PMPI_Graph_get( comm, maxindex, maxedges, index, edges );
-
-#ifdef PERF_PROFILE
-    PROFILE_STOP(86);
-#endif
-
     return returnVal;
 }
 
@@ -1942,17 +1349,7 @@ int   MPI_Graph_map( comm_old, nnodes, index, edges, newrank ) //87
     int * newrank;
 {
     int   returnVal;
-
-#ifdef PERF_PROFILE
-    PROFILE_START(87);
-#endif
-
     returnVal = PMPI_Graph_map( comm_old, nnodes, index, edges, newrank );
-
-#ifdef PERF_PROFILE
-    PROFILE_STOP(87);
-#endif
-
     return returnVal;
 }
 
@@ -1963,17 +1360,7 @@ int   MPI_Graph_neighbors( comm, rank, maxneighbors, neighbors ) //88
     int * neighbors;
 {
     int   returnVal;
-
-#ifdef PERF_PROFILE
-    PROFILE_START(88);
-#endif
-
     returnVal = PMPI_Graph_neighbors( comm, rank, maxneighbors, neighbors );
-
-#ifdef PERF_PROFILE
-    PROFILE_STOP(88);
-#endif
-
     return returnVal;
 }
 
@@ -1983,17 +1370,7 @@ int   MPI_Graph_neighbors_count( comm, rank, nneighbors ) //89
     int * nneighbors;
 {
     int   returnVal;
-
-#ifdef PERF_PROFILE
-    PROFILE_START(89);
-#endif
-
     returnVal = PMPI_Graph_neighbors_count( comm, rank, nneighbors );
-
-#ifdef PERF_PROFILE
-    PROFILE_STOP(89);
-#endif
-
     return returnVal;
 }
 
@@ -2003,17 +1380,7 @@ int   MPI_Graphdims_get( comm, nnodes, nedges ) //90
     int * nedges;
 {
     int   returnVal;
-
-#ifdef PERF_PROFILE
-    PROFILE_START(90);
-#endif
-
     returnVal = PMPI_Graphdims_get( comm, nnodes, nedges );
-
-#ifdef PERF_PROFILE
-    PROFILE_STOP(90);
-#endif
-
     return returnVal;
 }
 
@@ -2022,17 +1389,7 @@ int   MPI_Topo_test( comm, top_type ) //91
     int * top_type;
 {
     int   returnVal;
-
-#ifdef PERF_PROFILE
-    PROFILE_START(91);
-#endif
-
     returnVal = PMPI_Topo_test( comm, top_type );
-
-#ifdef PERF_PROFILE
-    PROFILE_STOP(91);
-#endif
-
     return returnVal;
 }
 
@@ -2054,17 +1411,7 @@ int  MPI_Abort( comm, errorcode )
 #endif /* MPI_Abort & LAM MPI [LAM MPI] */
 {
     int  returnVal;
-
-#ifdef PERF_PROFILE
-    PROFILE_START(92);
-#endif
-
     returnVal = PMPI_Abort( comm, errorcode );
-
-#ifdef PERF_PROFILE
-    PROFILE_STOP(92);
-#endif
-
     return returnVal;
 }
 
@@ -2073,17 +1420,7 @@ int  MPI_Error_class( errorcode, errorclass ) //93
     int * errorclass;
 {
     int  returnVal;
-
-#ifdef PERF_PROFILE
-    PROFILE_START(93);
-#endif
-
     returnVal = PMPI_Error_class( errorcode, errorclass );
-
-#ifdef PERF_PROFILE
-    PROFILE_STOP(93);
-#endif
-
     return returnVal;
 }
 
@@ -2092,17 +1429,7 @@ int  MPI_Errhandler_create( function, errhandler ) //94
     MPI_Errhandler * errhandler;
 {
     int  returnVal;
-
-#ifdef PERF_PROFILE
-    PROFILE_START(94);
-#endif
-
     returnVal = PMPI_Errhandler_create( function, errhandler );
-
-#ifdef PERF_PROFILE
-    PROFILE_STOP(94);
-#endif
-
     return returnVal;
 }
 
@@ -2110,17 +1437,7 @@ int  MPI_Errhandler_free( errhandler ) //95
     MPI_Errhandler * errhandler;
 {
     int  returnVal;
-
-#ifdef PERF_PROFILE
-    PROFILE_START(95);
-#endif
-
     returnVal = PMPI_Errhandler_free( errhandler );
-
-#ifdef PERF_PROFILE
-    PROFILE_STOP(95);
-#endif
-
     return returnVal;
 }
 
@@ -2129,17 +1446,7 @@ int  MPI_Errhandler_get( comm, errhandler ) //96
     MPI_Errhandler * errhandler;
 {
     int  returnVal;
-
-#ifdef PERF_PROFILE
-    PROFILE_START(96);
-#endif
-
     returnVal = PMPI_Errhandler_get( comm, errhandler );
-
-#ifdef PERF_PROFILE
-    PROFILE_STOP(96);
-#endif
-
     return returnVal;
 }
 
@@ -2149,17 +1456,7 @@ int  MPI_Error_string( errorcode, string, resultlen ) //97
     int * resultlen;
 {
     int  returnVal;
-
-#ifdef PERF_PROFILE
-    PROFILE_START(97);
-#endif
-
     returnVal = PMPI_Error_string( errorcode, string, resultlen );
-
-#ifdef PERF_PROFILE
-    PROFILE_STOP(97);
-#endif
-
     return returnVal;
 }
 
@@ -2168,17 +1465,7 @@ int  MPI_Errhandler_set( comm, errhandler ) //98
     MPI_Errhandler errhandler;
 {
     int  returnVal;
-
-#ifdef PERF_PROFILE
-    PROFILE_START(98);
-#endif
-
     returnVal = PMPI_Errhandler_set( comm, errhandler );
-
-#ifdef PERF_PROFILE
-    PROFILE_STOP(98);
-#endif
-
     return returnVal;
 }
 
@@ -2188,17 +1475,7 @@ int  MPI_Get_processor_name( name, resultlen ) //99
     int * resultlen;
 {
     int  returnVal;
-
-#ifdef PERF_PROFILE
-    PROFILE_START(99);
-#endif
-
     returnVal = PMPI_Get_processor_name( name, resultlen );
-
-#ifdef PERF_PROFILE
-    PROFILE_STOP(99);
-#endif
-
     return returnVal;
 }
 
@@ -2206,34 +1483,14 @@ int  MPI_Get_processor_name( name, resultlen ) //99
 double  MPI_Wtick(  ) //100
 {
     double  returnVal;
-
-#ifdef PERF_PROFILE
-    PROFILE_START(100);
-#endif
-
     returnVal = PMPI_Wtick(  );
-
-#ifdef PERF_PROFILE
-    PROFILE_STOP(100);
-#endif
-
     return returnVal;
 }
 
 double  MPI_Wtime(  ) //101
 {
     double  returnVal;
-
-#ifdef PERF_PROFILE
-    PROFILE_START(101);
-#endif
-
     returnVal = PMPI_Wtime(  );
-
-#ifdef PERF_PROFILE
-    PROFILE_STOP(101);
-#endif
-
     return returnVal;
 }
 
@@ -2242,17 +1499,7 @@ int  MPI_Address( location, address ) //102
     MPI_Aint * address;
 {
     int  returnVal;
-
-#ifdef PERF_PROFILE
-    PROFILE_START(102);
-#endif
-
     returnVal = PMPI_Address( location, address );
-
-#ifdef PERF_PROFILE
-    PROFILE_STOP(102);
-#endif
-
     return returnVal;
 }
 
@@ -2262,17 +1509,7 @@ int  MPI_Op_create( function, commute, op ) //103
     MPI_Op * op;
 {
     int  returnVal;
-
-#ifdef PERF_PROFILE
-    PROFILE_START(103);
-#endif
-
     returnVal = PMPI_Op_create( function, commute, op );
-
-#ifdef PERF_PROFILE
-    PROFILE_STOP(103);
-#endif
-
     return returnVal;
 }
 
@@ -2280,17 +1517,7 @@ int  MPI_Op_free( op ) //104
     MPI_Op * op;
 {
     int  returnVal;
-
-#ifdef PERF_PROFILE
-    PROFILE_START(104);
-#endif
-
     returnVal = PMPI_Op_free( op );
-
-#ifdef PERF_PROFILE
-    PROFILE_STOP(104);
-#endif
-
     return returnVal;
 }
 
@@ -2299,17 +1526,7 @@ int   MPI_Attr_delete( comm, keyval ) //105
     int keyval;
 {
     int   returnVal;
-
-#ifdef PERF_PROFILE
-    PROFILE_START(105);
-#endif
-
     returnVal = PMPI_Attr_delete( comm, keyval );
-
-#ifdef PERF_PROFILE
-    PROFILE_STOP(105);
-#endif
-
     return returnVal;
 }
 
@@ -2320,17 +1537,7 @@ int   MPI_Attr_get( comm, keyval, attr_value, flag ) //106
     int * flag;
 {
     int   returnVal;
-
-#ifdef PERF_PROFILE
-    PROFILE_START(106);
-#endif
-
     returnVal = PMPI_Attr_get( comm, keyval, attr_value, flag );
-
-#ifdef PERF_PROFILE
-    PROFILE_STOP(106);
-#endif
-
     return returnVal;
 }
 
@@ -2340,17 +1547,7 @@ int   MPI_Attr_put( comm, keyval, attr_value ) //107
     void * attr_value;
 {
     int   returnVal;
-
-#ifdef PERF_PROFILE
-    PROFILE_START(107);
-#endif
-
     returnVal = PMPI_Attr_put( comm, keyval, attr_value );
-
-#ifdef PERF_PROFILE
-    PROFILE_STOP(107);
-#endif
-
     return returnVal;
 }
 
@@ -2359,17 +1556,7 @@ int  MPI_Buffer_attach( buffer, size ) //108
     int size;
 {
     int  returnVal;
-
-#ifdef PERF_PROFILE
-    PROFILE_START(108);
-#endif
-
     returnVal = PMPI_Buffer_attach( buffer, size );
-
-#ifdef PERF_PROFILE
-    PROFILE_STOP(108);
-#endif
-
     return returnVal;
 }
 
@@ -2378,17 +1565,7 @@ int  MPI_Buffer_detach( buffer, size ) //109
     int * size;
 {
     int  returnVal;
-
-#ifdef PERF_PROFILE
-    PROFILE_START(109);
-#endif
-
     returnVal = PMPI_Buffer_detach( buffer, size );
-
-#ifdef PERF_PROFILE
-    PROFILE_STOP(109);
-#endif
-
     return returnVal;
 }
 
@@ -2398,17 +1575,7 @@ int   MPI_Get_elements( status, datatype, elements ) //110
     int * elements;
 {
     int   returnVal;
-
-#ifdef PERF_PROFILE
-    PROFILE_START(110);
-#endif
-
     returnVal = PMPI_Get_elements( status, datatype, elements );
-
-#ifdef PERF_PROFILE
-    PROFILE_STOP(110);
-#endif
-
     return returnVal;
 }
 
@@ -2418,17 +1585,7 @@ int  MPI_Get_count( status, datatype, count ) //111
     int * count;
 {
     int  returnVal;
-
-#ifdef PERF_PROFILE
-    PROFILE_START(111);
-#endif
-
     returnVal = PMPI_Get_count( status, datatype, count );
-
-#ifdef PERF_PROFILE
-    PROFILE_STOP(111);
-#endif
-
     return returnVal;
 }
 
@@ -2436,17 +1593,7 @@ int   MPI_Type_commit( datatype ) //112
     MPI_Datatype * datatype;
 {
     int   returnVal;
-
-#ifdef PERF_PROFILE
-    PROFILE_START(112);
-#endif
-
     returnVal = PMPI_Type_commit( datatype );
-
-#ifdef PERF_PROFILE
-    PROFILE_STOP(112);
-#endif
-
     return returnVal;
 }
 
@@ -2456,17 +1603,7 @@ int  MPI_Type_contiguous( count, old_type, newtype ) //113
     MPI_Datatype * newtype;
 {
     int  returnVal;
-
-#ifdef PERF_PROFILE
-    PROFILE_START(113);
-#endif
-
     returnVal = PMPI_Type_contiguous( count, old_type, newtype );
-
-#ifdef PERF_PROFILE
-    PROFILE_STOP(113);
-#endif
-
     return returnVal;
 }
 
@@ -2475,17 +1612,7 @@ int  MPI_Type_extent( datatype, extent ) //114
     MPI_Aint * extent;
 {
     int  returnVal;
-
-#ifdef PERF_PROFILE
-    PROFILE_START(114);
-#endif
-
     returnVal = PMPI_Type_extent( datatype, extent );
-
-#ifdef PERF_PROFILE
-    PROFILE_STOP(114);
-#endif
-
     return returnVal;
 }
 
@@ -2493,17 +1620,7 @@ int   MPI_Type_free( datatype ) //115
     MPI_Datatype * datatype;
 {
     int   returnVal;
-
-#ifdef PERF_PROFILE
-    PROFILE_START(115);
-#endif
-
     returnVal = PMPI_Type_free( datatype );
-
-#ifdef PERF_PROFILE
-    PROFILE_STOP(115);
-#endif
-
     return returnVal;
 }
 
@@ -2515,17 +1632,7 @@ int  MPI_Type_hindexed( count, blocklens, indices, old_type, newtype ) //116
     MPI_Datatype * newtype;
 {
     int  returnVal;
-
-#ifdef PERF_PROFILE
-    PROFILE_START(116);
-#endif
-
     returnVal = PMPI_Type_hindexed( count, blocklens, indices, old_type, newtype );
-
-#ifdef PERF_PROFILE
-    PROFILE_STOP(116);
-#endif
-
     return returnVal;
 }
 
@@ -2537,17 +1644,7 @@ int  MPI_Type_hvector( count, blocklen, stride, old_type, newtype ) //117
     MPI_Datatype * newtype;
 {
     int  returnVal;
-
-#ifdef PERF_PROFILE
-    PROFILE_START(117);
-#endif
-
     returnVal = PMPI_Type_hvector( count, blocklen, stride, old_type, newtype );
-
-#ifdef PERF_PROFILE
-    PROFILE_STOP(117);
-#endif
-
     return returnVal;
 }
 
@@ -2559,17 +1656,7 @@ int  MPI_Type_indexed( count, blocklens, indices, old_type, newtype ) //118
     MPI_Datatype * newtype;
 {
     int  returnVal;
-
-#ifdef PERF_PROFILE
-    PROFILE_START(118);
-#endif
-
     returnVal = PMPI_Type_indexed( count, blocklens, indices, old_type, newtype );
-
-#ifdef PERF_PROFILE
-    PROFILE_STOP(118);
-#endif
-
     return returnVal;
 }
 
@@ -2578,17 +1665,7 @@ int   MPI_Type_lb( datatype, displacement ) //119
     MPI_Aint * displacement;
 {
     int   returnVal;
-
-#ifdef PERF_PROFILE
-    PROFILE_START(119);
-#endif
-
     returnVal = PMPI_Type_lb( datatype, displacement );
-
-#ifdef PERF_PROFILE
-    PROFILE_STOP(119);
-#endif
-
     return returnVal;
 }
 
@@ -2597,17 +1674,7 @@ int   MPI_Type_size( datatype, size ) //120
     int * size;
 {
     int   returnVal;
-
-#ifdef PERF_PROFILE
-    PROFILE_START(120);
-#endif
-
     returnVal = PMPI_Type_size( datatype, size );
-
-#ifdef PERF_PROFILE
-    PROFILE_STOP(120);
-#endif
-
     return returnVal;
 }
 
@@ -2619,16 +1686,7 @@ int  MPI_Type_struct( count, blocklens, indices, old_types, newtype ) //121
     MPI_Datatype * newtype;
 {
     int  returnVal;
-
-#ifdef PERF_PROFILE
-    PROFILE_START(121);
-#endif
-
     returnVal = PMPI_Type_struct( count, blocklens, indices, old_types, newtype );
-
-#ifdef PERF_PROFILE
-    PROFILE_STOP(121);
-#endif
     return returnVal;
 }
 
@@ -2637,17 +1695,7 @@ int   MPI_Type_ub( datatype, displacement ) //122
     MPI_Aint * displacement;
 {
     int   returnVal;
-
-#ifdef PERF_PROFILE
-    PROFILE_START(122);
-#endif
-
     returnVal = PMPI_Type_ub( datatype, displacement );
-
-#ifdef PERF_PROFILE
-    PROFILE_STOP(122);
-#endif
-
     return returnVal;
 }
 
@@ -2659,17 +1707,7 @@ int  MPI_Type_vector( count, blocklen, stride, old_type, newtype ) //123
     MPI_Datatype * newtype;
 {
     int  returnVal;
-
-#ifdef PERF_PROFILE
-    PROFILE_START(123);
-#endif
-
     returnVal = PMPI_Type_vector( count, blocklen, stride, old_type, newtype );
-
-#ifdef PERF_PROFILE
-    PROFILE_STOP(123);
-#endif
-
     return returnVal;
 }
 
@@ -2683,17 +1721,7 @@ int   MPI_Unpack( inbuf, insize, position, outbuf, outcount, type, comm ) //124
     MPI_Comm comm;
 {
     int   returnVal;
-
-#ifdef PERF_PROFILE
-    PROFILE_START(124);
-#endif
-
     returnVal = PMPI_Unpack( inbuf, insize, position, outbuf, outcount, type, comm );
-
-#ifdef PERF_PROFILE
-    PROFILE_STOP(124);
-#endif
-
     return returnVal;
 }
 
@@ -2707,17 +1735,7 @@ int   MPI_Pack( inbuf, incount, type, outbuf, outcount, position, comm ) //125
     MPI_Comm comm;
 {
     int   returnVal;
-
-#ifdef PERF_PROFILE
-    PROFILE_START(125);
-#endif
-
     returnVal = PMPI_Pack( inbuf, incount, type, outbuf, outcount, position, comm );
-
-#ifdef PERF_PROFILE
-    PROFILE_STOP(125);
-#endif
-
     return returnVal;
 }
 
@@ -2728,17 +1746,7 @@ int   MPI_Pack_size( incount, datatype, comm, size ) //126
     int * size;
 {
     int   returnVal;
-
-#ifdef PERF_PROFILE
-    PROFILE_START(126);
-#endif
-
     returnVal = PMPI_Pack_size( incount, datatype, comm, size );
-
-#ifdef PERF_PROFILE
-    PROFILE_STOP(126);
-#endif
-
     return returnVal;
 }
 
