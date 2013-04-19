@@ -16,6 +16,7 @@
 LogGPO log_cmp, log_net, log_smp;
 IMBPara imb;
 pLocation location;
+#define SYN_SIZE (64*1024)
 
 /********************************************************************
 * Determining whether two MPI rank are in the same node or same CPU
@@ -395,7 +396,20 @@ int tag;
 MPI_Comm comm;
 MPI_Status * status;
 {
-	return 0;
+    int r0;
+    PMPI_Comm_rank(MPI_COMM_WORLD, &r0);
+    pLogGPO pgpo = getGPO(r0,source);
+    int size = E_count2byte(datatype, count);
+    LoggpoPara para = getPara( pgpo, size);
+    double sendtime, retVal;
+    if (size < SYN_SIZE) {
+        sendtime = para.os + para.ov;
+    }
+    else {
+        sendtime = para.os + para.ov + 2*(pgpo->os_0 + pgpo->or_0 + pgpo->latency);
+    }
+    retVal = para.rtt/2 - sendtime;
+	return retVal;
 }
 double E_MPI_Rsend( buf, count, datatype, dest, tag, comm )
 void * buf;
@@ -426,7 +440,19 @@ int dest;
 int tag;
 MPI_Comm comm;
 {
-	return 0;
+    int r0;
+    PMPI_Comm_rank(MPI_COMM_WORLD, &r0);
+    pLogGPO pgpo = getGPO(r0,dest);
+    int size = E_count2byte(datatype, count);
+    LoggpoPara para = getPara( pgpo, size);
+    double retVal;
+    if (size < SYN_SIZE) {
+        retVal = para.os + para.ov;
+    }
+    else {
+        retVal = para.os + para.ov + 2*(pgpo->os_0 + pgpo->or_0 + pgpo->latency);
+    }
+	return retVal;
 }
 double E_MPI_Sendrecv( sendbuf, sendcount, sendtype, dest, sendtag, recvbuf, recvcount, recvtype, source, recvtag, comm, status )
 void * sendbuf;
@@ -442,7 +468,17 @@ int recvtag;
 MPI_Comm comm;
 MPI_Status * status;
 {
-	return 0;
+    if (dest != source) {
+        printf("Must deal with E_MPI_Sendrecv\n");
+    }
+    int r0;
+    PMPI_Comm_rank(MPI_COMM_WORLD, &r0);
+    pLogGPO pgpo = getGPO(r0,dest);
+    int size = E_count2byte(sendtype, sendcount);
+    LoggpoPara para = getPara( pgpo, size);
+    double retVal;
+    retVal = para.sr;
+	return retVal;
 }
 double E_MPI_Sendrecv_replace( buf, count, datatype, dest, sendtag, source, recvtag, comm, status )
 void * buf;
