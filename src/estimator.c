@@ -218,7 +218,7 @@ double E_MPI_Init(int * argc, char*** argv)
         sprintf(sendbuf, "%s %d",hostname,core);
         PMPI_Send( sendbuf, 100, MPI_CHAR, 0, myrank, MPI_COMM_WORLD);
     }
-    if (myrank == 0) {
+    else {
         char rbuf[100];
         MPI_Status ms;
         char** ls = (char**)malloc(gsize*sizeof(char*));
@@ -252,9 +252,23 @@ double E_MPI_Init(int * argc, char*** argv)
         for (int i = 0; i < cnt; ++ i) 
             free(ls[i]);
         free(ls);
+        printf("from RANK 0\n");
+        for (int i = 0; i < gsize; ++ i) {
+            printf ("rank:%d, node:%d, core:%d\n", i, location[i].node, location[i].core );
+        }
     }
+    // boardcast to all MPI ranks
+    PMPI_Bcast(location, 2*gsize, MPI_INT, 0, MPI_COMM_WORLD);
+    if (myrank == 20) {
+        printf("from RANK 20\n");
+        for (int i = 0; i < gsize; ++ i) {
+            printf ("rank:%d, node:%d, core:%d\n", i, location[i].node, location[i].core );
+        }
+    }
+
 	return 0;
 }
+
 #ifdef PERF_MPI_THREADED
 double E_MPI_Init_thread (argc, argv, required, provided )
 int * argc;
