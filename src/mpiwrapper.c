@@ -42,28 +42,14 @@ int  MPI_Init( argc, argv )
 }
 
 #ifdef PERF_MPI_THREADED
-int  MPI_Init_thread (argc, argv, required, provided )
+int  MPI_Init_thread (argc, argv, required, provided ) //1
     int * argc;
     char *** argv;
     int required;
     int *provided;
 {
     int  returnVal;
-
-#ifdef PERF_PROFILE
-    PROFILE_START(1);
-#endif
-
-#ifdef DEBUG
-    printf("Enter MPI_Init_thread\n");
-#endif
-
     returnVal = PMPI_Init_thread( argc, argv, required, provided );
-
-#ifdef PERF_PROFILE
-    PROFILE_STOP(1);
-#endif
-
     return returnVal;
 }
 #endif /* PERF_MPI_THREADED */
@@ -92,7 +78,7 @@ int  MPI_Finalize(  )
  *                                                                 *
  ******************************************************************/
 
-int  MPI_Bsend( buf, count, datatype, dest, tag, comm )
+int  MPI_Bsend( buf, count, datatype, dest, tag, comm ) //3
     void * buf;
     int count;
     MPI_Datatype datatype;
@@ -101,25 +87,11 @@ int  MPI_Bsend( buf, count, datatype, dest, tag, comm )
     MPI_Comm comm;
 {
     int returnVal;
-
-#ifdef PERF_PROFILE
-    PROFILE_START(3);
-#endif
-
-#ifdef DEBUG
-    printf("Enter MPI_Bsend\n");
-#endif
-
     returnVal = PMPI_Bsend( buf, count, datatype, dest, tag, comm );
-
-#ifdef PERF_PROFILE
-    PROFILE_STOP(3);
-#endif
-
     return returnVal;
 }
 
-int  MPI_Bsend_init( buf, count, datatype, dest, tag, comm, request )
+int  MPI_Bsend_init( buf, count, datatype, dest, tag, comm, request ) //4
     void * buf;
     int count;
     MPI_Datatype datatype;
@@ -129,25 +101,11 @@ int  MPI_Bsend_init( buf, count, datatype, dest, tag, comm, request )
     MPI_Request * request;
 {
     int  returnVal;
-
-#ifdef PERF_PROFILE
-    PROFILE_START(4);
-#endif
-
-#ifdef DEBUG
-    printf("Enter MPI_Bsend_init\n");
-#endif
-
     returnVal = PMPI_Bsend_init( buf, count, datatype, dest, tag, comm, request );
-
-#ifdef PERF_PROFILE
-    PROFILE_STOP(4);
-#endif
-
     return returnVal;
 }
 
-int  MPI_Recv_init( buf, count, datatype, source, tag, comm, request )
+int  MPI_Recv_init( buf, count, datatype, source, tag, comm, request ) //5
     void * buf;
     int count;
     MPI_Datatype datatype;
@@ -157,25 +115,11 @@ int  MPI_Recv_init( buf, count, datatype, source, tag, comm, request )
     MPI_Request * request;
 {
     int  returnVal;
-
-#ifdef PERF_PROFILE
-    PROFILE_START(5);
-#endif
-
-#ifdef DEBUG
-    printf("Enter MPI_Recv_init\n");
-#endif
-
     returnVal = PMPI_Recv_init( buf, count, datatype, source, tag, comm, request );
-
-#ifdef PERF_PROFILE
-    PROFILE_STOP(5);
-#endif
-
     return returnVal;
 }
 
-int  MPI_Send_init( buf, count, datatype, dest, tag, comm, request )
+int  MPI_Send_init( buf, count, datatype, dest, tag, comm, request ) //6
     void * buf;
     int count;
     MPI_Datatype datatype;
@@ -185,25 +129,11 @@ int  MPI_Send_init( buf, count, datatype, dest, tag, comm, request )
     MPI_Request * request;
 {
     int  returnVal;
-
-#ifdef PERF_PROFILE
-    PROFILE_START(6);
-#endif
-
-#ifdef DEBUG
-    printf("Enter MPI_Send_init\n");
-#endif
-
     returnVal = PMPI_Send_init( buf, count, datatype, dest, tag, comm, request );
-
-#ifdef PERF_PROFILE
-    PROFILE_STOP(6);
-#endif
-
     return returnVal;
 }
 
-int  MPI_Ibsend( buf, count, datatype, dest, tag, comm, request )
+int  MPI_Ibsend( buf, count, datatype, dest, tag, comm, request ) //7
     void * buf;
     int count;
     MPI_Datatype datatype;
@@ -213,25 +143,11 @@ int  MPI_Ibsend( buf, count, datatype, dest, tag, comm, request )
     MPI_Request * request;
 {
     int  returnVal;
-
-#ifdef PERF_PROFILE
-    PROFILE_START(7);
-#endif
-
-#ifdef DEBUG
-    printf("Enter MPI_Ibsend\n");
-#endif
-
     returnVal = PMPI_Ibsend( buf, count, datatype, dest, tag, comm, request );
-
-#ifdef PERF_PROFILE
-    PROFILE_STOP(7);
-#endif
-
     return returnVal;
 }
 
-int  MPI_Irecv( buf, count, datatype, source, tag, comm, request )
+int  MPI_Irecv( buf, count, datatype, source, tag, comm, request ) //8
     void * buf;
     int count;
     MPI_Datatype datatype;
@@ -241,25 +157,11 @@ int  MPI_Irecv( buf, count, datatype, source, tag, comm, request )
     MPI_Request * request;
 {
     int  returnVal;
-
-#ifdef PERF_PROFILE
-    PROFILE_START(8);
-#endif
-
-#ifdef DEBUG
-    printf("Enter MPI_Irecv\n");
-#endif
-
     returnVal = PMPI_Irecv( buf, count, datatype, source, tag, comm, request );
-
-#ifdef PERF_PROFILE
-    PROFILE_STOP(8);
-#endif
-
     return returnVal;
 }
 
-int  MPI_Irsend( buf, count, datatype, dest, tag, comm, request )
+int  MPI_Irsend( buf, count, datatype, dest, tag, comm, request ) //9
     void * buf;
     int count;
     MPI_Datatype datatype;
@@ -269,25 +171,11 @@ int  MPI_Irsend( buf, count, datatype, dest, tag, comm, request )
     MPI_Request * request;
 {
     int  returnVal;
-
-#ifdef PERF_PROFILE
-    PROFILE_START(9);
-#endif
-
-#ifdef DEBUG
-    printf("Enter MPI_Irsend\n");
-#endif
-
     returnVal = PMPI_Irsend( buf, count, datatype, dest, tag, comm, request );
-
-#ifdef PERF_PROFILE
-    PROFILE_STOP(9);
-#endif
-
     return returnVal;
 }
 
-int  MPI_Isend( buf, count, datatype, dest, tag, comm, request )
+int  MPI_Isend( buf, count, datatype, dest, tag, comm, request ) //10
     void * buf;
     int count;
     MPI_Datatype datatype;
@@ -297,24 +185,11 @@ int  MPI_Isend( buf, count, datatype, dest, tag, comm, request )
     MPI_Request * request;
 {
     int  returnVal;
-
-#ifdef PERF_PROFILE
-    PROFILE_START(10);
-#endif
-
-#ifdef DEBUG
-    printf("Enter MPI_Isend\n");
-#endif
-
     returnVal = PMPI_Isend( buf, count, datatype, dest, tag, comm, request );
-
-#ifdef PERF_PROFILE
-    PROFILE_STOP(10);
-#endif
     return returnVal;
 }
 
-int  MPI_Issend( buf, count, datatype, dest, tag, comm, request )
+int  MPI_Issend( buf, count, datatype, dest, tag, comm, request ) //11
     void * buf;
     int count;
     MPI_Datatype datatype;
@@ -324,24 +199,11 @@ int  MPI_Issend( buf, count, datatype, dest, tag, comm, request )
     MPI_Request * request;
 {
     int  returnVal;
-
-#ifdef PERF_PROFILE
-    PROFILE_START(11);
-#endif
-
-#ifdef DEBUG
-    printf("Enter MPI_Issend\n");
-#endif
-
     returnVal = PMPI_Issend( buf, count, datatype, dest, tag, comm, request );
-
-#ifdef PERF_PROFILE
-    PROFILE_STOP(11);
-#endif
     return returnVal;
 }
 
-int  MPI_Recv( buf, count, datatype, source, tag, comm, status )
+int  MPI_Recv( buf, count, datatype, source, tag, comm, status ) //12
     void * buf;
     int count;
     MPI_Datatype datatype;
@@ -350,31 +212,15 @@ int  MPI_Recv( buf, count, datatype, source, tag, comm, status )
     MPI_Comm comm;
     MPI_Status * status;
 {
-    //MPI_Status local_status;
     int  returnVal;
-    //int size;
-
-#ifdef PERF_PROFILE
-    PROFILE_START(12);
-#endif
-
-#ifdef DEBUG
-    printf("Enter MPI_Recv\n");
-#endif
-
     returnVal = PMPI_Recv( buf, count, datatype, source, tag, comm, status );
-
-#ifdef PERF_PROFILE
-    PROFILE_STOP(12);
-#endif
-
 #ifdef PERF_ASSERT
     E_MPI_Recv( buf, count, datatype, source, tag, comm, status );
 #endif
     return returnVal;
 }
 
-int  MPI_Rsend( buf, count, datatype, dest, tag, comm )
+int  MPI_Rsend( buf, count, datatype, dest, tag, comm ) //13
     void * buf;
     int count;
     MPI_Datatype datatype;
@@ -383,25 +229,11 @@ int  MPI_Rsend( buf, count, datatype, dest, tag, comm )
     MPI_Comm comm;
 {
     int  returnVal;
-
-#ifdef PERF_PROFILE
-    PROFILE_START(13);
-#endif
-
-#ifdef DEBUG
-    printf("Enter MPI_Rsend\n");
-#endif
-
     returnVal = PMPI_Rsend( buf, count, datatype, dest, tag, comm );
-
-#ifdef PERF_PROFILE
-    PROFILE_STOP(13);
-#endif
-
     return returnVal;
 }
 
-int  MPI_Rsend_init( buf, count, datatype, dest, tag, comm, request )
+int  MPI_Rsend_init( buf, count, datatype, dest, tag, comm, request ) //14
     void * buf;
     int count;
     MPI_Datatype datatype;
@@ -411,26 +243,12 @@ int  MPI_Rsend_init( buf, count, datatype, dest, tag, comm, request )
     MPI_Request * request;
 {
     int  returnVal;
-
-#ifdef PERF_PROFILE
-    PROFILE_START(14);
-#endif
-
-#ifdef DEBUG
-    printf("Enter MPI_Rsend_init\n");
-#endif
-
     returnVal = PMPI_Rsend_init( buf, count, datatype, dest, tag, comm, request );
-
-#ifdef PERF_PROFILE
-    PROFILE_STOP(14);
-#endif
-
     return returnVal;
 }
 
 
-int  MPI_Send( buf, count, datatype, dest, tag, comm )
+int  MPI_Send( buf, count, datatype, dest, tag, comm ) //15
     void * buf;
     int count;
     MPI_Datatype datatype;
@@ -439,29 +257,14 @@ int  MPI_Send( buf, count, datatype, dest, tag, comm )
     MPI_Comm comm;
 {
     int  returnVal;
-
-#ifdef PERF_PROFILE
-    PROFILE_START(15);
-#endif
-
-#ifdef DEBUG
-    printf("Enter MPI_Send\n");
-#endif
-
     returnVal = PMPI_Send( buf, count, datatype, dest, tag, comm );
-
-#ifdef PERF_PROFILE
-    PROFILE_STOP(15);
-#endif
-
 #ifdef PERF_ASSERT
     E_MPI_Send( buf, count, datatype, dest, tag, comm );
 #endif
-
     return returnVal;
 }
 
-int  MPI_Sendrecv( sendbuf, sendcount, sendtype, dest, sendtag, recvbuf, recvcount, recvtype, source, recvtag, comm, status )
+int  MPI_Sendrecv( sendbuf, sendcount, sendtype, dest, sendtag, recvbuf, recvcount, recvtype, source, recvtag, comm, status ) //16
     void * sendbuf;
     int sendcount;
     MPI_Datatype sendtype;
@@ -476,25 +279,11 @@ int  MPI_Sendrecv( sendbuf, sendcount, sendtype, dest, sendtag, recvbuf, recvcou
     MPI_Status * status;
 {
     int  returnVal;
-
-#ifdef PERF_PROFILE
-    PROFILE_START(16);
-#endif
-
-#ifdef DEBUG
-    printf("Enter MPI_Sendrecv\n");
-#endif
-
     returnVal = PMPI_Sendrecv( sendbuf, sendcount, sendtype, dest, sendtag, recvbuf, recvcount, recvtype, source, recvtag, comm, status );
-
-#ifdef PERF_PROFILE
-    PROFILE_STOP(16);
-#endif
-
     return returnVal;
 }
 
-int  MPI_Sendrecv_replace( buf, count, datatype, dest, sendtag, source, recvtag, comm, status )
+int  MPI_Sendrecv_replace( buf, count, datatype, dest, sendtag, source, recvtag, comm, status ) //17
     void * buf;
     int count;
     MPI_Datatype datatype;
@@ -506,25 +295,11 @@ int  MPI_Sendrecv_replace( buf, count, datatype, dest, sendtag, source, recvtag,
     MPI_Status * status;
 {
     int  returnVal;
-
-#ifdef PERF_PROFILE
-    PROFILE_START(17);
-#endif
-
-#ifdef DEBUG
-    printf("Enter MPI_Sendrecv_replace\n");
-#endif
-
     returnVal = PMPI_Sendrecv_replace( buf, count, datatype, dest, sendtag, source, recvtag, comm, status );
-
-#ifdef PERF_PROFILE
-    PROFILE_STOP(17);
-#endif
-
     return returnVal;
 }
 
-int  MPI_Ssend( buf, count, datatype, dest, tag, comm )
+int  MPI_Ssend( buf, count, datatype, dest, tag, comm ) //18
     void * buf;
     int count;
     MPI_Datatype datatype;
@@ -533,25 +308,11 @@ int  MPI_Ssend( buf, count, datatype, dest, tag, comm )
     MPI_Comm comm;
 {
     int  returnVal;
-
-#ifdef PERF_PROFILE
-    PROFILE_START(18);
-#endif
-
-#ifdef DEBUG
-    printf("Enter MPI_Ssend\n");
-#endif
-
     returnVal = PMPI_Ssend( buf, count, datatype, dest, tag, comm );
-
-#ifdef PERF_PROFILE
-    PROFILE_STOP(18);
-#endif
-
     return returnVal;
 }
 
-int  MPI_Ssend_init( buf, count, datatype, dest, tag, comm, request )
+int  MPI_Ssend_init( buf, count, datatype, dest, tag, comm, request ) //19
     void * buf;
     int count;
     MPI_Datatype datatype;
@@ -561,75 +322,33 @@ int  MPI_Ssend_init( buf, count, datatype, dest, tag, comm, request )
     MPI_Request * request;
 {
     int  returnVal;
-
-#ifdef PERF_PROFILE
-    PROFILE_START(19);
-#endif
-
-#ifdef DEBUG
-    printf("Enter MPI_Ssend_init\n");
-#endif
-
     returnVal = PMPI_Ssend_init( buf, count, datatype, dest, tag, comm, request );
-
-#ifdef PERF_PROFILE
-    PROFILE_STOP(19);
-#endif
-
     return returnVal;
 }
 
 
-int   MPI_Test( request, flag, status )
+int   MPI_Test( request, flag, status ) //20
     MPI_Request * request;
     int * flag;
     MPI_Status * status;
 {
     int   returnVal;
-
-#ifdef PERF_PROFILE
-    PROFILE_START(20);
-#endif
-
-#ifdef DEBUG
-    printf("Enter MPI_Test\n");
-#endif
-
     returnVal = PMPI_Test( request, flag, status );
-
-#ifdef PERF_PROFILE
-    PROFILE_STOP(20);
-#endif
-
     return returnVal;
 }
 
-int  MPI_Testall( count, array_of_requests, flag, array_of_statuses )
+int  MPI_Testall( count, array_of_requests, flag, array_of_statuses ) //21
     int count;
     MPI_Request * array_of_requests;
     int * flag;
     MPI_Status * array_of_statuses;
 {
     int returnVal;
-
-#ifdef PERF_PROFILE
-    PROFILE_START(21);
-#endif
-
-#ifdef DEBUG
-    printf("Enter MPI_Testall\n");
-#endif
-
     returnVal = PMPI_Testall( count, array_of_requests, flag, array_of_statuses );
-
-#ifdef PERF_PROFILE
-    PROFILE_STOP(21);
-#endif
-
     return returnVal;
 }
 
-int  MPI_Testany( count, array_of_requests, index, flag, status )
+int  MPI_Testany( count, array_of_requests, index, flag, status ) //22
     int count;
     MPI_Request * array_of_requests;
     int * index;
@@ -655,7 +374,7 @@ int  MPI_Testany( count, array_of_requests, index, flag, status )
     return returnVal;
 }
 
-int  MPI_Test_cancelled( status, flag )
+int  MPI_Test_cancelled( status, flag ) //23
     MPI_Status * status;
     int * flag;
 {
@@ -678,7 +397,7 @@ int  MPI_Test_cancelled( status, flag )
     return returnVal;
 }
 
-int  MPI_Testsome( incount, array_of_requests, outcount, array_of_indices, array_of_statuses )
+int  MPI_Testsome( incount, array_of_requests, outcount, array_of_indices, array_of_statuses ) //24
     int incount;
     MPI_Request * array_of_requests;
     int * outcount;
@@ -704,7 +423,7 @@ int  MPI_Testsome( incount, array_of_requests, outcount, array_of_indices, array
     return returnVal;
 }
 
-int   MPI_Wait( request, status )
+int   MPI_Wait( request, status ) //25
     MPI_Request * request;
     MPI_Status * status;
 {
@@ -729,7 +448,7 @@ int   MPI_Wait( request, status )
     return returnVal;
 }
 
-int  MPI_Waitall( count, array_of_requests, array_of_statuses )
+int  MPI_Waitall( count, array_of_requests, array_of_statuses ) //26
     int count;
     MPI_Request * array_of_requests;
     MPI_Status * array_of_statuses;
@@ -753,7 +472,7 @@ int  MPI_Waitall( count, array_of_requests, array_of_statuses )
     return returnVal;
 }
 
-int  MPI_Waitany( count, array_of_requests, index, status )
+int  MPI_Waitany( count, array_of_requests, index, status ) //27
     int count;
     MPI_Request * array_of_requests;
     int * index;
@@ -778,7 +497,7 @@ int  MPI_Waitany( count, array_of_requests, index, status )
     return returnVal;
 }
 
-int  MPI_Waitsome( incount, array_of_requests, outcount, array_of_indices, array_of_statuses )
+int  MPI_Waitsome( incount, array_of_requests, outcount, array_of_indices, array_of_statuses ) //28
     int incount;
     MPI_Request * array_of_requests;
     int * outcount;
@@ -804,7 +523,7 @@ int  MPI_Waitsome( incount, array_of_requests, outcount, array_of_indices, array
     return returnVal;
 }
 
-int  MPI_Cancel( request )
+int  MPI_Cancel( request ) //29
     MPI_Request * request;
 {
     int  returnVal;
@@ -826,7 +545,7 @@ int  MPI_Cancel( request )
     return returnVal;
 }
 
-int  MPI_Request_free( request )
+int  MPI_Request_free( request ) //30
     MPI_Request * request;
 {
     int  returnVal;
@@ -848,7 +567,7 @@ int  MPI_Request_free( request )
     return returnVal;
 }
 
-int  MPI_Start( request )
+int  MPI_Start( request ) //31
     MPI_Request * request;
 {
     int  returnVal;
@@ -870,7 +589,7 @@ int  MPI_Start( request )
     return returnVal;
 }
 
-int  MPI_Startall( count, array_of_requests )
+int  MPI_Startall( count, array_of_requests ) //32
     int count;
     MPI_Request * array_of_requests;
 {
@@ -893,7 +612,7 @@ int  MPI_Startall( count, array_of_requests )
     return returnVal;
 }
 
-int  MPI_Iprobe( source, tag, comm, flag, status )
+int  MPI_Iprobe( source, tag, comm, flag, status ) //33
     int source;
     int tag;
     MPI_Comm comm;
@@ -919,7 +638,7 @@ int  MPI_Iprobe( source, tag, comm, flag, status )
     return returnVal;
 }
 
-int  MPI_Probe( source, tag, comm, status )
+int  MPI_Probe( source, tag, comm, status ) //34
     int source;
     int tag;
     MPI_Comm comm;
@@ -950,7 +669,7 @@ int  MPI_Probe( source, tag, comm, status )
  *                                                                 *
  ******************************************************************/
 
-int   MPI_Allgather( sendbuf, sendcount, sendtype, recvbuf, recvcount, recvtype, comm )
+int   MPI_Allgather( sendbuf, sendcount, sendtype, recvbuf, recvcount, recvtype, comm ) //35
     void * sendbuf;
     int sendcount;
     MPI_Datatype sendtype;
@@ -985,7 +704,7 @@ int   MPI_Allgather( sendbuf, sendcount, sendtype, recvbuf, recvcount, recvtype,
     return returnVal;
 }
 
-int   MPI_Allgatherv( sendbuf, sendcount, sendtype, recvbuf, recvcounts, displs, recvtype, comm )
+int   MPI_Allgatherv( sendbuf, sendcount, sendtype, recvbuf, recvcounts, displs, recvtype, comm ) //36
     void * sendbuf;
     int sendcount;
     MPI_Datatype sendtype;
@@ -1021,7 +740,7 @@ int   MPI_Allgatherv( sendbuf, sendcount, sendtype, recvbuf, recvcounts, displs,
     return returnVal;
 }
 
-int   MPI_Allreduce( sendbuf, recvbuf, count, datatype, op, comm )
+int   MPI_Allreduce( sendbuf, recvbuf, count, datatype, op, comm ) //37
     void * sendbuf;
     void * recvbuf;
     int count;
@@ -1055,7 +774,7 @@ int   MPI_Allreduce( sendbuf, recvbuf, count, datatype, op, comm )
     return returnVal;
 }
 
-int  MPI_Alltoall( sendbuf, sendcount, sendtype, recvbuf, recvcnt, recvtype, comm )
+int  MPI_Alltoall( sendbuf, sendcount, sendtype, recvbuf, recvcnt, recvtype, comm ) //38
     void * sendbuf;
     int sendcount;
     MPI_Datatype sendtype;
@@ -1090,7 +809,7 @@ int  MPI_Alltoall( sendbuf, sendcount, sendtype, recvbuf, recvcnt, recvtype, com
     return returnVal;
 }
 
-int   MPI_Alltoallv( sendbuf, sendcnts, sdispls, sendtype, recvbuf, recvcnts, rdispls, recvtype, comm )
+int   MPI_Alltoallv( sendbuf, sendcnts, sdispls, sendtype, recvbuf, recvcnts, rdispls, recvtype, comm ) //39
     void * sendbuf;
     int * sendcnts;
     int * sdispls;
@@ -1127,7 +846,7 @@ int   MPI_Alltoallv( sendbuf, sendcnts, sdispls, sendtype, recvbuf, recvcnts, rd
     return returnVal;
 }
 
-int   MPI_Barrier( comm )
+int   MPI_Barrier( comm ) //40
     MPI_Comm comm;
 {
     int   returnVal;
@@ -1158,7 +877,7 @@ int   MPI_Barrier( comm )
     return returnVal;
 }
 
-int   MPI_Bcast( buffer, count, datatype, root, comm )
+int   MPI_Bcast( buffer, count, datatype, root, comm ) //41
     void * buffer;
     int count;
     MPI_Datatype datatype;
@@ -1187,7 +906,7 @@ int   MPI_Bcast( buffer, count, datatype, root, comm )
     return returnVal;
 }
 
-int   MPI_Gather( sendbuf, sendcnt, sendtype, recvbuf, recvcount, recvtype, root, comm )
+int   MPI_Gather( sendbuf, sendcnt, sendtype, recvbuf, recvcount, recvtype, root, comm ) //42
     void * sendbuf;
     int sendcnt;
     MPI_Datatype sendtype;
@@ -1220,7 +939,7 @@ int   MPI_Gather( sendbuf, sendcnt, sendtype, recvbuf, recvcount, recvtype, root
     return returnVal;
 }
 
-int   MPI_Gatherv( sendbuf, sendcnt, sendtype, recvbuf, recvcnts, displs, recvtype, root, comm )
+int   MPI_Gatherv( sendbuf, sendcnt, sendtype, recvbuf, recvcnts, displs, recvtype, root, comm ) //43
     void * sendbuf;
     int sendcnt;
     MPI_Datatype sendtype;
@@ -1254,7 +973,7 @@ int   MPI_Gatherv( sendbuf, sendcnt, sendtype, recvbuf, recvcnts, displs, recvty
     return returnVal;
 }
 
-int   MPI_Reduce_scatter( sendbuf, recvbuf, recvcnts, datatype, op, comm )
+int   MPI_Reduce_scatter( sendbuf, recvbuf, recvcnts, datatype, op, comm ) //44
     void * sendbuf;
     void * recvbuf;
     int * recvcnts;
@@ -1288,7 +1007,7 @@ int   MPI_Reduce_scatter( sendbuf, recvbuf, recvcnts, datatype, op, comm )
     return returnVal;
 }
 
-int   MPI_Reduce( sendbuf, recvbuf, count, datatype, op, root, comm )
+int   MPI_Reduce( sendbuf, recvbuf, count, datatype, op, root, comm ) //45
     void * sendbuf;
     void * recvbuf;
     int count;
@@ -1323,7 +1042,7 @@ int   MPI_Reduce( sendbuf, recvbuf, count, datatype, op, root, comm )
     return returnVal;
 }
 
-int   MPI_Scan( sendbuf, recvbuf, count, datatype, op, comm )
+int   MPI_Scan( sendbuf, recvbuf, count, datatype, op, comm ) //46
     void * sendbuf;
     void * recvbuf;
     int count;
@@ -1350,7 +1069,7 @@ int   MPI_Scan( sendbuf, recvbuf, count, datatype, op, comm )
     return returnVal;
 }
 
-int   MPI_Scatter( sendbuf, sendcnt, sendtype, recvbuf, recvcnt, recvtype, root, comm )
+int   MPI_Scatter( sendbuf, sendcnt, sendtype, recvbuf, recvcnt, recvtype, root, comm ) //47
     void * sendbuf;
     int sendcnt;
     MPI_Datatype sendtype;
@@ -1386,7 +1105,7 @@ int   MPI_Scatter( sendbuf, sendcnt, sendtype, recvbuf, recvcnt, recvtype, root,
     return returnVal;
 }
 
-int   MPI_Scatterv( sendbuf, sendcnts, displs, sendtype, recvbuf, recvcnt, recvtype, root, comm )
+int   MPI_Scatterv( sendbuf, sendcnts, displs, sendtype, recvbuf, recvcnt, recvtype, root, comm ) //48
     void * sendbuf;
     int * sendcnts;
     int * displs;
@@ -1429,7 +1148,7 @@ int   MPI_Scatterv( sendbuf, sendcnts, displs, sendtype, recvbuf, recvcnt, recvt
  *                                                                 *
  ******************************************************************/
 
-int   MPI_Comm_compare( comm1, comm2, result )
+int   MPI_Comm_compare( comm1, comm2, result ) //49
     MPI_Comm comm1;
     MPI_Comm comm2;
     int * result;
@@ -1453,7 +1172,7 @@ int   MPI_Comm_compare( comm1, comm2, result )
     return returnVal;
 }
 
-int   MPI_Comm_create( comm, group, comm_out )
+int   MPI_Comm_create( comm, group, comm_out ) //50
     MPI_Comm comm;
     MPI_Group group;
     MPI_Comm * comm_out;
@@ -1477,7 +1196,7 @@ int   MPI_Comm_create( comm, group, comm_out )
     return returnVal;
 }
 
-int   MPI_Comm_dup( comm, comm_out )
+int   MPI_Comm_dup( comm, comm_out ) //51
     MPI_Comm comm;
     MPI_Comm * comm_out;
 {
@@ -1500,7 +1219,7 @@ int   MPI_Comm_dup( comm, comm_out )
     return returnVal;
 }
 
-int   MPI_Comm_free( comm )
+int   MPI_Comm_free( comm ) //52
     MPI_Comm * comm;
 {
     int   returnVal;
@@ -1522,7 +1241,7 @@ int   MPI_Comm_free( comm )
     return returnVal;
 }
 
-int   MPI_Comm_group( comm, group )
+int   MPI_Comm_group( comm, group ) //53
     MPI_Comm comm;
     MPI_Group * group;
 {
@@ -1541,7 +1260,7 @@ int   MPI_Comm_group( comm, group )
     return returnVal;
 }
 
-int   MPI_Comm_rank( comm, rank )
+int   MPI_Comm_rank( comm, rank ) //54
     MPI_Comm comm;
     int * rank;
 {
@@ -1560,7 +1279,7 @@ int   MPI_Comm_rank( comm, rank )
     return returnVal;
 }
 
-int   MPI_Comm_remote_group( comm, group )
+int   MPI_Comm_remote_group( comm, group ) //55
     MPI_Comm comm;
     MPI_Group * group;
 {
@@ -1579,7 +1298,7 @@ int   MPI_Comm_remote_group( comm, group )
     return returnVal;
 }
 
-int   MPI_Comm_remote_size( comm, size )
+int   MPI_Comm_remote_size( comm, size ) //56
     MPI_Comm comm;
     int * size;
 {
@@ -1598,7 +1317,7 @@ int   MPI_Comm_remote_size( comm, size )
     return returnVal;
 }
 
-int   MPI_Comm_size( comm, size )
+int   MPI_Comm_size( comm, size ) //57
     MPI_Comm comm;
     int * size;
 {
@@ -1617,7 +1336,7 @@ int   MPI_Comm_size( comm, size )
     return returnVal;
 }
 
-int   MPI_Comm_split( comm, color, key, comm_out )
+int   MPI_Comm_split( comm, color, key, comm_out ) //58
     MPI_Comm comm;
     int color;
     int key;
@@ -1638,7 +1357,7 @@ int   MPI_Comm_split( comm, color, key, comm_out )
     return returnVal;
 }
 
-int   MPI_Comm_test_inter( comm, flag )
+int   MPI_Comm_test_inter( comm, flag ) //59
     MPI_Comm comm;
     int * flag;
 {
@@ -1657,7 +1376,7 @@ int   MPI_Comm_test_inter( comm, flag )
     return returnVal;
 }
 
-int   MPI_Group_compare( group1, group2, result )
+int   MPI_Group_compare( group1, group2, result ) //60
     MPI_Group group1;
     MPI_Group group2;
     int * result;
@@ -1677,7 +1396,7 @@ int   MPI_Group_compare( group1, group2, result )
     return returnVal;
 }
 
-int   MPI_Group_difference( group1, group2, group_out )
+int   MPI_Group_difference( group1, group2, group_out ) //61
     MPI_Group group1;
     MPI_Group group2;
     MPI_Group * group_out;
@@ -1697,7 +1416,7 @@ int   MPI_Group_difference( group1, group2, group_out )
     return returnVal;
 }
 
-int   MPI_Group_excl( group, n, ranks, newgroup )
+int   MPI_Group_excl( group, n, ranks, newgroup ) //62
     MPI_Group group;
     int n;
     int * ranks;
@@ -1718,7 +1437,7 @@ int   MPI_Group_excl( group, n, ranks, newgroup )
     return returnVal;
 }
 
-int   MPI_Group_free( group )
+int   MPI_Group_free( group ) //63
     MPI_Group * group;
 {
     int   returnVal;
@@ -1736,7 +1455,7 @@ int   MPI_Group_free( group )
     return returnVal;
 }
 
-int   MPI_Group_incl( group, n, ranks, group_out )
+int   MPI_Group_incl( group, n, ranks, group_out ) //64
     MPI_Group group;
     int n;
     int * ranks;
@@ -1757,7 +1476,7 @@ int   MPI_Group_incl( group, n, ranks, group_out )
     return returnVal;
 }
 
-int   MPI_Group_intersection( group1, group2, group_out )
+int   MPI_Group_intersection( group1, group2, group_out ) //65
     MPI_Group group1;
     MPI_Group group2;
     MPI_Group * group_out;
@@ -1777,7 +1496,7 @@ int   MPI_Group_intersection( group1, group2, group_out )
     return returnVal;
 }
 
-int   MPI_Group_rank( group, rank )
+int   MPI_Group_rank( group, rank ) //66
     MPI_Group group;
     int * rank;
 {
@@ -1796,7 +1515,7 @@ int   MPI_Group_rank( group, rank )
     return returnVal;
 }
 
-int   MPI_Group_range_excl( group, n, ranges, newgroup )
+int   MPI_Group_range_excl( group, n, ranges, newgroup ) //67
     MPI_Group group;
     int n;
     int ranges[][3];
@@ -1817,7 +1536,7 @@ int   MPI_Group_range_excl( group, n, ranges, newgroup )
     return returnVal;
 }
 
-int   MPI_Group_range_incl( group, n, ranges, newgroup )
+int   MPI_Group_range_incl( group, n, ranges, newgroup ) //68
     MPI_Group group;
     int n;
     int ranges[][3];
@@ -1838,7 +1557,7 @@ int   MPI_Group_range_incl( group, n, ranges, newgroup )
     return returnVal;
 }
 
-int   MPI_Group_size( group, size )
+int   MPI_Group_size( group, size ) //69
     MPI_Group group;
     int * size;
 {
@@ -1857,7 +1576,7 @@ int   MPI_Group_size( group, size )
     return returnVal;
 }
 
-int   MPI_Group_translate_ranks( group_a, n, ranks_a, group_b, ranks_b )
+int   MPI_Group_translate_ranks( group_a, n, ranks_a, group_b, ranks_b ) //70
     MPI_Group group_a;
     int n;
     int * ranks_a;
@@ -1879,7 +1598,7 @@ int   MPI_Group_translate_ranks( group_a, n, ranks_a, group_b, ranks_b )
     return returnVal;
 }
 
-int   MPI_Group_union( group1, group2, group_out )
+int   MPI_Group_union( group1, group2, group_out ) //71
     MPI_Group group1;
     MPI_Group group2;
     MPI_Group * group_out;
@@ -1899,7 +1618,7 @@ int   MPI_Group_union( group1, group2, group_out )
     return returnVal;
 }
 
-int   MPI_Intercomm_create( local_comm, local_leader, peer_comm, remote_leader, tag, comm_out )
+int   MPI_Intercomm_create( local_comm, local_leader, peer_comm, remote_leader, tag, comm_out ) //72
     MPI_Comm local_comm;
     int local_leader;
     MPI_Comm peer_comm;
@@ -1922,7 +1641,7 @@ int   MPI_Intercomm_create( local_comm, local_leader, peer_comm, remote_leader, 
     return returnVal;
 }
 
-int   MPI_Intercomm_merge( comm, high, comm_out )
+int   MPI_Intercomm_merge( comm, high, comm_out ) //73
     MPI_Comm comm;
     int high;
     MPI_Comm * comm_out;
@@ -1942,7 +1661,7 @@ int   MPI_Intercomm_merge( comm, high, comm_out )
     return returnVal;
 }
 
-int   MPI_Keyval_create( copy_fn, delete_fn, keyval, extra_state )
+int   MPI_Keyval_create( copy_fn, delete_fn, keyval, extra_state ) //74
     MPI_Copy_function * copy_fn;
     MPI_Delete_function * delete_fn;
     int * keyval;
@@ -1963,7 +1682,7 @@ int   MPI_Keyval_create( copy_fn, delete_fn, keyval, extra_state )
     return returnVal;
 }
 
-int   MPI_Keyval_free( keyval )
+int   MPI_Keyval_free( keyval ) //75
     int * keyval;
 {
     int   returnVal;
@@ -1981,7 +1700,7 @@ int   MPI_Keyval_free( keyval )
     return returnVal;
 }
 
-int   MPI_Cart_coords( comm, rank, maxdims, coords )
+int   MPI_Cart_coords( comm, rank, maxdims, coords ) //76
     MPI_Comm comm;
     int rank;
     int maxdims;
@@ -2002,7 +1721,7 @@ int   MPI_Cart_coords( comm, rank, maxdims, coords )
     return returnVal;
 }
 
-int   MPI_Cart_create( comm_old, ndims, dims, periods, reorder, comm_cart )
+int   MPI_Cart_create( comm_old, ndims, dims, periods, reorder, comm_cart ) //77
     MPI_Comm comm_old;
     int ndims;
     int * dims;
@@ -2025,7 +1744,7 @@ int   MPI_Cart_create( comm_old, ndims, dims, periods, reorder, comm_cart )
     return returnVal;
 }
 
-int   MPI_Cart_get( comm, maxdims, dims, periods, coords )
+int   MPI_Cart_get( comm, maxdims, dims, periods, coords ) //78
     MPI_Comm comm;
     int maxdims;
     int * dims;
@@ -2047,7 +1766,7 @@ int   MPI_Cart_get( comm, maxdims, dims, periods, coords )
     return returnVal;
 }
 
-int   MPI_Cart_map( comm_old, ndims, dims, periods, newrank )
+int   MPI_Cart_map( comm_old, ndims, dims, periods, newrank ) //79
     MPI_Comm comm_old;
     int ndims;
     int * dims;
@@ -2069,7 +1788,7 @@ int   MPI_Cart_map( comm_old, ndims, dims, periods, newrank )
     return returnVal;
 }
 
-int   MPI_Cart_rank( comm, coords, rank )
+int   MPI_Cart_rank( comm, coords, rank ) //80
     MPI_Comm comm;
     int * coords;
     int * rank;
@@ -2089,7 +1808,7 @@ int   MPI_Cart_rank( comm, coords, rank )
     return returnVal;
 }
 
-int   MPI_Cart_shift( comm, direction, displ, source, dest )
+int   MPI_Cart_shift( comm, direction, displ, source, dest ) //81
     MPI_Comm comm;
     int direction;
     int displ;
@@ -2111,7 +1830,7 @@ int   MPI_Cart_shift( comm, direction, displ, source, dest )
     return returnVal;
 }
 
-int   MPI_Cart_sub( comm, remain_dims, comm_new )
+int   MPI_Cart_sub( comm, remain_dims, comm_new ) //82
     MPI_Comm comm;
     int * remain_dims;
     MPI_Comm * comm_new;
@@ -2131,7 +1850,7 @@ int   MPI_Cart_sub( comm, remain_dims, comm_new )
     return returnVal;
 }
 
-int   MPI_Cartdim_get( comm, ndims )
+int   MPI_Cartdim_get( comm, ndims ) //83
     MPI_Comm comm;
     int * ndims;
 {
@@ -2150,7 +1869,7 @@ int   MPI_Cartdim_get( comm, ndims )
     return returnVal;
 }
 
-int  MPI_Dims_create( nnodes, ndims, dims )
+int  MPI_Dims_create( nnodes, ndims, dims ) //84
     int nnodes;
     int ndims;
     int * dims;
@@ -2170,7 +1889,7 @@ int  MPI_Dims_create( nnodes, ndims, dims )
     return returnVal;
 }
 
-int   MPI_Graph_create( comm_old, nnodes, index, edges, reorder, comm_graph )
+int   MPI_Graph_create( comm_old, nnodes, index, edges, reorder, comm_graph ) //85
     MPI_Comm comm_old;
     int nnodes;
     int * index;
@@ -2193,7 +1912,7 @@ int   MPI_Graph_create( comm_old, nnodes, index, edges, reorder, comm_graph )
     return returnVal;
 }
 
-int   MPI_Graph_get( comm, maxindex, maxedges, index, edges )
+int   MPI_Graph_get( comm, maxindex, maxedges, index, edges ) //86
     MPI_Comm comm;
     int maxindex;
     int maxedges;
@@ -2215,7 +1934,7 @@ int   MPI_Graph_get( comm, maxindex, maxedges, index, edges )
     return returnVal;
 }
 
-int   MPI_Graph_map( comm_old, nnodes, index, edges, newrank )
+int   MPI_Graph_map( comm_old, nnodes, index, edges, newrank ) //87
     MPI_Comm comm_old;
     int nnodes;
     int * index;
@@ -2237,7 +1956,7 @@ int   MPI_Graph_map( comm_old, nnodes, index, edges, newrank )
     return returnVal;
 }
 
-int   MPI_Graph_neighbors( comm, rank, maxneighbors, neighbors )
+int   MPI_Graph_neighbors( comm, rank, maxneighbors, neighbors ) //88
     MPI_Comm comm;
     int rank;
     int  maxneighbors;
@@ -2258,7 +1977,7 @@ int   MPI_Graph_neighbors( comm, rank, maxneighbors, neighbors )
     return returnVal;
 }
 
-int   MPI_Graph_neighbors_count( comm, rank, nneighbors )
+int   MPI_Graph_neighbors_count( comm, rank, nneighbors ) //89
     MPI_Comm comm;
     int rank;
     int * nneighbors;
@@ -2278,7 +1997,7 @@ int   MPI_Graph_neighbors_count( comm, rank, nneighbors )
     return returnVal;
 }
 
-int   MPI_Graphdims_get( comm, nnodes, nedges )
+int   MPI_Graphdims_get( comm, nnodes, nedges ) //90
     MPI_Comm comm;
     int * nnodes;
     int * nedges;
@@ -2298,7 +2017,7 @@ int   MPI_Graphdims_get( comm, nnodes, nedges )
     return returnVal;
 }
 
-int   MPI_Topo_test( comm, top_type )
+int   MPI_Topo_test( comm, top_type ) //91
     MPI_Comm comm;
     int * top_type;
 {
@@ -2327,7 +2046,7 @@ int   MPI_Topo_test( comm, top_type )
    it is defined that way, we change the MPI_Abort wrapper */
 
 #if (defined(MPI_Abort) && defined(_ULM_MPI_H_))
-int _MPI_Abort( MPI_Comm comm, int errorcode, char * file, int line)
+int _MPI_Abort( MPI_Comm comm, int errorcode, char * file, int line) //92
 #else
 int  MPI_Abort( comm, errorcode )
     MPI_Comm comm;
@@ -2349,7 +2068,7 @@ int  MPI_Abort( comm, errorcode )
     return returnVal;
 }
 
-int  MPI_Error_class( errorcode, errorclass )
+int  MPI_Error_class( errorcode, errorclass ) //93
     int errorcode;
     int * errorclass;
 {
@@ -2368,7 +2087,7 @@ int  MPI_Error_class( errorcode, errorclass )
     return returnVal;
 }
 
-int  MPI_Errhandler_create( function, errhandler )
+int  MPI_Errhandler_create( function, errhandler ) //94
     MPI_Handler_function * function;
     MPI_Errhandler * errhandler;
 {
@@ -2387,7 +2106,7 @@ int  MPI_Errhandler_create( function, errhandler )
     return returnVal;
 }
 
-int  MPI_Errhandler_free( errhandler )
+int  MPI_Errhandler_free( errhandler ) //95
     MPI_Errhandler * errhandler;
 {
     int  returnVal;
@@ -2405,7 +2124,7 @@ int  MPI_Errhandler_free( errhandler )
     return returnVal;
 }
 
-int  MPI_Errhandler_get( comm, errhandler )
+int  MPI_Errhandler_get( comm, errhandler ) //96
     MPI_Comm comm;
     MPI_Errhandler * errhandler;
 {
@@ -2424,7 +2143,7 @@ int  MPI_Errhandler_get( comm, errhandler )
     return returnVal;
 }
 
-int  MPI_Error_string( errorcode, string, resultlen )
+int  MPI_Error_string( errorcode, string, resultlen ) //97
     int errorcode;
     char * string;
     int * resultlen;
@@ -2444,7 +2163,7 @@ int  MPI_Error_string( errorcode, string, resultlen )
     return returnVal;
 }
 
-int  MPI_Errhandler_set( comm, errhandler )
+int  MPI_Errhandler_set( comm, errhandler ) //98
     MPI_Comm comm;
     MPI_Errhandler errhandler;
 {
@@ -2464,7 +2183,7 @@ int  MPI_Errhandler_set( comm, errhandler )
 }
 
 
-int  MPI_Get_processor_name( name, resultlen )
+int  MPI_Get_processor_name( name, resultlen ) //99
     char * name;
     int * resultlen;
 {
@@ -2484,7 +2203,7 @@ int  MPI_Get_processor_name( name, resultlen )
 }
 
 
-double  MPI_Wtick(  )
+double  MPI_Wtick(  ) //100
 {
     double  returnVal;
 
@@ -2501,7 +2220,7 @@ double  MPI_Wtick(  )
     return returnVal;
 }
 
-double  MPI_Wtime(  )
+double  MPI_Wtime(  ) //101
 {
     double  returnVal;
 
@@ -2518,7 +2237,7 @@ double  MPI_Wtime(  )
     return returnVal;
 }
 
-int  MPI_Address( location, address )
+int  MPI_Address( location, address ) //102
     void * location;
     MPI_Aint * address;
 {
@@ -2537,7 +2256,7 @@ int  MPI_Address( location, address )
     return returnVal;
 }
 
-int  MPI_Op_create( function, commute, op )
+int  MPI_Op_create( function, commute, op ) //103
     MPI_User_function * function;
     int commute;
     MPI_Op * op;
@@ -2557,7 +2276,7 @@ int  MPI_Op_create( function, commute, op )
     return returnVal;
 }
 
-int  MPI_Op_free( op )
+int  MPI_Op_free( op ) //104
     MPI_Op * op;
 {
     int  returnVal;
@@ -2575,7 +2294,7 @@ int  MPI_Op_free( op )
     return returnVal;
 }
 
-int   MPI_Attr_delete( comm, keyval )
+int   MPI_Attr_delete( comm, keyval ) //105
     MPI_Comm comm;
     int keyval;
 {
@@ -2594,7 +2313,7 @@ int   MPI_Attr_delete( comm, keyval )
     return returnVal;
 }
 
-int   MPI_Attr_get( comm, keyval, attr_value, flag )
+int   MPI_Attr_get( comm, keyval, attr_value, flag ) //106
     MPI_Comm comm;
     int keyval;
     void * attr_value;
@@ -2615,7 +2334,7 @@ int   MPI_Attr_get( comm, keyval, attr_value, flag )
     return returnVal;
 }
 
-int   MPI_Attr_put( comm, keyval, attr_value )
+int   MPI_Attr_put( comm, keyval, attr_value ) //107
     MPI_Comm comm;
     int keyval;
     void * attr_value;
@@ -2635,7 +2354,7 @@ int   MPI_Attr_put( comm, keyval, attr_value )
     return returnVal;
 }
 
-int  MPI_Buffer_attach( buffer, size )
+int  MPI_Buffer_attach( buffer, size ) //108
     void * buffer;
     int size;
 {
@@ -2654,7 +2373,7 @@ int  MPI_Buffer_attach( buffer, size )
     return returnVal;
 }
 
-int  MPI_Buffer_detach( buffer, size )
+int  MPI_Buffer_detach( buffer, size ) //109
     void * buffer;
     int * size;
 {
@@ -2673,7 +2392,7 @@ int  MPI_Buffer_detach( buffer, size )
     return returnVal;
 }
 
-int   MPI_Get_elements( status, datatype, elements )
+int   MPI_Get_elements( status, datatype, elements ) //110
     MPI_Status * status;
     MPI_Datatype datatype;
     int * elements;
@@ -2693,7 +2412,7 @@ int   MPI_Get_elements( status, datatype, elements )
     return returnVal;
 }
 
-int  MPI_Get_count( status, datatype, count )
+int  MPI_Get_count( status, datatype, count ) //111
     MPI_Status * status;
     MPI_Datatype datatype;
     int * count;
@@ -2713,7 +2432,7 @@ int  MPI_Get_count( status, datatype, count )
     return returnVal;
 }
 
-int   MPI_Type_commit( datatype )
+int   MPI_Type_commit( datatype ) //112
     MPI_Datatype * datatype;
 {
     int   returnVal;
@@ -2731,7 +2450,7 @@ int   MPI_Type_commit( datatype )
     return returnVal;
 }
 
-int  MPI_Type_contiguous( count, old_type, newtype )
+int  MPI_Type_contiguous( count, old_type, newtype ) //113
     int count;
     MPI_Datatype old_type;
     MPI_Datatype * newtype;
@@ -2751,7 +2470,7 @@ int  MPI_Type_contiguous( count, old_type, newtype )
     return returnVal;
 }
 
-int  MPI_Type_extent( datatype, extent )
+int  MPI_Type_extent( datatype, extent ) //114
     MPI_Datatype datatype;
     MPI_Aint * extent;
 {
@@ -2770,7 +2489,7 @@ int  MPI_Type_extent( datatype, extent )
     return returnVal;
 }
 
-int   MPI_Type_free( datatype )
+int   MPI_Type_free( datatype ) //115
     MPI_Datatype * datatype;
 {
     int   returnVal;
@@ -2788,7 +2507,7 @@ int   MPI_Type_free( datatype )
     return returnVal;
 }
 
-int  MPI_Type_hindexed( count, blocklens, indices, old_type, newtype )
+int  MPI_Type_hindexed( count, blocklens, indices, old_type, newtype ) //116
     int count;
     int * blocklens;
     MPI_Aint * indices;
@@ -2810,7 +2529,7 @@ int  MPI_Type_hindexed( count, blocklens, indices, old_type, newtype )
     return returnVal;
 }
 
-int  MPI_Type_hvector( count, blocklen, stride, old_type, newtype )
+int  MPI_Type_hvector( count, blocklen, stride, old_type, newtype ) //117
     int count;
     int blocklen;
     MPI_Aint stride;
@@ -2832,7 +2551,7 @@ int  MPI_Type_hvector( count, blocklen, stride, old_type, newtype )
     return returnVal;
 }
 
-int  MPI_Type_indexed( count, blocklens, indices, old_type, newtype )
+int  MPI_Type_indexed( count, blocklens, indices, old_type, newtype ) //118
     int count;
     int * blocklens;
     int * indices;
@@ -2854,7 +2573,7 @@ int  MPI_Type_indexed( count, blocklens, indices, old_type, newtype )
     return returnVal;
 }
 
-int   MPI_Type_lb( datatype, displacement )
+int   MPI_Type_lb( datatype, displacement ) //119
     MPI_Datatype datatype;
     MPI_Aint * displacement;
 {
@@ -2873,7 +2592,7 @@ int   MPI_Type_lb( datatype, displacement )
     return returnVal;
 }
 
-int   MPI_Type_size( datatype, size )
+int   MPI_Type_size( datatype, size ) //120
     MPI_Datatype datatype;
     int * size;
 {
@@ -2892,7 +2611,7 @@ int   MPI_Type_size( datatype, size )
     return returnVal;
 }
 
-int  MPI_Type_struct( count, blocklens, indices, old_types, newtype )
+int  MPI_Type_struct( count, blocklens, indices, old_types, newtype ) //121
     int count;
     int * blocklens;
     MPI_Aint * indices;
@@ -2913,7 +2632,7 @@ int  MPI_Type_struct( count, blocklens, indices, old_types, newtype )
     return returnVal;
 }
 
-int   MPI_Type_ub( datatype, displacement )
+int   MPI_Type_ub( datatype, displacement ) //122
     MPI_Datatype datatype;
     MPI_Aint * displacement;
 {
@@ -2932,7 +2651,7 @@ int   MPI_Type_ub( datatype, displacement )
     return returnVal;
 }
 
-int  MPI_Type_vector( count, blocklen, stride, old_type, newtype )
+int  MPI_Type_vector( count, blocklen, stride, old_type, newtype ) //123
     int count;
     int blocklen;
     int stride;
@@ -2954,7 +2673,7 @@ int  MPI_Type_vector( count, blocklen, stride, old_type, newtype )
     return returnVal;
 }
 
-int   MPI_Unpack( inbuf, insize, position, outbuf, outcount, type, comm )
+int   MPI_Unpack( inbuf, insize, position, outbuf, outcount, type, comm ) //124
     void * inbuf;
     int insize;
     int * position;
@@ -2978,7 +2697,7 @@ int   MPI_Unpack( inbuf, insize, position, outbuf, outcount, type, comm )
     return returnVal;
 }
 
-int   MPI_Pack( inbuf, incount, type, outbuf, outcount, position, comm )
+int   MPI_Pack( inbuf, incount, type, outbuf, outcount, position, comm ) //125
     void * inbuf;
     int incount;
     MPI_Datatype type;
@@ -3002,7 +2721,7 @@ int   MPI_Pack( inbuf, incount, type, outbuf, outcount, position, comm )
     return returnVal;
 }
 
-int   MPI_Pack_size( incount, datatype, comm, size )
+int   MPI_Pack_size( incount, datatype, comm, size ) //126
     int incount;
     MPI_Datatype datatype;
     MPI_Comm comm;
@@ -3021,18 +2740,6 @@ int   MPI_Pack_size( incount, datatype, comm, size )
 #endif
 
     return returnVal;
-}
-/********************************************************
- *                  User defined functions               *
- ********************************************************/
-void MPI_Profile_on()
-{
-    PROFILE_ON();
-}
-
-void MPI_Profile_off()
-{
-    PROFILE_OFF();
 }
 
 
