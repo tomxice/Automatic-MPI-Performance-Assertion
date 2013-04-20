@@ -16,7 +16,28 @@
 LogGPO log_cmp, log_net, log_smp;
 IMBPara imb;
 pLocation location;
+RequestParaList req_list;
 #define SYN_SIZE (64*1024)
+
+void req_list_insert(RequestParaList* list, pRequestPara req) {
+    if (list->len == 0) {
+        head = req;
+        tail = req;
+        len = 1;
+    }
+    else {
+        tail->next = req;
+        tail = req;
+        len ++;
+    }
+}
+
+void req_list_delete(RequestParaList* list, pRequestPara req) {
+    pRequestPara hit = NULL, cur = list->head;
+    for (int i = 0; i < list->len; ++ i) {
+
+
+
 
 /********************************************************************
 * Determining whether two MPI rank are in the same node or same CPU
@@ -253,20 +274,26 @@ double E_MPI_Init(int * argc, char*** argv)
         for (int i = 0; i < cnt; ++ i) 
             free(ls[i]);
         free(ls);
+#if 0
         printf("from RANK 0\n");
         for (int i = 0; i < gsize; ++ i) {
             printf ("rank:%d, node:%d, core:%d\n", i, location[i].node, location[i].core );
         }
+#endif 
     }
     // boardcast to all MPI ranks
     PMPI_Bcast(location, 2*gsize, MPI_INT, 0, MPI_COMM_WORLD);
+#if 0
     if (myrank == 20) {
         printf("from RANK 20\n");
         for (int i = 0; i < gsize; ++ i) {
             printf ("rank:%d, node:%d, core:%d\n", i, location[i].node, location[i].core );
         }
     }
-
+#endif
+    req_list.len = 0;
+    req_list.head = NULL;
+    req_list.tail = NULL;
 	return 0;
 }
 
@@ -374,7 +401,16 @@ int tag;
 MPI_Comm comm;
 MPI_Request * request;
 {
-	return 0;
+    int r0;
+    PMPI_Comm_rank(MPI_COMM_WORLD, &r0);
+    pLogGPO pgpo = getGPO(r0,dest);
+    int size = E_count2byte(datatype, count);
+    LoggpoPara para = getPara( pgpo, size);
+
+    double retVal;
+    //TODO how does Isend behave while sending small messages? 
+    retVal = para.os;
+	return retVal;
 }
 double E_MPI_Issend( buf, count, datatype, dest, tag, comm, request )
 void * buf;

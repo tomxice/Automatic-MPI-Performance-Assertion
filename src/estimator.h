@@ -12,6 +12,18 @@ typedef struct Location {
     int core;
 } Location,*pLocation;
 
+typedef struct RequestPara {
+    MPI_Request* req;
+    LoggpoPara para;
+    RequestPara* next;
+} RequestPara, *pRequestPara;
+
+typedef struct ReqestParaList {
+    int len;
+    pRequestPara head;
+    pRequestPara tail;
+} RequestParaList;
+
 /******************************************************************
 *                                                                 *
 *                   MPI Functions for Management                  *

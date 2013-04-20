@@ -29,7 +29,7 @@ void _wtime(double *t)
   gettimeofday(&tv, 0);
   if (sec < 0)
         sec = tv.tv_sec;
-  *t = (tv.tv_sec - sec) + 1.0e-6*tv.tv_usec;
+  *t = (tv.tv_sec - sec)*1e6 + tv.tv_usec;
 }
 
 /*****************************************************************/

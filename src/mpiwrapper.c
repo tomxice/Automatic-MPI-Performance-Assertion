@@ -212,9 +212,20 @@ int  MPI_Recv( buf, count, datatype, source, tag, comm, status ) //12
     MPI_Status * status;
 {
     int  returnVal;
+#ifdef PERF_ASSERT
+    _timer_start(PATN);
+#endif 
     returnVal = PMPI_Recv( buf, count, datatype, source, tag, comm, status );
 #ifdef PERF_ASSERT
-    E_MPI_Recv( buf, count, datatype, source, tag, comm, status );
+    _timer_stop(PATN);
+    double r = _timer_read(PATN);
+    _timer_clear(PATN);
+    double e = E_MPI_Recv( buf, count, datatype, source, tag, comm, status );
+    int pid;
+    PMPI_Comm_rank(MPI_COMM_WORLD, &pid);
+    char para[100];
+    sprintf(para, "count:%d, source:%d",count,source);
+    R_log(R_Level,0,r,e,pid,12,para);
 #endif
     return returnVal;
 }
@@ -256,9 +267,20 @@ int  MPI_Send( buf, count, datatype, dest, tag, comm ) //15
     MPI_Comm comm;
 {
     int  returnVal;
+#ifdef PERF_ASSERT
+    _timer_start(PATN);
+#endif 
     returnVal = PMPI_Send( buf, count, datatype, dest, tag, comm );
 #ifdef PERF_ASSERT
-    E_MPI_Send( buf, count, datatype, dest, tag, comm );
+    _timer_stop(PATN);
+    double r = _timer_read(PATN);
+    _timer_clear(PATN);
+    double e = E_MPI_Send( buf, count, datatype, dest, tag, comm );
+    int pid;
+    PMPI_Comm_rank(MPI_COMM_WORLD, &pid);
+    char para[100];
+    sprintf(para, "count:%d, dest:%d",count,dest);
+    R_log(R_Level,0,r,e,pid,15,para);
 #endif
     return returnVal;
 }
@@ -278,7 +300,21 @@ int  MPI_Sendrecv( sendbuf, sendcount, sendtype, dest, sendtag, recvbuf, recvcou
     MPI_Status * status;
 {
     int  returnVal;
+#ifdef PERF_ASSERT
+    _timer_start(PATN);
+#endif 
     returnVal = PMPI_Sendrecv( sendbuf, sendcount, sendtype, dest, sendtag, recvbuf, recvcount, recvtype, source, recvtag, comm, status );
+#ifdef PERF_ASSERT
+    _timer_stop(PATN);
+    double r = _timer_read(PATN);
+    _timer_clear(PATN);
+    double e = E_MPI_Sendrecv( sendbuf, sendcount, sendtype, dest, sendtag, recvbuf, recvcount, recvtype, source, recvtag, comm, status );
+    int pid;
+    PMPI_Comm_rank(MPI_COMM_WORLD, &pid);
+    char para[100];
+    sprintf(para, "sendcount:%d, dest:%d, recvcount:%d, source:%d",sendcount,dest,recvcount,source);
+    R_log(R_Level,0,r,e,pid,16,para);
+#endif
     return returnVal;
 }
 
@@ -508,7 +544,7 @@ int   MPI_Allgather( sendbuf, sendcount, sendtype, recvbuf, recvcount, recvtype,
 #endif 
 
 #ifdef PERF_ASSERT
-    double r = _timer_read(PATN)*1e6;
+    double r = _timer_read(PATN);
     _timer_clear(PATN);
     double e = E_MPI_Allgather( sendbuf, sendcount, sendtype, recvbuf, recvcount, recvtype, comm );
     int pid;
@@ -544,7 +580,7 @@ int   MPI_Allgatherv( sendbuf, sendcount, sendtype, recvbuf, recvcounts, displs,
 #endif 
 
 #ifdef PERF_ASSERT
-    double r = _timer_read(PATN)*1e6;
+    double r = _timer_read(PATN);
     _timer_clear(PATN);
     double e = E_MPI_Allgatherv( sendbuf, sendcount, sendtype, recvbuf, recvcounts, displs, recvtype, comm );
     int pid;
@@ -578,7 +614,7 @@ int   MPI_Allreduce( sendbuf, recvbuf, count, datatype, op, comm ) //37
 #endif 
 
 #ifdef PERF_ASSERT
-    double r = _timer_read(PATN)*1e6;
+    double r = _timer_read(PATN);
     _timer_clear(PATN);
     double e = E_MPI_Allreduce( sendbuf, recvbuf, count, datatype, op, comm );
     int pid;
@@ -613,7 +649,7 @@ int  MPI_Alltoall( sendbuf, sendcount, sendtype, recvbuf, recvcnt, recvtype, com
 #endif 
 
 #ifdef PERF_ASSERT
-    double r = _timer_read(PATN)*1e6;
+    double r = _timer_read(PATN);
     _timer_clear(PATN);
     double e = E_MPI_Alltoall( sendbuf, sendcount, sendtype, recvbuf, recvcnt, recvtype, comm );
     int pid;
@@ -650,7 +686,7 @@ int   MPI_Alltoallv( sendbuf, sendcnts, sdispls, sendtype, recvbuf, recvcnts, rd
 #endif 
 
 #ifdef PERF_ASSERT
-    double r = _timer_read(PATN)*1e6;
+    double r = _timer_read(PATN);
     _timer_clear(PATN);
     double e = E_MPI_Alltoallv( sendbuf, sendcnts, sdispls, sendtype, recvbuf, recvcnts, rdispls, recvtype, comm );
     int pid;
@@ -679,7 +715,7 @@ int   MPI_Barrier( comm ) //40
 #endif 
 
 #ifdef PERF_ASSERT
-    double r = _timer_read(PATN)*1e6;
+    double r = _timer_read(PATN);
     _timer_clear(PATN);
     double e = E_MPI_Barrier( comm );
     int pid;
@@ -710,7 +746,7 @@ int   MPI_Bcast( buffer, count, datatype, root, comm ) //41
 
 #ifdef PERF_ASSERT
     _timer_stop(PATN);
-    double r = _timer_read(PATN)*1e6;
+    double r = _timer_read(PATN);
     _timer_clear(PATN);
     double e = E_MPI_Bcast( buffer, count, datatype, root, comm );
     int pid;
@@ -743,7 +779,7 @@ int   MPI_Gather( sendbuf, sendcnt, sendtype, recvbuf, recvcount, recvtype, root
 
 #ifdef PERF_ASSERT
     _timer_stop(PATN);
-    double r = _timer_read(PATN)*1e6;
+    double r = _timer_read(PATN);
     _timer_clear(PATN);
     double e = E_MPI_Gather( sendbuf, sendcnt, sendtype, recvbuf, recvcount, recvtype, root, comm );
     int pid;
@@ -777,7 +813,7 @@ int   MPI_Gatherv( sendbuf, sendcnt, sendtype, recvbuf, recvcnts, displs, recvty
 
 #ifdef PERF_ASSERT
     _timer_stop(PATN);
-    double r = _timer_read(PATN)*1e6;
+    double r = _timer_read(PATN);
     _timer_clear(PATN);
     double e = E_MPI_Gatherv( sendbuf, sendcnt, sendtype, recvbuf, recvcnts, displs, recvtype, root, comm );
     int pid;
@@ -811,7 +847,7 @@ int   MPI_Reduce_scatter( sendbuf, recvbuf, recvcnts, datatype, op, comm ) //44
 #endif 
 
 #ifdef PERF_ASSERT
-    double r = _timer_read(PATN)*1e6;
+    double r = _timer_read(PATN);
     _timer_clear(PATN);
     double e = E_MPI_Reduce_scatter( sendbuf, recvbuf, recvcnts, datatype, op, comm );
     int pid;
@@ -846,7 +882,7 @@ int   MPI_Reduce( sendbuf, recvbuf, count, datatype, op, root, comm ) //45
 #endif 
 
 #ifdef PERF_ASSERT
-    double r = _timer_read(PATN)*1e6;
+    double r = _timer_read(PATN);
     _timer_clear(PATN);
     double e = E_MPI_Reduce( sendbuf, recvbuf, count, datatype, op, root, comm );
     int pid;
@@ -895,7 +931,7 @@ int   MPI_Scatter( sendbuf, sendcnt, sendtype, recvbuf, recvcnt, recvtype, root,
 #endif 
 
 #ifdef PERF_ASSERT
-    double r = _timer_read(PATN)*1e6;
+    double r = _timer_read(PATN);
     _timer_clear(PATN);
     double e = E_MPI_Scatter( sendbuf, sendcnt, sendtype, recvbuf, recvcnt, recvtype, root, comm );
     int pid;
@@ -932,7 +968,7 @@ int   MPI_Scatterv( sendbuf, sendcnts, displs, sendtype, recvbuf, recvcnt, recvt
 #endif 
 
 #ifdef PERF_ASSERT
-    double r = _timer_read(PATN)*1e6;
+    double r = _timer_read(PATN);
     _timer_clear(PATN);
     double e = E_MPI_Scatterv( sendbuf, sendcnts, displs, sendtype, recvbuf, recvcnt, recvtype, root, comm );
     int pid;
