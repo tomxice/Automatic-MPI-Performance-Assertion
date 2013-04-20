@@ -5,6 +5,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "mpiname.h"
+#include "parser.h"
 
 #define PATN 50 // the index "n" in timer.c
 typedef struct Location {
@@ -13,15 +14,15 @@ typedef struct Location {
 } Location,*pLocation;
 
 typedef struct RequestPara {
-    MPI_Request* req;
+    MPI_Request req;
+    pLogGPO pgpo;
     LoggpoPara para;
-    RequestPara* next;
+    struct RequestPara *prev, *next;
 } RequestPara, *pRequestPara;
 
 typedef struct ReqestParaList {
     int len;
     pRequestPara head;
-    pRequestPara tail;
 } RequestParaList;
 
 /******************************************************************

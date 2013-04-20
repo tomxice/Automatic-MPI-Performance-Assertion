@@ -73,7 +73,7 @@ void R_log(int level, int warn, double real, double expc, int pid, int mpiid, co
     double gap = real-expc;
     gap = (gap > 0) ? gap : -gap;
     if (expc < 0) record.status = NODATA;
-    else if (gap < 1) record.status = NORMAL;
+    else if (gap < 20) record.status = NORMAL;
     else if (real < expc*0.25) record.status = SHORT;
     else if (real > expc*4) record.status = LONG;
     else record.status = NORMAL;

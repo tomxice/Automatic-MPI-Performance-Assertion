@@ -156,7 +156,21 @@ int  MPI_Irecv( buf, count, datatype, source, tag, comm, request ) //8
     MPI_Request * request;
 {
     int  returnVal;
+#ifdef PERF_ASSERT
+    _timer_start(PATN);
+#endif 
     returnVal = PMPI_Irecv( buf, count, datatype, source, tag, comm, request );
+#ifdef PERF_ASSERT
+    _timer_stop(PATN);
+    double r = _timer_read(PATN);
+    _timer_clear(PATN);
+    double e = E_MPI_Irecv( buf, count, datatype, source, tag, comm, request );
+    int pid;
+    PMPI_Comm_rank(MPI_COMM_WORLD, &pid);
+    char para[100];
+    sprintf(para, "count:%d, source:%d",count,source);
+    R_log(R_Level,0,r,e,pid,8,para);
+#endif
     return returnVal;
 }
 
@@ -184,7 +198,21 @@ int  MPI_Isend( buf, count, datatype, dest, tag, comm, request ) //10
     MPI_Request * request;
 {
     int  returnVal;
+#ifdef PERF_ASSERT
+    _timer_start(PATN);
+#endif 
     returnVal = PMPI_Isend( buf, count, datatype, dest, tag, comm, request );
+#ifdef PERF_ASSERT
+    _timer_stop(PATN);
+    double r = _timer_read(PATN);
+    _timer_clear(PATN);
+    double e = E_MPI_Isend( buf, count, datatype, dest, tag, comm, request );
+    int pid;
+    PMPI_Comm_rank(MPI_COMM_WORLD, &pid);
+    char para[100];
+    sprintf(para, "count:%d, dest:%d",count,dest);
+    R_log(R_Level,0,r,e,pid,10,para);
+#endif
     return returnVal;
 }
 
@@ -422,8 +450,23 @@ int   MPI_Wait( request, status ) //25
 {
     int   returnVal;
     //MPI_Status local_status;
-    //MPI_Request saverequest;
+    //MPI_Request* saverequest = request;
+
+#ifdef PERF_ASSERT
+    double e = E_MPI_Wait( request, status );
+    _timer_start(PATN);
+#endif 
     returnVal = PMPI_Wait( request, status );
+#ifdef PERF_ASSERT
+    _timer_stop(PATN);
+    double r = _timer_read(PATN);
+    _timer_clear(PATN);
+    int pid;
+    PMPI_Comm_rank(MPI_COMM_WORLD, &pid);
+    char para[100];
+    sprintf(para, "req:%p", request);
+    R_log(R_Level,0,r,e,pid,25,para);
+#endif
     return returnVal;
 }
 
@@ -433,7 +476,21 @@ int  MPI_Waitall( count, array_of_requests, array_of_statuses ) //26
     MPI_Status * array_of_statuses;
 {
     int  returnVal;
+#ifdef PERF_ASSERT
+    double e = E_MPI_Waitall( count, array_of_requests, array_of_statuses );
+    _timer_start(PATN);
+#endif 
     returnVal = PMPI_Waitall( count, array_of_requests, array_of_statuses );
+#ifdef PERF_ASSERT
+    _timer_stop(PATN);
+    double r = _timer_read(PATN);
+    _timer_clear(PATN);
+    int pid;
+    PMPI_Comm_rank(MPI_COMM_WORLD, &pid);
+    char para[100];
+    sprintf(para, "count:%d", count);
+    R_log(R_Level,0,r,e,pid,26,para);
+#endif
     return returnVal;
 }
 

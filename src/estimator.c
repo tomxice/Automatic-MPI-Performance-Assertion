@@ -19,26 +19,59 @@ pLocation location;
 RequestParaList req_list;
 #define SYN_SIZE (64*1024)
 
-void req_list_insert(RequestParaList* list, pRequestPara req) {
+void req_list_insert(RequestParaList* list, MPI_Request* req, pLogGPO pgpo, LoggpoPara* para) {
+    //printf("insert req: %p\n", req);
+    RequestPara *p = (RequestPara*)malloc(sizeof(RequestPara));
+    p->req = *req;
+    p->pgpo = pgpo;
+    p->para = *para;
+    p->next = NULL;
+    p->prev = NULL;
     if (list->len == 0) {
-        head = req;
-        tail = req;
-        len = 1;
+        list->head = p;
+        p->next = p;
+        p->prev = p;
     }
     else {
-        tail->next = req;
-        tail = req;
-        len ++;
+        p->prev = list->head;
+        p->next = list->head->next;
+        list->head->next->prev = p;
+        list->head->next = p;
     }
+    list->len ++;
 }
 
-void req_list_delete(RequestParaList* list, pRequestPara req) {
+RequestPara req_list_delete(RequestParaList* list, MPI_Request* req) {
+    //printf("search for %p\n", req);
     pRequestPara hit = NULL, cur = list->head;
-    for (int i = 0; i < list->len; ++ i) {
-
-
-
-
+    RequestPara ret;
+    ret.req = -12345;
+    //printf("list_length:%d\n", list->len);
+    for (int i = 0; i < list->len; ++ i, cur = cur->next) {
+        //printf("cur->req: %p\n", cur->req);
+        if (cur->req == *req) {
+            hit = cur;
+            break;
+        }
+    }
+    if (hit == NULL) return ret;
+    //printf("HIT!===============================================!HIT!\n");
+    ret = *hit;
+    if (hit == list->head) {
+        if (list->len == 1) {
+            list->head = NULL;
+        }
+        else {
+            list->head = list->head->next;
+        }
+    }
+    hit->prev->next = hit->next;
+    hit->next->prev = hit->prev;
+    free(hit);
+    list->len --;
+    return ret;
+}
+        
 /********************************************************************
 * Determining whether two MPI rank are in the same node or same CPU
 ********************************************************************/
@@ -293,7 +326,6 @@ double E_MPI_Init(int * argc, char*** argv)
 #endif
     req_list.len = 0;
     req_list.head = NULL;
-    req_list.tail = NULL;
 	return 0;
 }
 
@@ -379,7 +411,16 @@ int tag;
 MPI_Comm comm;
 MPI_Request * request;
 {
-	return 0;
+    int r0;
+    PMPI_Comm_rank(MPI_COMM_WORLD, &r0);
+    pLogGPO pgpo = getGPO(r0, source);
+    int size = E_count2byte(datatype, count);
+    LoggpoPara para = getPara( pgpo, size);
+
+    req_list_insert(&req_list, request, pgpo, &para);
+
+    double retVal = para.os + para.or;
+	return retVal;
 }
 double E_MPI_Irsend( buf, count, datatype, dest, tag, comm, request )
 void * buf;
@@ -406,6 +447,8 @@ MPI_Request * request;
     pLogGPO pgpo = getGPO(r0,dest);
     int size = E_count2byte(datatype, count);
     LoggpoPara para = getPara( pgpo, size);
+
+    req_list_insert(&req_list, request, pgpo, &para);
 
     double retVal;
     //TODO how does Isend behave while sending small messages? 
@@ -437,14 +480,14 @@ MPI_Status * status;
     pLogGPO pgpo = getGPO(r0,source);
     int size = E_count2byte(datatype, count);
     LoggpoPara para = getPara( pgpo, size);
-    double sendtime, retVal;
+    double sendtime;
     if (size < SYN_SIZE) {
         sendtime = para.os + para.ov;
     }
     else {
         sendtime = para.os + para.ov + 2*(pgpo->os_0 + pgpo->or_0 + pgpo->latency);
     }
-    retVal = para.rtt/2 - sendtime;
+    double retVal = para.rtt/2 - sendtime;
 	return retVal;
 }
 double E_MPI_Rsend( buf, count, datatype, dest, tag, comm )
@@ -593,14 +636,33 @@ double E_MPI_Wait( request, status )
 MPI_Request * request;
 MPI_Status * status;
 {
-	return 0;
+    RequestPara reqpara = req_list_delete(&req_list, request);
+    if (reqpara.req != *request) {
+        printf("No Such Request! \n");
+        return -1;
+    }
+    double retVal;
+    int size = reqpara.para.size;
+    //printf("Wait size: %d\n", size);
+    pLogGPO pgpo = reqpara.pgpo;
+    if (size < SYN_SIZE) {
+        retVal = reqpara.para.ov;
+    }
+    else {
+        retVal = pgpo->latency + size*reqpara.para.gap;
+    }
+	return retVal;
 }
 double E_MPI_Waitall( count, array_of_requests, array_of_statuses )
 int count;
 MPI_Request * array_of_requests;
 MPI_Status * array_of_statuses;
 {
-	return 0;
+    double retVal = 0;
+    for (int i = 0; i < count; ++ i) {
+        retVal += E_MPI_Wait(&array_of_requests[i], &array_of_statuses[i]);
+    }
+    return retVal;
 }
 double E_MPI_Waitany( count, array_of_requests, index, status )
 int count;
