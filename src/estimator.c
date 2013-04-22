@@ -419,7 +419,7 @@ MPI_Request * request;
 
     req_list_insert(&req_list, request, pgpo, &para);
 
-    double retVal = para.os + para.or;
+    double retVal = pgpo->os_0;
 	return retVal;
 }
 double E_MPI_Irsend( buf, count, datatype, dest, tag, comm, request )
@@ -451,8 +451,7 @@ MPI_Request * request;
     req_list_insert(&req_list, request, pgpo, &para);
 
     double retVal;
-    //TODO how does Isend behave while sending small messages? 
-    retVal = para.os;
+    retVal = pgpo->os_0;
 	return retVal;
 }
 double E_MPI_Issend( buf, count, datatype, dest, tag, comm, request )
@@ -646,7 +645,7 @@ MPI_Status * status;
     //printf("Wait size: %d\n", size);
     pLogGPO pgpo = reqpara.pgpo;
     if (size < SYN_SIZE) {
-        retVal = reqpara.para.ov;
+        retVal = 0;
     }
     else {
         retVal = pgpo->latency + size*reqpara.para.gap;
@@ -670,7 +669,7 @@ MPI_Request * array_of_requests;
 int * index;
 MPI_Status * status;
 {
-	return 0;
+    return 0;
 }
 double E_MPI_Waitsome( incount, array_of_requests, outcount, array_of_indices, array_of_statuses )
 int incount;
