@@ -34,7 +34,7 @@ int  MPI_Init( argc, argv )
     PMPI_Comm_rank( MPI_COMM_WORLD, &proc_id );
     E_MPI_Init(argc, argv);
     char filename[128];
-    sprintf(filename,"%s%d","mpipa.report.",proc_id);
+    sprintf(filename,"%s%d","mpipa.log.",proc_id);
     R_init(filename);
 #endif
     return returnVal;
