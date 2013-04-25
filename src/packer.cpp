@@ -6,6 +6,7 @@
 #include <cstdio>
 #include <map>
 #include <vector>
+#include <omp.h>
 
 using namespace std;
 
@@ -20,12 +21,13 @@ struct MPI_Call {
     double t_exp;
     string location;
     bool operator < (const MPI_Call &c) const {
+        if (location != c.location) return location < c.location;
         if (t_exp != c.t_exp) return t_exp < c.t_exp;
-        int r = strcmp(addr2, c.addr2);
-        if (r != 0) return r < 0;
+        int r;
         r = strcmp(type, c.type);
         if (r != 0) return r < 0;
-        if (location < c.location) return true;
+	r = strcmp(addr2, c.addr2);
+        if (r != 0) return r < 0;
         r = strcmp(description, c.description);
         if (r != 0) return r < 0;
         return false;
@@ -67,7 +69,7 @@ string get_line(char* addr1, char* addr2) {
     if (fgets(buf, 100, pp)) loc1 = buf;
     pclose(pp);
     if (loc1.substr(0,wrapper_f.size()) != wrapper_f) {
-        string ret = func.substr(0,func.size()-1)+loc1.substr(0,loc1.size()-1);
+        string ret = func.substr(0,func.size()-1)+" at "+loc1.substr(0,loc1.size()-1);
         if (! hit1)
             addr2line[string(addr1)] = ret;
         return ret;
@@ -82,7 +84,7 @@ string get_line(char* addr1, char* addr2) {
     if (fgets(buf, 100, pp)) func = buf;
     if (fgets(buf, 100, pp)) loc2 = buf;
     pclose(pp);
-    string ret = func.substr(0,func.size()-1)+loc2.substr(0,loc2.size()-1);
+    string ret = func.substr(0,func.size()-1)+" at "+loc2.substr(0,loc2.size()-1);
     addr2line[string(addr2)] = ret;
     return ret;
 }
@@ -96,16 +98,22 @@ int pack_file(int i) {
         return PACK_ERROR;
     char line[1000];
     char tmp[128];
+    string header = "";
     while (fgets(line, 1000, pf)) {
         sscanf(line, "%s", tmp);
         if (string(tmp) == call_begin) 
             break;
+        header += string(line);
     }
     //printf("Begin !!\n");
     while (fgets(line, 1000, pf)) {
         MPI_Call call;
         double t_real;
         sscanf(line, "%s%s%s%s%lf%lf%s", call.func, call.addr1, call.addr2, call.type, &call.t_exp, &t_real, call.description);
+#ifndef ALLTRACE
+        if (strcmp(call.type, "NORMAL") == 0)
+            continue;
+#endif
         //printf("line(parsered): %s\n", line);
         call.location = get_line(call.addr1, call.addr2);
         //printf("location: %s\n", call.location.c_str());
@@ -117,6 +125,7 @@ int pack_file(int i) {
     pf = fopen(wfname, "w");
     if (! pf) 
         return PACK_ERROR;
+    fprintf(pf,"%s",header.c_str());
     fprintf(pf,"%-27s%-30s%-8s%-10s%6s  %-10s%-10s%-10s%-s\n", "Func_name", "Location", "Type", "t_exp", "count", "real_avg", "real_max", "real_min", "description");
     map<MPI_Call, vector<double> >::iterator iter;
     for (iter = trace.begin(); iter != trace.end(); ++ iter) {
@@ -143,6 +152,7 @@ int main(int argc, char** argv) {
     }
     exefile = argv[1];
     int nprocs = atoi(argv[2]);
+#pragma omp parallel for
     for (int i = 0; i < nprocs; ++ i) {
         if (pack_file(i) != PACK_DONE) {
             printf("Error while packing No.%i file\n", i);

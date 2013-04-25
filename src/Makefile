@@ -11,7 +11,7 @@ OBJS= timer.o mpiwrapper.o mpiwrapper_f.o estimator.o parser.o mpiname.o reporte
 
 ALL: main.out packer.out
 packer.out: packer.cpp
-	$(CPP) $(CPPFLAGS) $(DEF) packer.cpp -o packer.out
+	$(CPP) $(CPPFLAGS) -fopenmp $(DEF) packer.cpp -o packer.out
 main.out: main.o libmpit
 	g++ main.o -L. -L/usr/bin -lmpit -lmpich -o main.out
 libmpit	: $(OBJS)
