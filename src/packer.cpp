@@ -152,7 +152,7 @@ int main(int argc, char** argv) {
     }
     exefile = argv[1];
     int nprocs = atoi(argv[2]);
-#pragma omp parallel for
+//#pragma omp parallel for
     for (int i = 0; i < nprocs; ++ i) {
         if (pack_file(i) != PACK_DONE) {
             printf("Error while packing No.%i file\n", i);

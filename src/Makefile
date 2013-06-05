@@ -9,7 +9,9 @@ ARTAG = rcv
 
 OBJS= timer.o mpiwrapper.o mpiwrapper_f.o estimator.o parser.o mpiname.o reporter.o
 
-ALL: main.out packer.out
+ALL: main.out packer.out analist.out
+analist.out: analist.cpp
+	$(CPP) $(CPPFLAGS) analist.cpp -o analist.out
 packer.out: packer.cpp
 	$(CPP) $(CPPFLAGS) -fopenmp $(DEF) packer.cpp -o packer.out
 main.out: main.o libmpit
