@@ -41,3 +41,4 @@ clean :
 	rm -f *.log
 	rm -f mpi_record.*
 	rm -f mpipa.report.*
+	rm -f mpipa.log.*

@@ -139,7 +139,7 @@ void R_report(int level, int numproc) {
     
     fprintf(f_final, "\n\nMPI_Call Log\n");
     fprintf(f_final, "===================\n\n");
-    fprintf(f_final, "%-27s%-22s%-10s%-10s%-10s%-s\n","Func_name","Location","Type","t_exp","t_real","description");
+    fprintf(f_final, "%-27s%-32s%-10s%-10s%-10s%-s\n","Func_name","Location","Type","t_exp","t_real","description");
     for (int i = 0; i < numfunc; ++ i) {
         map<string, vector<Record> >::iterator iter = result[i].begin();
         while (iter != result[i].end()) {
@@ -148,7 +148,7 @@ void R_report(int level, int numproc) {
 #ifndef ALLTRACE
                 if (it->status == NORMAL) continue;
 #endif
-                fprintf(f_final, "%-27s%-22s%-10s",MPI_Functions[i],iter->first.c_str(),status[it->status]);
+                fprintf(f_final, "%-27s%-32s%-10s",MPI_Functions[i],iter->first.c_str(),status[it->status]);
                 fprintf(f_final, "%-10.2e%-10.2e%-s\n",it->expc,it->real,it->parameter.c_str());
             }
             ++ iter;
